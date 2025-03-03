@@ -1,0 +1,24 @@
+.period-filter {
+    display: flex;
+    margin: 3em;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.filter-title {
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 0.2em;
+}
+
+.custom-period {
+    display: flex;
+    align-items: center;
+}
+
+.custom-period input {
+    width: 4em;
+    height: 2em;
+    border: #CCCCCC 1.5px solid;
+    border-radius: 6px;
+}

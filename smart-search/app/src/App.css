@@ -1,0 +1,12 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto", sans-serif !important;
+  font-size: 14px;
+  font-style: normal !important;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+}
