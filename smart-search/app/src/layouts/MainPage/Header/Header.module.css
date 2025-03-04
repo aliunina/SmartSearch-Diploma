@@ -1,0 +1,6 @@
+.header {
+    display: flex;
+    justify-content: right;
+    padding: 1.5em;
+    overflow: auto;
+}

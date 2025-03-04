@@ -1,0 +1,9 @@
+.avatar {
+    cursor: pointer;
+}
+
+.avatar-button {
+    border: none;
+    background-color: transparent;
+    border-radius: 5px;
+}

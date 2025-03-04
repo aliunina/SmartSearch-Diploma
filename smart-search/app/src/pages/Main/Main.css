@@ -1,0 +1,21 @@
+.sign-in-button {
+    padding: 0.7em;
+    width: 5em;
+    color: white;
+    background-color: #008054;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 0;
+}
+
+.menu-button {
+    border: 0;
+    cursor: pointer;
+    margin-right: 1em;
+    margin-top: 0.3em;
+    background-color: transparent;
+}
+
+.title {
+    margin-bottom: 3em;
+}
