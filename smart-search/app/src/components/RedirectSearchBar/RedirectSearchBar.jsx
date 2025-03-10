@@ -1,14 +1,10 @@
 import "./RedirectSearchBar.css";
-import { useState } from "react";
 import Button from "../Button/Button";
 
-export default function RedirectSearchBar() {
-  const [searchValue, setSearchValue] = useState("");
-
+export default function RedirectSearchBar({ searchValue, setSearchValue, redirect }) {
   const executeSearch = (e) => {
     e.preventDefault();
-    const hash = `gsc.tab=0&gsc.q=${searchValue}&gsc.page=1`;
-    window.location = "/search" + '#' + hash;
+    redirect(searchValue);
   };
 
   return (

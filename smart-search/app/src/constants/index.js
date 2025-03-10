@@ -1,25 +1,32 @@
+export const SEARCH_ENGINE = {
+  url: "https://www.googleapis.com/customsearch/v1",
+  key: "AIzaSyAGewCbct9EcpOfhcVnC7i1Dwk7d5WMorU",
+  cx: "77d08b0f7527e4171"
+};
+
 export const PERIOD_FILTER = {
-  All: {
-    key: "all",
-    value: 0
+  "all": {
+    name: "all",
+    value: null
   },
-  Month: {
-    key: "month",
-    value: 1
+  "month": {
+    name: "month",
+    value: "m1"
   },
-  Quarter: {
-    key: "quarter",
-    value: 3
+  "quarter": {
+    name: "quarter",
+    value: "m3"
   },
-  HalfYear: {
-    key: "half-year",
-    value: 6
+  "half-year": {
+    name: "half-year",
+    value: "m6"
   },
-  Year: {
-    key: "year",
-    value: 12
+  "year": {
+    name: "year",
+    value: "y1"
   },
-  Custom: {
-    key: "custom"
+  "custom": {
+    name: "custom",
+    value: null
   }
 };

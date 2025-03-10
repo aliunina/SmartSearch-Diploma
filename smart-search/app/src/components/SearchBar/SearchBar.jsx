@@ -3,33 +3,24 @@ import Button from "../Button/Button";
 import "./SearchBar.css";
 import { useLocation } from "react-router-dom";
 
-export default function SearchBar() {
-  let query;
+export default function SearchBar({search}) {
   const location = useLocation();
-  const [hash, setHash] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
 
-  location.hash.split("&").forEach(elem => {
-    const key = elem.split("=")[0];
-    if (key === "gsc.q") {
-      query = decodeURI(elem.split("=")[1]);
+  useEffect(() => {  
+    const urlParams = Object.fromEntries(new URLSearchParams(location.search));
+    if (urlParams.q) {
+      setSearchValue(decodeURI(urlParams.q));
     }
-  });
-
-  const [searchValue, setSearchValue] = useState(query);
-
-  useEffect(() => {
-    if (hash) {
-      window.location = location.pathname + '#' + hash;
-    }
-  }, [location.pathname, hash]);
+  }, [location.search]);
 
   const executeSearch = (e) => {
     e.preventDefault();
-    setHash(`gsc.tab=0&gsc.q=${searchValue}&gsc.page=1`);
+    search(searchValue);
   };
 
   const clearSearch = () => {
-    setHash(null);
+    ////TO DO
   };
 
   return (

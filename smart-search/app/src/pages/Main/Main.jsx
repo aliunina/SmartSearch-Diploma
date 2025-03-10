@@ -4,8 +4,20 @@ import Body from "../../layouts/MainPage/Body/Body";
 import Button from "../../components/Button/Button";
 
 import RedirectSearchBar from "../../components/RedirectSearchBar/RedirectSearchBar";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Main() {
+  const [searchValue, setSearchValue] = useState("");
+  const navigate = useNavigate();
+
+  const handleRedirect = (searchValue) => {
+    const urlParams = new URLSearchParams({
+      q: searchValue
+    });
+    navigate("search?" + urlParams.toString());
+  };
+
   return (
     <div>
       <Header>       
@@ -18,7 +30,7 @@ export default function Main() {
       </Header>
       <Body>
         <img src="title.svg" alt="Заголовок сайта" className="title"/>
-        <RedirectSearchBar/>
+        <RedirectSearchBar searchValue={searchValue} setSearchValue={setSearchValue} redirect={handleRedirect}/>
       </Body>
     </div>
   );

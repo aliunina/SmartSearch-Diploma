@@ -1,4 +1,11 @@
 .left-panel {
     margin-left: 15em;
-    min-width: 200px;
+    min-width: 17em;
+}
+
+.filter-container {
+    display: flex;
+    margin: 3em;
+    flex-direction: column;
+    gap: 1em;
 }

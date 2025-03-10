@@ -1,71 +1,80 @@
 import "./PeriodFilter.css";
 import FilterItem from "../FilterItem/FilterItem";
 import { PERIOD_FILTER } from "../../constants/index";
-import { getFilterQuery } from "../../helpers/period-filter";
-import { useLocation } from "react-router-dom";
 
-
-export default function PeriodFilter({ currentFilter, updateFilter, ...props }) {
-  const location = useLocation();
+export default function PeriodFilter({
+  currentFilter,
+  updateFilter,
+  ...props
+}) {
   const onFilterChange = (event) => {
     const newFilter = event.target.value;
-    updateFilter(newFilter);
-    
-    // const filterQuery = getFilterQuery(newFilter);
-    // window.location = location.pathname + location.hash.split('+after:')[0] + filterQuery;
+    updateFilter(PERIOD_FILTER[newFilter]);
   };
 
   return (
-    <form className="period-filter" {...props}>
-      <p className="filter-title">
-        Период
-      </p>
+    <form className="filter-container" {...props}>
+      <p className="filter-title">Период</p>
       <FilterItem
-        checked={currentFilter === PERIOD_FILTER.All.key}
-        name={PERIOD_FILTER.All.key}
-        value={PERIOD_FILTER.All.key}
+        checked={currentFilter.name === PERIOD_FILTER["all"].name}
+        name={PERIOD_FILTER["all"].name}
+        value={PERIOD_FILTER["all"].name}
         text="За всё время"
         onChange={onFilterChange}
       />
       <FilterItem
-        checked={currentFilter === PERIOD_FILTER.Month.key}
-        name={PERIOD_FILTER.Month.key}
-        value={PERIOD_FILTER.Month.key}
+        checked={currentFilter.name === PERIOD_FILTER["month"].name}
+        name={PERIOD_FILTER["month"].name}
+        value={PERIOD_FILTER["month"].name}
         text="Месяц"
         onChange={onFilterChange}
       />
       <FilterItem
-        checked={currentFilter === PERIOD_FILTER.Quarter.key}
-        name={PERIOD_FILTER.Quarter.key}
-        value={PERIOD_FILTER.Quarter.key}
+        checked={currentFilter.name === PERIOD_FILTER["quarter"].name}
+        name={PERIOD_FILTER["quarter"].name}
+        value={PERIOD_FILTER["quarter"].name}
         text="3 месяца"
         onChange={onFilterChange}
       />
       <FilterItem
-        checked={currentFilter === PERIOD_FILTER.HalfYear.key}
-        name={PERIOD_FILTER.HalfYear.key}
-        value={PERIOD_FILTER.HalfYear.key}
+        checked={currentFilter.name === PERIOD_FILTER["half-year"].name}
+        name={PERIOD_FILTER["half-year"].name}
+        value={PERIOD_FILTER["half-year"].name}
         text="Полгода"
         onChange={onFilterChange}
       />
       <FilterItem
-        checked={currentFilter === PERIOD_FILTER.Year.key}
-        name={PERIOD_FILTER.Year.key}
-        value={PERIOD_FILTER.Year.key}
+        checked={currentFilter.name === PERIOD_FILTER["year"].name}
+        name={PERIOD_FILTER["year"].name}
+        value={PERIOD_FILTER["year"].name}
         text="Год"
         onChange={onFilterChange}
       />
       <FilterItem
-        checked={currentFilter === PERIOD_FILTER.Custom.key}
-        name={PERIOD_FILTER.Custom.key}
-        value={PERIOD_FILTER.Custom.key}
+        checked={currentFilter.name === PERIOD_FILTER["custom"].name}
+        name={PERIOD_FILTER["custom"].name}
+        value={PERIOD_FILTER["custom"].name}
         text="Свой период"
         onChange={onFilterChange}
       />
       <div className="custom-period">
-        <input type="text" maxLength="4" minLength="4" placeholder="от"/>
-        <span style={{marginLeft: "0.5em", marginRight: "0.5em"}}>—</span>
-        <input type="text" maxLength="4" minLength="4" placeholder="до"/>
+        <input
+          type="text"
+          maxLength="4"
+          pattern="[0-9]*"
+          disabled={currentFilter.name !== PERIOD_FILTER["custom"].name}
+          minLength="4"
+          placeholder="от"
+        />
+        <span style={{ marginLeft: "0.5em", marginRight: "0.5em" }}>—</span>
+        <input
+          type="text"
+          maxLength="4"
+          pattern="[0-9]*"
+          disabled={currentFilter.name !== PERIOD_FILTER["custom"].name}
+          minLength="4"
+          placeholder="до"
+        />
       </div>
     </form>
   );
