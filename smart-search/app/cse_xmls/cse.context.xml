@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomSearchEngine language="ru" safesearch="true" autocompletions="true" enable_promotions="false" top_refinements="12">
+	<Title>
+		BNTU Smart Search
+	</Title>
+	<Description>
+	</Description>
+	<Context>
+		<BackgroundLabels>
+			<Label name="_include_" mode="FILTER">
+			</Label>
+			<Label name="_exclude_" mode="ELIMINATE">
+			</Label>
+		</BackgroundLabels>
+		<Facet>
+			<FacetItem>
+				<Label name="Электронный_каталог" mode="FILTER">
+				</Label>
+				<Title>
+					Электронный каталог
+				</Title>
+			</FacetItem>
+			<FacetItem>
+				<Label name="Репозиторий_БНТУ" mode="FILTER">
+				</Label>
+				<Title>
+					Репозиторий БНТУ
+				</Title>
+			</FacetItem>
+			<FacetItem>
+				<Label name="Лань" mode="FILTER">
+				</Label>
+				<Title>
+					Лань
+				</Title>
+			</FacetItem>
+			<FacetItem>
+				<Label name="znanium" mode="FILTER">
+				</Label>
+				<Title>
+					Znanium
+				</Title>
+			</FacetItem>
+			<FacetItem>
+				<Label name="ibooks.ru_-_it_коллекция" mode="FILTER">
+				</Label>
+				<Title>
+					ibooks.ru - IT коллекция
+				</Title>
+			</FacetItem>
+			<FacetItem>
+				<Label name="Юрайт" mode="FILTER">
+				</Label>
+				<Title>
+					Юрайт
+				</Title>
+			</FacetItem>
+			<FacetItem>
+				<Label name="ЛитРес" mode="FILTER">
+				</Label>
+				<Title>
+					ЛитРес
+				</Title>
+			</FacetItem>
+			<FacetItem>
+				<Label name="google_Академия" mode="FILTER">
+				</Label>
+				<Title>
+					Google Академия
+				</Title>
+			</FacetItem>
+			<FacetItem>
+				<Label name="БНТУ_в_СМИ" mode="FILTER">
+				</Label>
+				<Title>
+					БНТУ в СМИ
+				</Title>
+			</FacetItem>
+			<FacetItem>
+				<Label name="wiley_online_library" mode="FILTER">
+				</Label>
+				<Title>
+					Wiley Online Library
+				</Title>
+			</FacetItem>
+		</Facet>
+	</Context>
+	<LookAndFeel element_layout="1" theme="1" enable_cse_thumbnail="false" element_branding="hide" custom_theme="true" font="7">
+		<Colors url="" title="" visited="" title_hover="" title_active="" text="" background="" border="">
+		</Colors>
+		<Promotions title_color="" title_visited_color="" title_hover_color="" title_active_color="" background_color="" border_color="" url_color="" snippet_color="">
+		</Promotions>
+		<SearchControls input_border_color="" button_icon_color="" button_border_color="#007f53" button_background_color="#007f53" tab_border_color="" tab_background_color="" tab_selected_border_color="#007f53" tab_selected_background_color="">
+		</SearchControls>
+		<Results border_color="" border_hover_color="" background_color="" background_hover_color="">
+		</Results>
+		<Logo url="" destination="" height="30">
+		</Logo>
+		<Widget query_parameter_name="q">
+		</Widget>
+	</LookAndFeel>
+	<ImageSearchSettings enable="false">
+	</ImageSearchSettings>
+	<cse_advance_settings enable_facet_search="false">
+		<web_search_options enable_history="true" show_structured_data="false">
+			<search_restrict_args lr="" cr="" gl="by" filter="0" sort="" as_siteseach="" as_oq="">
+			</search_restrict_args>
+		</web_search_options>
+		<image_advanced_options default_to_image_search="false">
+			<search_restrict_args lr="" cr="" gl="by" filter="0" sort="" as_siteseach="" as_oq="">
+			</search_restrict_args>
+		</image_advanced_options>
+		<search_options link_target="">
+		</search_options>
+		<custom_search_control_options no_results_string="Статьи по запросу отсутствуют.">
+		</custom_search_control_options>
+	</cse_advance_settings>
+	<sort_by_keys label="Relevance" key="">
+	</sort_by_keys>
+	<sort_by_keys label="Date" key="date">
+	</sort_by_keys>
+	<autocomplete_settings source="2">
+	</autocomplete_settings>
+</CustomSearchEngine>

@@ -36,6 +36,7 @@ export default function SearchBar() {
     <form className="search-form" onSubmit={executeSearch}>
       <input
         type="text"
+        maxLength="2048"
         onChange={(e) => setSearchValue(e.target.value)}
         value={searchValue}
         name="searchBar"

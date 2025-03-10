@@ -9,16 +9,14 @@ import Avatar from "../../components/Avatar/Avatar";
 import PeriodFilter from "../../components/PeriodFilter/PeriodFilter";
 
 import { PERIOD_FILTER } from "../../constants/index";
-import { getFilterQuery } from "../../helpers/period-filter";
 
 import { useState, useCallback } from "react";
 
 export default function Search() {
-  const [periodFilter, setPeriodFilter] = useState(PERIOD_FILTER.All);
+  const [periodFilter, setPeriodFilter] = useState(PERIOD_FILTER.All.key);
 
   const handlePeriodFilterUpdate = useCallback((newFilter) => {
     setPeriodFilter(newFilter);
-    const filterQuery = getFilterQuery(newFilter);
   }, []);
 
   return (

@@ -1,5 +1,12 @@
+import { PERIOD_FILTER } from "../constants/index";
+
 export const getFilterQuery = (filter) => {
-  let res;
+  for (let entry in PERIOD_FILTER) {
+    if (PERIOD_FILTER[entry].key === filter) {
+      const date = getDate(PERIOD_FILTER[entry].value);
+      return "+after:" + date;
+    }
+  };  
 };
 
 function getDate(month) {
