@@ -21,6 +21,14 @@
   border: 0;
 }
 
+.redirect-search-button:hover {
+  background-color: #006642;
+}
+
+.redirect-search-button:active {
+  background-color: #014931;
+}
+
 .redirect-search-icon {
   border-top-left-radius: 28px;
   border-bottom-left-radius: 28px;

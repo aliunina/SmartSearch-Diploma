@@ -1,7 +1,8 @@
 import "./RedirectSearchBar.css";
 import Button from "../Button/Button";
+import { forwardRef  } from 'react';
 
-export default function RedirectSearchBar({ searchValue, setSearchValue, redirect }) {
+const RedirectSearchBar = forwardRef(function RedirectSearchBar({ searchValue, setSearchValue, redirect }, ref) {
   const executeSearch = (e) => {
     e.preventDefault();
     redirect(searchValue);
@@ -19,6 +20,7 @@ export default function RedirectSearchBar({ searchValue, setSearchValue, redirec
         </div>
         <input
           type="text"
+          ref={ref}
           onChange={(e) => setSearchValue(e.target.value)}
           value={searchValue}
           className="redirect-search-input"
@@ -30,4 +32,6 @@ export default function RedirectSearchBar({ searchValue, setSearchValue, redirec
       </Button>
     </form>
   );
-}
+});
+
+export default RedirectSearchBar;

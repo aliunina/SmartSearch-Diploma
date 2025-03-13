@@ -1,0 +1,40 @@
+.error-page-container {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.error-page-image {
+  width: 20em;
+}
+
+.error-page-text {
+  font-size: 1.2em;
+  margin-bottom: 2em;
+}
+
+.error-page-button {
+  padding: 0.7em;
+  width: 7em;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  background-color: #008054;
+  border-radius: 12px;
+  border: 0;
+}
+
+.error-page-button:hover {
+  background-color: #006642;
+}
+
+.error-page-button:active {
+  background-color: #014931;
+}

@@ -6,6 +6,15 @@ body {
   padding: 0;
 }
 
+.message-toast {
+  font-family: "Roboto", sans-serif !important;
+  border: 1px solid #cccccc;
+}
+
+body:has(.dialog-background) {
+  overflow: hidden;
+}
+
 * {  
   font-family: "Roboto", sans-serif !important;
 }

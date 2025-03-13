@@ -1,0 +1,10 @@
+.sign-up-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    max-width: 30em;
+}
+
+.sign-up-header-logo {
+    cursor: pointer;
+}

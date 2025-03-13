@@ -1,29 +1,73 @@
-.search-results {    
-    margin: 3em;
-    display: flex;
-    flex-direction: column;
-    gap: 2em;
-    justify-items: center;
+.search-results-container {
+  margin: 3em;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.search-results {
+  margin-bottom: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  justify-items: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 2em;
+}
+
+.page {
+  font-size: 1.2em;
+  color: #008054;
+  cursor: pointer;
+}
+
+.page:hover {
+  color: #006642;
+}
+
+.page-active {
+  color: black;
+}
+
+.issue-container {
+  width: 100%;
+  margin-top: 3em;
+  align-items: center;
+  gap: 2em;
+  display: flex;
+  flex-direction: column;
+}
+
+.issue-image {
+  width: 20em;
+}
+
+.issue-text {
+  margin: 0;
+  text-align: center;
 }
 
 .loader-container {
-    display: flex;
-    justify-content: center;
-    min-height: 40em;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 40em;
+  align-items: center;
 }
 
 .loader {
-    height: 4em;
-    width: 4em;
-    border: 0.3em solid #008054;
-    border-color: #008054 transparent #008054 transparent;
-    border-radius: 50%;
-    animation: load 1s linear infinite;
+  height: 4em;
+  width: 4em;
+  border: 0.3em solid #008054;
+  border-color: #008054 transparent #008054 transparent;
+  border-radius: 50%;
+  animation: load 1s linear infinite;
 }
 
 @keyframes load {
-    to {
-        transform: rotate(360deg)
-    }
+  to {
+    transform: rotate(360deg);
+  }
 }
