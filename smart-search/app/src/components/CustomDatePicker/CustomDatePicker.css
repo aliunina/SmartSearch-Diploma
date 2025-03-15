@@ -1,0 +1,30 @@
+.date-picker-container {
+  position: relative;
+  width: 100%;
+  float: left;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
+.date-picker {
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1em;
+  margin: 0;
+  border: 1px solid #cccccc;
+}
+
+.date-picker-icon {
+  position: absolute;
+  top: 0.8em;
+  right: 0.8em;
+  pointer-events: none;
+}
+
+.date-picker-icon button {
+  border: none;
+  background: transparent;
+}
