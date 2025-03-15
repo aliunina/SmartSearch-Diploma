@@ -6,6 +6,7 @@ import Body from "../../layouts/SignUpLayout/Body/Body";
 import LeftPanel from "../../layouts/SignUpLayout/LeftPanel/LeftPanel";
 import RightPanel from "../../layouts/SignUpLayout/RightPanel/RightPanel";
 import SignUpStep from "../../components/SignUpStep/SignUpStep";
+import SignUpForm from "../../components/SignUpForm/SignUpForm";
 
 export default function SignUp() {
   return (
@@ -35,7 +36,9 @@ export default function SignUp() {
             />
           </div>
         </LeftPanel>
-        <RightPanel />
+        <RightPanel>
+          <SignUpForm/>
+        </RightPanel>
       </Body>
     </>
   );

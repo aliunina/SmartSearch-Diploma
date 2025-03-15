@@ -1,0 +1,50 @@
+.sign-up-form {
+  width: 30em;
+}
+
+.sign-up-form-google-button {
+  padding: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  width: 100%;
+  cursor: pointer;
+  z-index: 6;
+  font-weight: 500;
+  background-color: white;
+  border: 1px solid #cccccc;
+  border-radius: 12px;
+}
+
+.sign-up-form-divider {
+  width: 100%;
+  align-items: center;
+  display: flex;
+  color: #929292;
+  gap: 1em;
+}
+
+.sign-up-form-divider-line {
+  width: 50%;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.sign-up-form-name-patronymic-container {
+  display: flex;
+  gap: 1em;
+}
+
+.sign-up-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.sign-up-form-name-container {
+  width: 50%;
+}
+
+.sign-up-form-patronymic-container {
+  width: 50%;
+}

@@ -4,7 +4,7 @@ export default function SignUpStep({ title, description, active }) {
   return (
     <div className="sign-up-step-container">
       <svg
-        className="svg1"
+        className="sign-up-step-icon"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
