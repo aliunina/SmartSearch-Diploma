@@ -1,0 +1,12 @@
+.header {
+    align-items: center;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 2em;
+    overflow: auto;
+    z-index: 5;
+}
+
+.header-logo {
+    cursor: pointer;
+}
