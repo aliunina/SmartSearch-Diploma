@@ -9,12 +9,23 @@ import SignUpForm from "../../components/SignUpForm/SignUpForm";
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { DB_PARAMS } from "../../constants";
 
 export default function SignUp() {
   const [selectedTab, setSelectedTab] = useState(0);
 
   const signUp = (values) => {
-
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(DB_PARAMS.url + "/register/user", values);
+        console.log(response);
+      } catch (error) {
+        console.log("Error while fetching data.");
+        console.log(error);
+      }
+    };
+    fetchData();
   };
 
   return (

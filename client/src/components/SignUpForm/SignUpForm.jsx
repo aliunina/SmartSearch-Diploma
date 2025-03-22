@@ -113,10 +113,12 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
 
   useEffect(() => {
     if (isReadyToSubmit) {
-      const result = values.map((value) => value.trim());
+      const result = {...values};
+      Object.keys(result).forEach(key => values[key] = values[key].trim());
       if (!result.status) {
         result.status = status.text;
       }
+      result.themes = result.themes.split(" ");
       signUp(result);
     }
   }, [isReadyToSubmit, values, status, signUp]);

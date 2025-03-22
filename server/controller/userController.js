@@ -37,8 +37,26 @@ export const getAllUsers = async (request, response) => {
 
 export const getUserById = async (request, response) => {
   try {
-    const id = request.params.id;
+    const newUser = new User(request.body);
     const userData = await User.findById(id);
+    if (!userData) {
+      return response.status(404).json({
+        errorMessage: "User not found.",
+      });
+    }
+    response.status(200).json(userData);
+  } catch (error) {
+    response.status(500).json({
+      errorMessage: error.message,
+    });
+  }
+};
+
+export const getUserByCredentials = async (request, response) => {
+  try {
+    const credentials = new User(request.body);
+    const { email, password } = credentials;
+    const userData = await User.findOne({ email, password });
     if (!userData) {
       return response.status(404).json({
         errorMessage: "User not found.",

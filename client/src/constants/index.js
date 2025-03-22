@@ -4,6 +4,10 @@ export const SEARCH_ENGINE = {
   cx: "f5a24536d2c834267"
 };
 
+export const DB_PARAMS = {
+  url: "http://localhost:8000/api"
+};
+
 export const PERIOD_FILTER = {
   "all": {
     text: "За всё время",
