@@ -412,6 +412,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                 id="signUpThemes"
                 name="themes"
                 value={values.themes}
+                maxLength="1000"
                 onChange={onChange}
                 autoComplete="new-password"
                 placeholder="Введите темы через запятую"
