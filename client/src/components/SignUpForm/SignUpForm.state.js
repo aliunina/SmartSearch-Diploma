@@ -12,26 +12,26 @@ export const INITIAL_STATE = {
     birthday: "",
     employment: "",
     themes: "",
-    status: "",
+    status: ""
   },
   isValidTab0: {
     lastName: true,
     firstName: true,
-    email: true,
+    email: true
   },
   isValidTab1: {
     password: true,
-    repeatPassword: true,
+    repeatPassword: true
   },
   isValidTab2: {
     country: true,
     birthday: true,
-    employment: true,
+    employment: true
   },
   isReadyToSubmitTab0: false,
   isReadyToSubmitTab1: false,
   isReadyToSubmitTab2: false,
-  isReadyToSubmit: false,
+  isReadyToSubmit: false
 };
 
 export function formReducer(state, action) {
@@ -41,8 +41,8 @@ export function formReducer(state, action) {
         ...state,
         values: {
           ...state.values,
-          ...action.payload,
-        },
+          ...action.payload
+        }
       };
     case "SUBMIT_TAB_0": {
       const lastNameValidity = state.values.lastName?.trim().length > 0;
@@ -54,10 +54,10 @@ export function formReducer(state, action) {
         isValidTab0: {
           lastName: lastNameValidity,
           firstName: firstNameValidity,
-          email: emailValidity,
+          email: emailValidity
         },
         isReadyToSubmitTab0:
-          lastNameValidity && firstNameValidity && emailValidity,
+          lastNameValidity && firstNameValidity && emailValidity
       };
     }
     case "SUBMIT_TAB_1": {
@@ -68,9 +68,9 @@ export function formReducer(state, action) {
         ...state,
         isValidTab1: {
           password: passwordValidity,
-          repeatPassword: repeatPasswordValidity,
+          repeatPassword: repeatPasswordValidity
         },
-        isReadyToSubmitTab1: passwordValidity && repeatPasswordValidity,
+        isReadyToSubmitTab1: passwordValidity && repeatPasswordValidity
       };
     }
     case "SUBMIT_TAB_2": {
@@ -80,7 +80,7 @@ export function formReducer(state, action) {
         const birthday = state.values.birthday.trim();
         if (
           birthday.length > 0 &&
-          (new Date(birthday) > new Date() ||
+          (new Date(birthday) > Date.now() ||
             new Date(birthday) < new Date("1900-01-01"))
         ) {
           birthdayValidity = false;
@@ -92,22 +92,22 @@ export function formReducer(state, action) {
         isValidTab2: {
           country: countryValidity,
           birthday: birthdayValidity,
-          employment: employmentValidity,
+          employment: employmentValidity
         },
         isReadyToSubmitTab2:
-          countryValidity && birthdayValidity && employmentValidity,
+          countryValidity && birthdayValidity && employmentValidity
       };
     }
     case "SUBMIT": {
       return {
         ...state,
-        isReadyToSubmit: true,
+        isReadyToSubmit: true
       };
     }
     case "RESET_READINESS": {
       return {
         ...state,
-        isReadyToSubmit: false,
+        isReadyToSubmit: false
       };
     }
   }

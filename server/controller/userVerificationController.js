@@ -1,1 +1,0 @@
-import UserVerification from "../model/userVerificationModel.js";

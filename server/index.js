@@ -2,9 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import userRoute from "./routes/userRoute.js";
-import userVerificationRoute from "./routes/userVerificationRoute.js";
 import cors from "cors";
+
+import userRoute from "./routes/userRoute.js";
 
 const app = express();
 app.use(bodyParser.json());
@@ -27,4 +27,3 @@ mongoose
   });
 
 app.use("/api", userRoute);
-app.use("/verify", userVerificationRoute);

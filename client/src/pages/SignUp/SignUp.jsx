@@ -25,7 +25,7 @@ export default function SignUp() {
           values
         );
         if (response.status === 200) {
-          showSuccessMessageToast("Регистрация успешна.");
+          showSuccessMessageToast("Письмо с подтверждением отправлено на указанную при регистрации почту.");
           navigate(-1);
         } else if (response.status === 400) {
           showErrorMessageToast("Пользователь с таким email уже существует.");
