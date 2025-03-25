@@ -1,4 +1,6 @@
 import User from "../model/userModel.js";
+import bcrypt from "bcrypt";
+const saltRounds = 10;
 
 export const createUser = async (request, response) => {
   try {
@@ -10,8 +12,27 @@ export const createUser = async (request, response) => {
         errorMessage: "User with this email alredy exists.",
       });
     }
-    const savedData = await newUser.save();
-    response.status(200).json(savedData);
+    //Password hashing
+    bcrypt
+      .hash(newUser.password, saltRounds)
+      .then((hashedPassword) => {
+        newUser.password = hashedPassword;
+        newUser
+          .save()
+          .then((result) => {
+            response.status(200).json(result);
+          })
+          .catch((error) =>
+            response.status(500).json({
+              errorMessage: error.message,
+            })
+          );
+      })
+      .catch((error) => {
+        response.status(500).json({
+          errorMessage: error.message,
+        });
+      });
   } catch (error) {
     response.status(500).json({
       errorMessage: error.message,
@@ -55,14 +76,27 @@ export const getUserById = async (request, response) => {
 export const getUserByCredentials = async (request, response) => {
   try {
     const credentials = new User(request.body);
-    const { email, password } = credentials;
-    const userData = await User.findOne({ email, password });
-    if (!userData) {
-      return response.status(404).json({
-        errorMessage: "User not found.",
+    const { email } = credentials;
+    User.findOne({ email })
+      .then((result) => {
+        bcrypt
+          .hash(credentials.password, saltRounds)
+          .then((hashedPassword) => {
+            if (hashedPassword === result.password) {
+              return response.status(200).json(result);
+            }
+          })
+          .catch((error) => {
+            return response.status(500).json({
+              errorMessage: error.message
+            });
+          });
+      })
+      .catch((error) => {
+        return response.status(404).json({
+          errorMessage: "User with this email is not found.",
+        });
       });
-    }
-    response.status(200).json(userData);
   } catch (error) {
     response.status(500).json({
       errorMessage: error.message,
