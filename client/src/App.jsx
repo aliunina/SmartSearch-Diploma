@@ -1,10 +1,10 @@
-
 import "./App.css";
+import { UserContextProvider } from "./contexts/UserContext/UserContextProvider";
 
-export default function App({children}) {
+export default function App({ children }) {
   return (
-    <div className="app">
-      {children}
-    </div>
+    <UserContextProvider>
+      <div className="app">{children}</div>
+    </UserContextProvider>
   );
 }

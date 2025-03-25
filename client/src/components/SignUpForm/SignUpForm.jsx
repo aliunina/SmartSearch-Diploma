@@ -24,7 +24,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
     isReadyToSubmitTab0,
     isReadyToSubmitTab1,
     isReadyToSubmitTab2,
-    isReadyToSubmit
+    isReadyToSubmit,
   } = formState;
 
   const [status, setStatus] = useState(STATUS_SELECT.student);
@@ -113,12 +113,12 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
 
   useEffect(() => {
     if (isReadyToSubmit) {
-      const result = {...values};
-      Object.keys(result).forEach(key => values[key] = values[key].trim());
+      const result = { ...values };
+      Object.keys(result).forEach((key) => (values[key] = values[key].trim()));
       if (!result.status) {
         result.status = status.text;
       }
-      result.themes = result.themes.split(" ");
+      result.themes = result.themes.split(",").map((elem) => elem.trim());
       signUp(result);
     }
   }, [isReadyToSubmit, values, status, signUp]);
@@ -149,8 +149,8 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
     dispatchForm({
       type: "SET_VALUE",
       payload: {
-        [event.target.name]: event.target.value
-      }
+        [event.target.name]: event.target.value,
+      },
     });
   };
 
@@ -419,7 +419,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                 autoComplete="new-password"
                 placeholder="Введите темы через запятую"
               >
-                <Hint text="Например, наночастицы диоксида титана" />
+                <Hint text="Например, наночастицы диоксида титана, квантовая механика" />
               </Input>
             </div>
             <div className="sign-up-form-container">

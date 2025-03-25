@@ -8,12 +8,14 @@ import ExtendedSearchDialog from "../../components/ExtendedSearchDialog/Extended
 
 import RedirectSearchBar from "../../components/RedirectSearchBar/RedirectSearchBar";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import NavMenu from "../../components/NavMenu/NavMenu";
 import { ToastContainer } from "react-toastify";
 import { showErrorMessageToast } from "../../helpers/util";
+import { UserContext } from "../../contexts/UserContext/UserContext";
 
-export default function Main() {
+export default function Main() {  
+  const {user} = useContext(UserContext);
   const searchBarRef = useRef();
   const navigate = useNavigate();
 
@@ -73,23 +75,13 @@ export default function Main() {
       <Header className="main-header">
         <Button className="menu-button" onClick={openMenu}>
           <img src="menu.svg" alt="Меню" />
-        </Button>
-        <Button className="sign-in-button" onClick={signIn}>Войти</Button>
+        </Button>    
+        {!user && <Button className="sign-in-button" onClick={signIn}>Войти</Button>}
         {menuOpen && (
           <NavMenu
             setMenuOpen={setMenuOpen}
             openESDialog={handleOpenESDialog}
-            header={
-              <>
-                <Logo />
-                <p className="nav-menu-description">
-                  Зарегистрируйтесь в БНТУ Умный поиск, чтобы создавать оповещения
-                </p>
-                <Button type="button" className="nav-menu-signin-button" onClick={signUp}>
-                  Регистрация в БНТУ Умный поиск
-                </Button>
-              </>
-            }
+            signUp={signUp}
           />
         )}
         {dialogOpen && (

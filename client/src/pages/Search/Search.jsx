@@ -281,6 +281,10 @@ export default function Search() {
   const handleOpenESDialog = () => {
     setDialogOpen(true);
     setMenuOpen(false);
+  };  
+
+  const signUp = () => {
+    navigate("/sign-up");
   };
 
   return (
@@ -301,12 +305,7 @@ export default function Search() {
           <NavMenu
             setMenuOpen={setMenuOpen}
             openESDialog={handleOpenESDialog}
-            header={
-              <>
-                <p className="nav-menu-user-name">Иванов Иван</p>
-                <Avatar />
-              </>
-            }
+            signUp={signUp}
           />
         )}
       </Header>

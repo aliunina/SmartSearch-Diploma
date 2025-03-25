@@ -13,6 +13,22 @@ export const getFormmattedDate = (date) => {
     .padStart(2, "0")}-${dateObj.getDate().toString().padStart(2, "0")}`;
 };
 
+export const showSuccessMessageToast = (message) => {
+  toast.success(message, {
+    toastId: "success",
+    position: "bottom-center",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: false,
+    progress: undefined,
+    theme: "light",
+    transition: Zoom,
+    className: "message-toast"
+  });
+};
+
 export const showErrorMessageToast = (message) => {
   toast.error(message, {
     toastId: "error",
