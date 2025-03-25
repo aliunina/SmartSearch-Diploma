@@ -51,6 +51,10 @@ const userSchema = mongoose.Schema({
     status: {
         type: String,
         maxlength: 50
+    },
+    verified: {
+        type: Boolean,
+        default: false
     }
 });
 
