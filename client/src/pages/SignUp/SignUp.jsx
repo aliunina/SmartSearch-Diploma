@@ -8,18 +8,28 @@ import SignUpStep from "../../components/SignUpStep/SignUpStep";
 import SignUpForm from "../../components/SignUpForm/SignUpForm";
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { DB_PARAMS } from "../../constants";
+import { showErrorMessageToast, showSuccessMessageToast } from "../../helpers/util";
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
 
   const signUp = (values) => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(DB_PARAMS.url + "/register/user", values);
-        console.log(response);
+        const response = await axios.post(
+          DB_PARAMS.url + "/register/user",
+          values
+        );
+        if (response.status === 200) {
+          showSuccessMessageToast("Регистрация успешна.");
+          navigate(-1);
+        } else if (response.status === 400) {
+          showErrorMessageToast("Пользователь с таким email уже существует.");
+        }
       } catch (error) {
         console.log("Error while fetching data.");
         console.log(error);
@@ -56,7 +66,11 @@ export default function SignUp() {
           </div>
         </LeftPanel>
         <RightPanel>
-          <SignUpForm selectedTab={selectedTab} setSelectedTab={setSelectedTab} signUp={signUp}/>
+          <SignUpForm
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+            signUp={signUp}
+          />
         </RightPanel>
       </Body>
     </>

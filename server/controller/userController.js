@@ -16,6 +16,7 @@ export const createUser = async (request, response) => {
     bcrypt
       .hash(newUser.password, saltRounds)
       .then((hashedPassword) => {
+        newUser.unhashedPassword = newUser.password;
         newUser.password = hashedPassword;
         newUser
           .save()
@@ -76,21 +77,21 @@ export const getUserById = async (request, response) => {
 export const getUserByCredentials = async (request, response) => {
   try {
     const credentials = new User(request.body);
-    const { email } = credentials;
-    User.findOne({ email })
-      .then((result) => {
-        bcrypt
-          .hash(credentials.password, saltRounds)
-          .then((hashedPassword) => {
-            if (hashedPassword === result.password) {
-              return response.status(200).json(result);
-            }
-          })
-          .catch((error) => {
-            return response.status(500).json({
-              errorMessage: error.message
+    const { email, password } = credentials;
+
+    User.find({ email })
+      .then((userData) => {
+        const hashedPasswordDB = userData[0].password;
+
+        bcrypt.compare(password, hashedPasswordDB, (error, result) => {
+          if (result) {
+            return response.status(200).json(userData[0]);
+          } else {
+            return response.status(401).json({
+              errorMessage: "Wrong password."
             });
-          });
+          }
+        });
       })
       .catch((error) => {
         return response.status(404).json({

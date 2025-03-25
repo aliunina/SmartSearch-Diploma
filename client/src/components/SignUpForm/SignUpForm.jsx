@@ -120,6 +120,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
       }
       result.themes = result.themes.split(",").map((elem) => elem.trim());
       signUp(result);
+      dispatchForm({ type: "RESET_READINESS" });
     }
   }, [isReadyToSubmit, values, status, signUp]);
 
@@ -265,7 +266,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
               <Input
                 type={inputType}
                 placeholder="Введите пароль"
-                maxLength="50"
+                maxLength="65"
                 id="signUpPassword"
                 name="password"
                 value={values.password}
@@ -276,7 +277,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                 title={
                   isValidTab1.password
                     ? ""
-                    : "Пароль должен содержать не менее 8 и не более 50 символов. Допустимые символы: латинские буквы, цифры, знаки ' !@#$%^&* '."
+                    : "Пароль должен содержать не менее 8 и не более 65 символов. Допустимые символы: латинские буквы, цифры, знаки ' !@#$%^&* '."
                 }
               >
                 <img
@@ -305,7 +306,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
               <Input
                 type={repeatInputType}
                 placeholder="Введите пароль"
-                maxLength="50"
+                maxLength="65"
                 id="signUpRepeatPassword"
                 name="repeatPassword"
                 value={values.repeatPassword}
@@ -380,7 +381,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                   valid={isValidTab2.birthday}
                   autoComplete="new-password"
                   title={
-                    isValidTab2.birthday ? "" : "Поле не может быть пустым."
+                    isValidTab2.birthday ? "" : `Дата рождения не может быть пустой и лежать вне диапазона "01.01.1900" - сегодняшняя дата`
                   }
                 />
               </div>

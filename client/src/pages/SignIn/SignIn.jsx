@@ -9,7 +9,10 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext/UserContext";
 import { useContext } from "react";
-import { showSuccessMessageToast } from "../../helpers/util";
+import {
+  showErrorMessageToast,
+  showSuccessMessageToast
+} from "../../helpers/util";
 import { DB_PARAMS } from "../../constants";
 
 export default function SignIn() {
@@ -18,18 +21,23 @@ export default function SignIn() {
 
   const signIn = (credentials) => {
     const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          DB_PARAMS.url + "/authorize/user",
-          credentials
-        );
-        showSuccessMessageToast("Вход успешно выполнен.");
-        setUser(response.data);
-        navigate("/");
-      } catch (error) {
-        console.log("Error while fetching data.");
-        console.log(error);
-      }
+      axios
+        .post(DB_PARAMS.url + "/authorize/user", credentials)
+        .then((response) => {
+          setUser(response.data);
+          navigate("/");
+          showSuccessMessageToast("Вход успешно выполнен.");
+        })
+        .catch((response) => {
+          console.log(response.data);
+          if (response.status === 404) {
+            showErrorMessageToast("Пользователь с таким email не найден.");
+          } else if (response.status === 401) {
+            showErrorMessageToast("Неверный пароль.");
+          } else {
+            showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+          }
+        });
     };
     fetchData();
   };

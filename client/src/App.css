@@ -8,7 +8,13 @@ body {
 
 .message-toast {
   font-family: "Roboto", sans-serif !important;
+  font-size: 0.87em;
   border: 1px solid #cccccc;
+}
+
+:root {
+  --toastify-color-success: #008054;
+  --toastify-color-error: #B3261E;
 }
 
 body:has(.dialog-background) {

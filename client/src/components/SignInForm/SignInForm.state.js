@@ -34,5 +34,11 @@ export function formReducer(state, action) {
         isReadyToSubmit: passwordValidity && emailValidity
       };
     }
+    case "RESET_READINESS": {
+      return {
+        ...state,
+        isReadyToSubmit: false
+      };
+    }
   }
 }

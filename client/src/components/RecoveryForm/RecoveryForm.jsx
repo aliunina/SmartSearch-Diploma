@@ -180,7 +180,7 @@ export default function RecoveryForm() {
             <Input
               type={inputType}
               placeholder="Введите пароль"
-              maxLength="50"
+              maxLength="65"
               id="recoveryPassword"
               name="password"
               value={values.password}
@@ -218,7 +218,7 @@ export default function RecoveryForm() {
             <Input
               type={repeatInputType}
               placeholder="Введите пароль"
-              maxLength="50"
+              maxLength="65"
               id="recoveryRepeatPassword"
               name="repeatPassword"
               value={values.repeatPassword}
