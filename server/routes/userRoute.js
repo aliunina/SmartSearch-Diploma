@@ -1,5 +1,16 @@
 import express from "express";
-import {createUser, deleteUser, getAllUsers, getUserByCredentials, getUserByEmail, updateUser, verifyUser, verified} from "../controller/userController.js";
+import {
+  createUser,
+  deleteUser,
+  getAllUsers,
+  getUserByCredentials,
+  checkCode,
+  recoveryUser,
+  resetPassword,
+  updateUser,
+  verifyUser,
+  verified,
+} from "../controller/userController.js";
 
 const userRoute = express.Router();
 
@@ -7,7 +18,6 @@ userRoute.post("/register/user", createUser);
 userRoute.post("/authorize/user", getUserByCredentials);
 
 userRoute.get("/users", getAllUsers);
-userRoute.get("/user/:email", getUserByEmail);
 
 userRoute.put("/update/user/:id", updateUser);
 userRoute.delete("/delete/user/:id", deleteUser);
@@ -15,4 +25,8 @@ userRoute.delete("/delete/user/:id", deleteUser);
 userRoute.get("/verify/user/:id/:uniqueString", verifyUser);
 userRoute.get("/verified", verified);
 
-export default userRoute;  
+userRoute.get("/recovery/user/:email", recoveryUser);
+userRoute.get("/recovery/check-code/:email/:code", checkCode);
+userRoute.put("/recovery/reset-password", resetPassword);
+
+export default userRoute;

@@ -24,7 +24,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
     isReadyToSubmitTab0,
     isReadyToSubmitTab1,
     isReadyToSubmitTab2,
-    isReadyToSubmit,
+    isReadyToSubmit
   } = formState;
 
   const [status, setStatus] = useState(STATUS_SELECT.student);
@@ -150,8 +150,8 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
     dispatchForm({
       type: "SET_VALUE",
       payload: {
-        [event.target.name]: event.target.value,
-      },
+        [event.target.name]: event.target.value
+      }
     });
   };
 

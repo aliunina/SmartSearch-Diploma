@@ -4,7 +4,7 @@ const userResetPasswordSchema = mongoose.Schema({
     userId: {
         type: String
     },
-    resetString: {
+    resetCode: {
         type: String
     },
     createdAt: {

@@ -28,6 +28,24 @@ export function formReducer(state, action) {
           ...action.payload
         }
       };
+    case "RESET_READINESS_STEP_0": {
+      return {
+        ...state,
+        isReadyToSubmitStep0: false
+      };
+    }
+    case "RESET_READINESS_STEP_1": {
+      return {
+        ...state,
+        isReadyToSubmitStep1: false
+      };
+    }
+    case "RESET_READINESS_STEP_2": {
+      return {
+        ...state,
+        isReadyToSubmitStep2: false
+      };
+    }
     case "RESET_FORM":
       return INITIAL_STATE;
     case "SUBMIT_STEP_0": {

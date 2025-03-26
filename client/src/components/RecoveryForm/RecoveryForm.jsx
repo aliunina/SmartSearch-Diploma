@@ -9,7 +9,15 @@ import { useEffect, useReducer, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { EyeFilled, EyeInvisibleFilled } from "@ant-design/icons";
 
-export default function RecoveryForm() {
+export default function RecoveryForm({
+  step,
+  setStep,
+  checkEmail,
+  checkCode,
+  resetPassword,
+  validAcc, 
+  setValidAcc
+}) {
   const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
   const {
     values,
@@ -22,8 +30,6 @@ export default function RecoveryForm() {
   } = formState;
 
   const navigate = useNavigate();
-  const [step, setStep] = useState(0);
-  const [validAcc, setValidAcc] = useState(true);
   const [inputType, setInputType] = useState("password");
   const [repeatInputType, setRepeatInputType] = useState("password");
 
@@ -44,17 +50,19 @@ export default function RecoveryForm() {
     if (!isValidStep0) {
       emailRef.current.focus();
     } else if (isReadyToSubmitStep0) {
-      setStep(1);
+      checkEmail(emailRef.current.value);
+      dispatchForm({ type: "RESET_READINESS_STEP_0" });
     }
-  }, [isValidStep0, isReadyToSubmitStep0]);
+  }, [isValidStep0, setStep, isReadyToSubmitStep0, checkEmail]);
 
   useEffect(() => {
     if (!isValidStep1) {
       codeRef.current.focus();
     } else if (isReadyToSubmitStep1) {
-      setStep(2);
+      checkCode(codeRef.current.value);
+      dispatchForm({ type: "RESET_READINESS_STEP_1" });
     }
-  }, [isValidStep1, isReadyToSubmitStep1]);
+  }, [isValidStep1, setStep, isReadyToSubmitStep1, checkCode]);
 
   const focusErrorStep2 = (isValid) => {
     switch (true) {
@@ -71,9 +79,10 @@ export default function RecoveryForm() {
     if (!isValidStep2.password || !isValidStep2.repeatPassword) {
       focusErrorStep2(isValidStep2);
     } else if (isReadyToSubmitStep2) {
-      setStep(3);
+      resetPassword(passwordRef.current.value);
+      dispatchForm({ type: "RESET_READINESS_STEP_2" });
     }
-  }, [isValidStep2, isReadyToSubmitStep2]);
+  }, [isValidStep2, setStep, isReadyToSubmitStep2, resetPassword]);
 
   const navForward = () => {
     switch (step) {

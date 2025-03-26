@@ -4,7 +4,7 @@ export const SEARCH_ENGINE = {
   cx: "f5a24536d2c834267"
 };
 
-export const DB_PARAMS = {
+export const SERVER_PARAMS = {
   url: "http://localhost:7000/api"
 };
 

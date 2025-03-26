@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 import User from "../model/userModel.js";
 import UserVerification from "../model/userVerificationModel.js";
 import UserResetPassword from "../model/userResetPasswordModel.js";
+import { request } from "http";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -42,7 +43,7 @@ const sendVerificationEmail = ({ _id, email }, response) => {
     to: email,
     subject: "Подтвердите ваш Email",
     html:
-      "<p>Потдвердите свой Email-адрес для БНТУ Умный поиск, чтобы завершить регистрацию и войти в свой аккаунт.</p>" +
+      "<p>Подтвердите свой Email-адрес для БНТУ Умный поиск, чтобы завершить регистрацию и войти в свой аккаунт.</p>" +
       "<p>Срок действия ссылки - 6 часов.</p>" +
       `<p><a href="${
         currentUrl + "api/verify/user/" + _id + "/" + uniqueString
@@ -70,7 +71,6 @@ const sendVerificationEmail = ({ _id, email }, response) => {
               });
             })
             .catch((error) => {
-              console.log(error);
               return response.status(500).json({
                 errorMessage:
                   "An error occured while sending verification email.",
@@ -78,7 +78,6 @@ const sendVerificationEmail = ({ _id, email }, response) => {
             });
         })
         .catch((error) => {
-          console.log(error);
           return response.status(500).json({
             errorMessage: "An error occured while saving verification email.",
           });
@@ -104,7 +103,6 @@ export const verifyUser = (request, response) => {
             .then((result) => {
               User.deleteOne({ _id: userId })
                 .then((result) => {
-                  console.log(error);
                   let message =
                     "Срок действия ссылки истёк. Пожалуйста, пройдите регистрацию еще раз.";
                   response.redirect(
@@ -112,7 +110,6 @@ export const verifyUser = (request, response) => {
                   );
                 })
                 .catch((error) => {
-                  console.log(error);
                   let message =
                     "Произошла ошибка при удалении пользовательской записи.";
                   response.redirect(
@@ -121,7 +118,6 @@ export const verifyUser = (request, response) => {
                 });
             })
             .catch((error) => {
-              console.log(error);
               let message =
                 "Произошла ошибка при удалении записи для верификации.";
               response.redirect(`/api/verified?error=true&message=${message}`);
@@ -135,12 +131,9 @@ export const verifyUser = (request, response) => {
                   .then((result) => {
                     UserVerification.deleteOne({ userId: id })
                       .then((result) => {
-                        response.redirect(
-                          `/api/verified?error=false`
-                        );
+                        response.redirect(`/api/verified?error=false`);
                       })
                       .catch((error) => {
-                        console.log(error);
                         let message =
                           "Произошла ошибка при удалении записи об успешной верификации.";
                         response.redirect(
@@ -149,7 +142,6 @@ export const verifyUser = (request, response) => {
                       });
                   })
                   .catch((error) => {
-                    console.log(error);
                     let message =
                       "Произошла ошибка при подтверждении аккаунта.";
                     response.redirect(
@@ -165,7 +157,6 @@ export const verifyUser = (request, response) => {
               }
             })
             .catch((error) => {
-              console.log(error);
               let message = "Произошла ошибка при сравнении уникальной строки.";
               response.redirect(`/api/verified?error=true&message=${message}`);
             });
@@ -177,7 +168,6 @@ export const verifyUser = (request, response) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       let message =
         "Произошла ошибка при проверке на существование записи для верификации.";
       response.redirect(`/api/verified?error=true&message=${message}`);
@@ -223,7 +213,7 @@ export const createUser = async (request, response) => {
       })
       .catch((error) => {
         response.status(500).json({
-          errorMessage: error.message,
+          errorMessage: "An error occured while hashing password.",
         });
       });
   } catch (error) {
@@ -249,16 +239,199 @@ export const getAllUsers = async (request, response) => {
   }
 };
 
-export const getUserByEmail = async (request, response) => {
+const sendResetPasswordEmail = ({ _id, email }, response) => {
+  UserResetPassword.deleteMany({ userId: _id })
+    .then(() => {
+      const resetCode = Math.floor(100000 + Math.random() * 900000) + "";
+      const mailOptions = {
+        from: process.env.SENDER_EMAIL,
+        to: email,
+        subject: "Сброс пароля",
+        html: `<p>Код для сброса пароля на сайте БНТУ Умный поиск: ${resetCode}</p>`,
+      };
+
+      bcrypt
+        .hash(resetCode, 10)
+        .then((hashedResetCode) => {
+          const newUserResetPassword = new UserResetPassword({
+            userId: _id,
+            resetCode: hashedResetCode,
+            createdAt: Date.now(),
+            expiresAt: Date.now() + 3600000,
+          });
+
+          newUserResetPassword
+            .save()
+            .then(() => {
+              transporter
+                .sendMail(mailOptions)
+                .then(() => {
+                  return response.status(200).json({
+                    message: "Reset password email sent.",
+                  });
+                })
+                .catch((error) => {
+                  return response.status(500).json({
+                    errorMessage:
+                      "An error occured while sending reset password email.",
+                  });
+                });
+            })
+            .catch((error) => {
+              response.status(500).json({
+                errorMessage:
+                  "An error occured while saving user reset password record.",
+              });
+            });
+        })
+        .catch((error) => {
+          response.status(500).json({
+            errorMessage: "An error occured while hashing reset password code.",
+          });
+        });
+    })
+    .catch((error) => {
+      response.status(500).json({
+        errorMessage: "An error occured while deleting reset password records.",
+      });
+    });
+};
+
+export const resetPassword = async (request, response) => {
+  const { password, email } = new User(request.body);
+  const userData = await User.findOne({ email });
+  if (!userData) {
+    return response.status(204).json({
+      errorMessage: "User not found.",
+    });
+  } else {
+    const userResetPasswordData = await UserResetPassword.findOne({
+      userId: userData._id,
+    });
+    if (!userResetPasswordData) {
+      return response.status(204).json({
+        errorMessage: "Reset password entry for this user is not found.",
+      });
+    } else {
+      bcrypt.compare(
+        request.body.code,
+        userResetPasswordData.resetCode,
+        (error, result) => {
+          if (result) {
+            bcrypt.compare(
+              request.body.password,
+              userData.password,
+              (error, result) => {
+                if (result) {
+                  return response.status(400).json({
+                    errorMessage: "Password can't be the same as the old one."
+                  });
+                } else {
+                  bcrypt
+                    .hash(password, saltRounds)
+                    .then((hashedPassword) => {
+                      const forUpdateData = {
+                        unhashedPassword: password,
+                        password: hashedPassword,
+                      };
+                      User.findByIdAndUpdate(userData._id, forUpdateData)
+                        .then((result) => {
+                          response.status(200).json({
+                            message: "Password is updated.",
+                          });
+                        })
+                        .catch((error) => {
+                          response.status(500).json({
+                            errorMessage:
+                              "An error occured while reseting password.",
+                          });
+                        });
+                    })
+                    .catch((error) => {
+                      response.status(500).json({
+                        errorMessage:
+                          "An error occured while hashing password.",
+                      });
+                    });
+                }
+              }
+            );
+          } else {
+            response.status(401).json({
+              errorMessage: "Wrong code.",
+            });
+          }
+        }
+      );
+    }
+  }
+};
+
+export const checkCode = async (request, response) => {
+  const code = request.params.code;
+  const email = request.params.email;
+  const userData = await User.findOne({ email });
+  if (!userData) {
+    return response.status(204).json({
+      errorMessage: "User not found.",
+    });
+  } else {
+    const userResetPasswordData = await UserResetPassword.findOne({
+      userId: userData._id,
+    });
+    if (!userResetPasswordData) {
+      return response.status(204).json({
+        errorMessage: "Reset password entry for this user is not found.",
+      });
+    } else {
+      const { expiresAt } = userResetPasswordData;
+      const hashedCode = userResetPasswordData.resetCode;
+
+      if (expiresAt < Date.now()) {
+        UserResetPassword.deleteOne({ userId: userData._id })
+          .then(() => {
+            return response.status(410).json({
+              errorMessage: "The code has expired.",
+            });
+          })
+          .catch(() => {
+            return response.status(500).json({
+              errorMessage:
+                "An error occured while deleting reset password entry for this user.",
+            });
+          });
+      } else {
+        bcrypt.compare(code, hashedCode, (error, result) => {
+          if (result) {
+            response.status(200).json(userData);
+          } else {
+            response.status(401).json({
+              errorMessage: "Wrong code.",
+            });
+          }
+        });
+      }
+    }
+  }
+};
+
+export const recoveryUser = async (request, response) => {
   try {
     const email = request.params.email;
     const userData = await User.findOne({ email });
+
     if (!userData) {
-      return response.status(404).json({
+      return response.status(204).json({
         errorMessage: "User not found.",
       });
     }
-    response.status(200).json(userData);
+    if (!userData.verified) {
+      return response.status(403).json({
+        errorMessage: "Email is not verified.",
+      });
+    }
+
+    sendResetPasswordEmail(userData, response);
   } catch (error) {
     response.status(500).json({
       errorMessage: error.message,

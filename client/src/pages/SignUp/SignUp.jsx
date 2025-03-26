@@ -10,34 +10,36 @@ import SignUpForm from "../../components/SignUpForm/SignUpForm";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { DB_PARAMS } from "../../constants";
-import { showErrorMessageToast, showSuccessMessageToast } from "../../helpers/util";
+import { SERVER_PARAMS } from "../../constants";
+import {
+  showErrorMessageToast,
+  showSuccessMessageToast
+} from "../../helpers/util";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
 
   const signUp = (values) => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          DB_PARAMS.url + "/register/user",
-          values
-        );
+    axios
+      .post(SERVER_PARAMS.url + "/register/user", values)
+      .then((response) => {
         if (response.status === 200) {
-          showSuccessMessageToast("Письмо с подтверждением отправлено на указанную при регистрации почту.");
+          showSuccessMessageToast(
+            "Письмо с подтверждением отправлено на указанную при регистрации почту."
+          );
           navigate(-1);
-        } else if (response.status === 400) {
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+      })
+      .catch((response) => {
+        if (response.status === 400) {
           showErrorMessageToast("Пользователь с таким email уже существует.");
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
-      } catch (error) {
-        console.log("Error while fetching data.");
-        console.log(error);
-      }
-    };
-    fetchData();
+      });
   };
 
   return (
