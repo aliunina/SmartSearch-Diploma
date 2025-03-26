@@ -9,14 +9,14 @@
   </style>
 </head>
 <body>
+  <div id="content"></div>
   <script>
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const error = urlParams.get("error");
+    const error = urlParams.get("error") === "true";
     const message = urlParams.get("message");
     const content = error ? `<p>${message}</p>` : `<p>Email подтвержден!</p>`;
     document.getElementById("content").innerHTML = content;
   </script>
-  <div id="content"></div>
 </body>
 </html>

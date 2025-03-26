@@ -34,6 +34,8 @@ export default function SignIn() {
             showErrorMessageToast("Пользователь с таким email не найден.");
           } else if (response.status === 401) {
             showErrorMessageToast("Неверный пароль.");
+          } else if (response.status === 403){
+            showErrorMessageToast("Email не подтвержден. Проверьте ваш почтовый ящик.");
           } else {
             showErrorMessageToast("Произошла ошибка, попробуйте позже.");
           }

@@ -29,6 +29,8 @@ export default function SignUp() {
           navigate(-1);
         } else if (response.status === 400) {
           showErrorMessageToast("Пользователь с таким email уже существует.");
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
       } catch (error) {
         console.log("Error while fetching data.");

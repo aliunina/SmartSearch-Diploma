@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-const userVerificationSchema = mongoose.Schema({
+const userResetPasswordSchema = mongoose.Schema({
     userId: {
         type: String
     },
-    uniqueString: {
+    resetString: {
         type: String
     },
     createdAt: {
@@ -15,4 +15,4 @@ const userVerificationSchema = mongoose.Schema({
     }
 });
 
-export default mongoose.model("UserVerification", userVerificationSchema);
+export default mongoose.model("UserResetPassword", userResetPasswordSchema);

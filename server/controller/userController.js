@@ -3,8 +3,15 @@ import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import path from "path";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 
 import User from "../model/userModel.js";
+import UserVerification from "../model/userVerificationModel.js";
+import UserResetPassword from "../model/userResetPasswordModel.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const saltRounds = 10;
 
@@ -37,9 +44,9 @@ const sendVerificationEmail = ({ _id, email }, response) => {
     html:
       "<p>Потдвердите свой Email-адрес для БНТУ Умный поиск, чтобы завершить регистрацию и войти в свой аккаунт.</p>" +
       "<p>Срок действия ссылки - 6 часов.</p>" +
-      `<p><a href=${
-        currentUrl + "verify/user/" + _id + "/" + uniqueString
-      }>Перейдите по ссылке, чтобы подтвердить</a></p>`,
+      `<p><a href="${
+        currentUrl + "api/verify/user/" + _id + "/" + uniqueString
+      }">Перейдите по ссылке, чтобы подтвердить</a></p>`,
   };
 
   bcrypt
@@ -58,13 +65,13 @@ const sendVerificationEmail = ({ _id, email }, response) => {
           transporter
             .sendMail(mailOptions)
             .then(() => {
-              response.status(200).json({
+              return response.status(200).json({
                 message: "Verification email sent.",
               });
             })
             .catch((error) => {
               console.log(error);
-              response.status(500).json({
+              return response.status(500).json({
                 errorMessage:
                   "An error occured while sending verification email.",
               });
@@ -72,7 +79,7 @@ const sendVerificationEmail = ({ _id, email }, response) => {
         })
         .catch((error) => {
           console.log(error);
-          response.status(500).json({
+          return response.status(500).json({
             errorMessage: "An error occured while saving verification email.",
           });
         });
@@ -85,9 +92,8 @@ const sendVerificationEmail = ({ _id, email }, response) => {
 };
 
 export const verifyUser = (request, response) => {
-  const { userId, uniqueString } = request.params;
-
-  UserVerification.find({ userId })
+  const { id, uniqueString } = request.params;
+  UserVerification.find({ userId: id })
     .then((result) => {
       if (result.length > 0) {
         const { expiresAt } = result[0];
@@ -101,32 +107,36 @@ export const verifyUser = (request, response) => {
                   console.log(error);
                   let message =
                     "Срок действия ссылки истёк. Пожалуйста, пройдите регистрацию еще раз.";
-                  response.redirect(`/verified?error=true&message=${message}`);
+                  response.redirect(
+                    `/api/verified?error=true&message=${message}`
+                  );
                 })
                 .catch((error) => {
                   console.log(error);
                   let message =
                     "Произошла ошибка при удалении пользовательской записи.";
-                  response.redirect(`/verified?error=true&message=${message}`);
+                  response.redirect(
+                    `/api/verified?error=true&message=${message}`
+                  );
                 });
             })
             .catch((error) => {
               console.log(error);
               let message =
                 "Произошла ошибка при удалении записи для верификации.";
-              response.redirect(`/verified?error=true&message=${message}`);
+              response.redirect(`/api/verified?error=true&message=${message}`);
             });
         } else {
           bcrypt
             .compare(uniqueString, hashedUniqueString)
             .then((result) => {
               if (result) {
-                User.updateOne({ _id: userId }, { verified: true })
+                User.updateOne({ _id: id }, { verified: true })
                   .then((result) => {
-                    UserVerification.deleteOne({ userId })
+                    UserVerification.deleteOne({ userId: id })
                       .then((result) => {
-                        response.sendFile(
-                          path.join(__dirname, "./../view/verified.html")
+                        response.redirect(
+                          `/api/verified?error=false`
                         );
                       })
                       .catch((error) => {
@@ -134,7 +144,7 @@ export const verifyUser = (request, response) => {
                         let message =
                           "Произошла ошибка при удалении записи об успешной верификации.";
                         response.redirect(
-                          `/verified?error=true&message=${message}`
+                          `/api/verified?error=true&message=${message}`
                         );
                       });
                   })
@@ -143,42 +153,45 @@ export const verifyUser = (request, response) => {
                     let message =
                       "Произошла ошибка при подтверждении аккаунта.";
                     response.redirect(
-                      `/verified?error=true&message=${message}`
+                      `/api/verified?error=true&message=${message}`
                     );
                   });
               } else {
                 let message =
                   "Переданы некорректные данные для подтверждения. Проверьте свой почтовый ящик.";
-                response.redirect(`/verified?error=true&message=${message}`);
+                response.redirect(
+                  `/api/verified?error=true&message=${message}`
+                );
               }
             })
             .catch((error) => {
               console.log(error);
               let message = "Произошла ошибка при сравнении уникальной строки.";
-              response.redirect(`/verified?error=true&message=${message}`);
+              response.redirect(`/api/verified?error=true&message=${message}`);
             });
         }
       } else {
         let message =
           "Запись для верификации не существует или верификация уже пройдена. Пожалуйста, выполните вход или зарегистрируйтесь.";
-        response.redirect(`/verified?error=true&message=${message}`);
+        response.redirect(`/api/verified?error=true&message=${message}`);
       }
     })
     .catch((error) => {
       console.log(error);
       let message =
         "Произошла ошибка при проверке на существование записи для верификации.";
-      response.redirect(`/verified?error=true&message=${message}`);
+      response.redirect(`/api/verified?error=true&message=${message}`);
     });
 };
 
 export const verified = (request, response) => {
-  response.sendFile(path.join(__dirname, "./../view/verified.html"));
+  response.sendFile(path.resolve("views/verified.html"));
 };
 
 export const createUser = async (request, response) => {
   try {
     const newUser = new User(request.body);
+
     const { email } = newUser;
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -186,6 +199,10 @@ export const createUser = async (request, response) => {
         errorMessage: "User with this email alredy exists.",
       });
     }
+
+    newUser.createdAt = Date.now();
+    newUser.updatedAt = Date.now();
+
     //Password hashing
     bcrypt
       .hash(newUser.password, saltRounds)
@@ -197,7 +214,6 @@ export const createUser = async (request, response) => {
           .then((result) => {
             //Verification
             sendVerificationEmail(result, response);
-            response.status(200).json(result);
           })
           .catch((error) =>
             response.status(500).json({
@@ -233,10 +249,10 @@ export const getAllUsers = async (request, response) => {
   }
 };
 
-export const getUserById = async (request, response) => {
+export const getUserByEmail = async (request, response) => {
   try {
-    const newUser = new User(request.body);
-    const userData = await User.findById(id);
+    const email = request.params.email;
+    const userData = await User.findOne({ email });
     if (!userData) {
       return response.status(404).json({
         errorMessage: "User not found.",
@@ -267,7 +283,7 @@ export const getUserByCredentials = async (request, response) => {
         } else {
           bcrypt.compare(password, hashedPasswordDB, (error, result) => {
             if (result) {
-              response.status(200).json(userData[0]);
+              response.status(200).json(userData);
             } else {
               response.status(401).json({
                 errorMessage: "Wrong password.",
@@ -297,7 +313,9 @@ export const updateUser = async (request, response) => {
         errorMessage: "User not found.",
       });
     }
-    const updatedData = await User.findByIdAndUpdate(id, request.body, {
+
+    const forUpdateData = { ...request.body, updatedAt: Date.now() };
+    const updatedData = await User.findByIdAndUpdate(id, forUpdateData, {
       new: true,
     });
     response.status(200).json(updatedData);

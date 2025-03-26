@@ -5,7 +5,7 @@ export const SEARCH_ENGINE = {
 };
 
 export const DB_PARAMS = {
-  url: "http://localhost:8000/api"
+  url: "http://localhost:7000/api"
 };
 
 export const PERIOD_FILTER = {
