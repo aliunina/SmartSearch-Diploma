@@ -1,9 +1,9 @@
 import express from "express";
 import {
-  createUser,
+  authorizeUser,
   deleteUser,
   getAllUsers,
-  getUserByCredentials,
+  registerUser,
   checkCode,
   recoveryUser,
   resetPassword,
@@ -14,8 +14,8 @@ import {
 
 const userRoute = express.Router();
 
-userRoute.post("/register/user", createUser);
-userRoute.post("/authorize/user", getUserByCredentials);
+userRoute.post("/register/user", registerUser);
+userRoute.post("/authorize/user", authorizeUser);
 
 userRoute.get("/users", getAllUsers);
 

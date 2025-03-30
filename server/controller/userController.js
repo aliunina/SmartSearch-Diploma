@@ -1,18 +1,14 @@
-import bcrypt, { hash } from "bcrypt";
+import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import path from "path";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import jwt from "jsonwebtoken";
 
 import User from "../model/userModel.js";
 import UserVerification from "../model/userVerificationModel.js";
 import UserResetPassword from "../model/userResetPasswordModel.js";
 import { request } from "http";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const saltRounds = 10;
 
@@ -178,7 +174,7 @@ export const verified = (request, response) => {
   response.sendFile(path.resolve("views/verified.html"));
 };
 
-export const createUser = async (request, response) => {
+export const registerUser = async (request, response) => {
   try {
     const newUser = new User(request.body);
 
@@ -324,7 +320,7 @@ export const resetPassword = async (request, response) => {
               (error, result) => {
                 if (result) {
                   return response.status(400).json({
-                    errorMessage: "Password can't be the same as the old one."
+                    errorMessage: "Password can't be the same as the old one.",
                   });
                 } else {
                   bcrypt
@@ -439,7 +435,7 @@ export const recoveryUser = async (request, response) => {
   }
 };
 
-export const getUserByCredentials = async (request, response) => {
+export const authorizeUser = async (request, response) => {
   try {
     const credentials = new User(request.body);
     const { email, password } = credentials;
@@ -456,6 +452,18 @@ export const getUserByCredentials = async (request, response) => {
         } else {
           bcrypt.compare(password, hashedPasswordDB, (error, result) => {
             if (result) {
+              const token = jwt.sign(
+                { id: userData._id },
+                process.env.JWT_SECRET,
+                { expiresIn: "7d" }
+              );
+
+              response.cookie("token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+                maxAge: 7 * 24 * 60 * 60 * 1000
+              });
               response.status(200).json(userData);
             } else {
               response.status(401).json({
@@ -511,6 +519,23 @@ export const deleteUser = async (request, response) => {
     await User.findByIdAndDelete(id);
     response.status(200).json({
       message: `User with id '${id}' has been deleted.`,
+    });
+  } catch (error) {
+    response.status(500).json({
+      errorMessage: error.message,
+    });
+  }
+};
+
+export const logOut = async (request, response) => {
+  try {
+    response.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
+    });
+    response.status(200).json({
+      message: `Successfully logged out.`,
     });
   } catch (error) {
     response.status(500).json({
