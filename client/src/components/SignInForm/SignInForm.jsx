@@ -39,6 +39,7 @@ export default function SignInForm({ signIn }) {
   useEffect(() => {
     if (isReadyToSubmit) {
       signIn(values);
+      dispatchForm({ type: "RESET_READINESS" });
     }
   }, [isReadyToSubmit, values, signIn]);
 
@@ -103,7 +104,7 @@ export default function SignInForm({ signIn }) {
           <Input
             type={inputType}
             placeholder="Введите пароль"
-            maxLength="50"
+            maxLength="65"
             id="signInPassword"
             name="password"
             value={values.password}

@@ -22,7 +22,6 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import OrderFilter from "../../components/OrderFilter/OrderFilter";
 import SourceFilter from "../../components/SourceFilter/SourceFilter";
-import { ToastContainer } from "react-toastify";
 
 export default function Search() {
   const [from, setFrom] = useState("");
@@ -337,7 +336,6 @@ export default function Search() {
             updatePage={handleUpdatePage}
             count={appState.count}
           />
-          <ToastContainer />
         </Body>
       </div>
     </>

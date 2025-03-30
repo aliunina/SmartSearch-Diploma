@@ -75,7 +75,17 @@ export function formReducer(state, action) {
     }
     case "SUBMIT_TAB_2": {
       const countryValidity = state.values.country?.trim().length > 0;
-      const birthdayValidity = state.values.birthday?.trim().length > 0;
+      let birthdayValidity = !!state.values.birthday;
+      if (birthdayValidity) {
+        const birthday = state.values.birthday.trim();
+        if (
+          birthday.length > 0 &&
+          (new Date(birthday) > Date.now() ||
+            new Date(birthday) < new Date("1900-01-01"))
+        ) {
+          birthdayValidity = false;
+        }
+      }
       const employmentValidity = state.values.employment?.trim().length > 0;
       return {
         ...state,
@@ -92,6 +102,12 @@ export function formReducer(state, action) {
       return {
         ...state,
         isReadyToSubmit: true
+      };
+    }
+    case "RESET_READINESS": {
+      return {
+        ...state,
+        isReadyToSubmit: false
       };
     }
   }

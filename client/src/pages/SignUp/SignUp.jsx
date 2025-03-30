@@ -8,24 +8,38 @@ import SignUpStep from "../../components/SignUpStep/SignUpStep";
 import SignUpForm from "../../components/SignUpForm/SignUpForm";
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { DB_PARAMS } from "../../constants";
+import { SERVER_PARAMS } from "../../constants";
+import {
+  showErrorMessageToast,
+  showSuccessMessageToast
+} from "../../helpers/util";
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
 
   const signUp = (values) => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(DB_PARAMS.url + "/register/user", values);
-        console.log(response);
-      } catch (error) {
-        console.log("Error while fetching data.");
-        console.log(error);
-      }
-    };
-    fetchData();
+    axios
+      .post(SERVER_PARAMS.url + "/register/user", values)
+      .then((response) => {
+        if (response.status === 200) {
+          showSuccessMessageToast(
+            "Письмо с подтверждением отправлено на указанную при регистрации почту."
+          );
+          navigate(-1);
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+      })
+      .catch((response) => {
+        if (response.status === 400) {
+          showErrorMessageToast("Пользователь с таким email уже существует.");
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+      });
   };
 
   return (
@@ -56,7 +70,11 @@ export default function SignUp() {
           </div>
         </LeftPanel>
         <RightPanel>
-          <SignUpForm selectedTab={selectedTab} setSelectedTab={setSelectedTab} signUp={signUp}/>
+          <SignUpForm
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+            signUp={signUp}
+          />
         </RightPanel>
       </Body>
     </>

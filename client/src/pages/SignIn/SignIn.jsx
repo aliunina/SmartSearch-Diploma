@@ -9,29 +9,42 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext/UserContext";
 import { useContext } from "react";
-import { showSuccessMessageToast } from "../../helpers/util";
-import { DB_PARAMS } from "../../constants";
+import {
+  showErrorMessageToast,
+  showSuccessMessageToast
+} from "../../helpers/util";
+import { SERVER_PARAMS } from "../../constants";
 
 export default function SignIn() {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
 
   const signIn = (credentials) => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          DB_PARAMS.url + "/authorize/user",
-          credentials
-        );
-        showSuccessMessageToast("Вход успешно выполнен.");
-        setUser(response.data);
-        navigate("/");
-      } catch (error) {
-        console.log("Error while fetching data.");
-        console.log(error);
-      }
-    };
-    fetchData();
+    axios
+      .post(SERVER_PARAMS.url + "/authorize/user", credentials)
+      .then((response) => {
+        if (response.status === 200) {
+          setUser(response.data);
+          navigate("/");
+          showSuccessMessageToast("Вход успешно выполнен.");
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+      })
+      .catch((response) => {
+        console.log(response.data);
+        if (response.status === 404) {
+          showErrorMessageToast("Пользователь с таким email не найден.");
+        } else if (response.status === 401) {
+          showErrorMessageToast("Неверный пароль.");
+        } else if (response.status === 403) {
+          showErrorMessageToast(
+            "Email не подтвержден. Проверьте ваш почтовый ящик."
+          );
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+        }
+      });
   };
 
   return (

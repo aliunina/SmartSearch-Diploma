@@ -3,14 +3,12 @@ import "./Main.css";
 import Header from "../../layouts/CommonLayout/Header/Header";
 import Body from "../../layouts/CommonLayout/Body/Body";
 import Button from "../../components/Button/Button";
-import Logo from "../../components/Logo/Logo";
 import ExtendedSearchDialog from "../../components/ExtendedSearchDialog/ExtendedSearchDialog";
 
 import RedirectSearchBar from "../../components/RedirectSearchBar/RedirectSearchBar";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useContext } from "react";
 import NavMenu from "../../components/NavMenu/NavMenu";
-import { ToastContainer } from "react-toastify";
 import { showErrorMessageToast } from "../../helpers/util";
 import { UserContext } from "../../contexts/UserContext/UserContext";
 
@@ -101,7 +99,6 @@ export default function Main() {
           setSearchValue={setSearchValue}
           redirect={handleRedirect}
         />
-        <ToastContainer />
       </Body>
     </>
   );
