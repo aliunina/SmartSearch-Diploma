@@ -9,11 +9,13 @@ import RedirectSearchBar from "../../components/RedirectSearchBar/RedirectSearch
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useContext } from "react";
 import NavMenu from "../../components/NavMenu/NavMenu";
-import { showErrorMessageToast } from "../../helpers/util";
+import { showErrorMessageToast, showSuccessMessageToast } from "../../helpers/util";
 import { UserContext } from "../../contexts/UserContext/UserContext";
+import axios from "axios";
+import { SERVER_PARAMS } from "../../constants";
 
 export default function Main() {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const searchBarRef = useRef();
   const navigate = useNavigate();
 
@@ -74,6 +76,26 @@ export default function Main() {
         tab
       }
     });
+    
+  const signOut = () => {
+    axios
+      .get(SERVER_PARAMS.url + "/user/sign-out", {
+        withCredentials: true
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setUser(null);
+          showSuccessMessageToast("Вы вышли из аккаунта.");
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+        setMenuOpen(false);
+      })
+      .catch((response) => {
+        console.log(response.data);
+        showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+        setMenuOpen(false);
+      });
   };
 
   return (
@@ -93,6 +115,7 @@ export default function Main() {
             openESDialog={handleOpenESDialog}
             signUp={signUp}
             openUserProfile={openUserProfile}
+            signOut={signOut}
           />
         )}
         {dialogOpen && (

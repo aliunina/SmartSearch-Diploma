@@ -8,7 +8,13 @@ import { useContext } from "react";
 
 import { UserContext } from "../../contexts/UserContext/UserContext";
 
-export default function NavMenu({ setMenuOpen, openESDialog, signUp, openUserProfile }) {
+export default function NavMenu({
+  setMenuOpen,
+  openESDialog,
+  signUp,
+  signOut,
+  openUserProfile
+}) {
   const { user } = useContext(UserContext);
 
   const close = () => {
@@ -44,7 +50,7 @@ export default function NavMenu({ setMenuOpen, openESDialog, signUp, openUserPro
             </p>
             <Button
               type="button"
-              className="nav-menu-signin-button"
+              className="nav-menu-signup-button"
               onClick={signUp}
             >
               Регистрация в БНТУ Умный поиск
@@ -99,6 +105,14 @@ export default function NavMenu({ setMenuOpen, openESDialog, signUp, openUserPro
           Справка
         </Button>
       </div>
+      {user && (
+        <div className="nav-menu-button-container">
+          <Button className="nav-menu-button" onClick={signOut}>
+            <img src="sign_out.svg" alt="Выход" />
+            Выход
+          </Button>
+        </div>
+      )}
     </nav>
   );
 }

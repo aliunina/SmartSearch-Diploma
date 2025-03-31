@@ -17,6 +17,7 @@ const userSchema = mongoose.Schema({
     },
     email: {
         type: String,
+        unique: true,
         maxlength: 100,
         match: /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu,
         required: true

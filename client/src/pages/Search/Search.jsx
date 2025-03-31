@@ -13,17 +13,25 @@ import PeriodFilter from "../../components/PeriodFilter/PeriodFilter";
 import {
   PERIOD_FILTER,
   SEARCH_ENGINE,
+  SERVER_PARAMS,
   SOURCE_FILTER
 } from "../../constants/index";
-import { getPagesCount, showErrorMessageToast } from "../../helpers/util";
+import {
+  getPagesCount,
+  showErrorMessageToast,
+  showSuccessMessageToast
+} from "../../helpers/util";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import OrderFilter from "../../components/OrderFilter/OrderFilter";
 import SourceFilter from "../../components/SourceFilter/SourceFilter";
+import { UserContext } from "../../contexts/UserContext/UserContext";
+import Button from "../../components/Button/Button";
 
 export default function Search() {
+  const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [from, setFrom] = useState("");
@@ -282,7 +290,11 @@ export default function Search() {
   const handleOpenESDialog = () => {
     setDialogOpen(true);
     setMenuOpen(false);
-  };  
+  };
+
+  const signIn = () => {
+    navigate("/sign-in");
+  };
 
   const signUp = () => {
     navigate("/sign-up");
@@ -294,6 +306,26 @@ export default function Search() {
         tab
       }
     });
+    
+  const signOut = () => {
+    axios
+      .get(SERVER_PARAMS.url + "/user/sign-out", {
+        withCredentials: true
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setUser(null);
+          showSuccessMessageToast("Вы вышли из аккаунта.");
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+        setMenuOpen(false);
+      })
+      .catch((response) => {
+        console.log(response.data);
+        showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+        setMenuOpen(false);
+      });
   };
 
   return (
@@ -309,13 +341,24 @@ export default function Search() {
           setDialogOpen={setDialogOpen}
           extendedSearch={handleExtendedSearch}
         />
-        <Avatar onClick={openMenu} title="Профиль" />
+        {user && <Avatar onClick={openMenu} title="Профиль" />}
+        {!user && (
+          <div className="search-header-buttons">
+            <Button className="menu-button" onClick={openMenu}>
+              <img src="menu.svg" alt="Меню" />
+            </Button>
+            <Button className="sign-in-button" onClick={signIn}>
+              Войти
+            </Button>
+          </div>
+        )}
         {menuOpen && (
           <NavMenu
             setMenuOpen={setMenuOpen}
             openESDialog={handleOpenESDialog}
             signUp={signUp}
             openUserProfile={openUserProfile}
+            signOut={signOut}
           />
         )}
       </Header>
