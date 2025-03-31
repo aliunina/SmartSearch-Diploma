@@ -1,15 +1,19 @@
 import "./NavMenu.css";
+
 import Button from "../Button/Button";
-import { useContext } from "react";
-import { UserContext } from "../../contexts/UserContext/UserContext";
 import Avatar from "../Avatar/Avatar";
 import Logo from "../Logo/Logo";
+
+import { useContext } from "react";
+
+import { UserContext } from "../../contexts/UserContext/UserContext";
 
 export default function NavMenu({
   setMenuOpen,
   openESDialog,
   signUp,
-  signOut
+  signOut,
+  openUserProfile
 }) {
   const { user } = useContext(UserContext);
 
@@ -57,25 +61,25 @@ export default function NavMenu({
       {user && (
         <ul className="nav-menu-actions-list">
           <li>
-            <Button className="nav-menu-button">
+            <Button className="nav-menu-button" onClick={openUserProfile}>
               <img src="my_profile.svg" alt="Мой профиль" />
               Мой профиль
             </Button>
           </li>
           <li>
-            <Button className="nav-menu-button">
+            <Button className="nav-menu-button" onClick={openUserProfile}>
               <img src="my_library.svg" alt="Моя библиотека" />
               Моя библиотека
             </Button>
           </li>
           <li>
-            <Button className="nav-menu-button">
+            <Button className="nav-menu-button" onClick={() => openUserProfile(1)}>
               <img src="notifications_by_theme.svg" alt="Оповещения по теме" />
               Оповещения по теме
             </Button>
           </li>
           <li>
-            <Button className="nav-menu-button">
+            <Button className="nav-menu-button" onClick={() => openUserProfile(2)}>
               <img
                 src="notifications_by_article.svg"
                 alt="Оповещения по журналам"

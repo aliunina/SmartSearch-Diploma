@@ -70,6 +70,13 @@ export default function Main() {
     navigate("/sign-in");
   };
 
+  const openUserProfile = (tab = 0) => {
+    navigate("/my-profile", {
+      state: {
+        tab
+      }
+    });
+    
   const signOut = () => {
     axios
       .get(SERVER_PARAMS.url + "/user/sign-out", {
@@ -107,6 +114,7 @@ export default function Main() {
             setMenuOpen={setMenuOpen}
             openESDialog={handleOpenESDialog}
             signUp={signUp}
+            openUserProfile={openUserProfile}
             signOut={signOut}
           />
         )}

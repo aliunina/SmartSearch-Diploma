@@ -300,6 +300,13 @@ export default function Search() {
     navigate("/sign-up");
   };
 
+  const openUserProfile = (tab = 0) => {
+    navigate("/my-profile", {
+      state: {
+        tab
+      }
+    });
+    
   const signOut = () => {
     axios
       .get(SERVER_PARAMS.url + "/user/sign-out", {
@@ -350,6 +357,7 @@ export default function Search() {
             setMenuOpen={setMenuOpen}
             openESDialog={handleOpenESDialog}
             signUp={signUp}
+            openUserProfile={openUserProfile}
             signOut={signOut}
           />
         )}
