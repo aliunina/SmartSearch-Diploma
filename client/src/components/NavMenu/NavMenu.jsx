@@ -61,13 +61,13 @@ export default function NavMenu({
       {user && (
         <ul className="nav-menu-actions-list">
           <li>
-            <Button className="nav-menu-button" onClick={openUserProfile}>
+            <Button className="nav-menu-button" onClick={() => openUserProfile(0)}>
               <img src="my_profile.svg" alt="Мой профиль" />
               Мой профиль
             </Button>
           </li>
           <li>
-            <Button className="nav-menu-button" onClick={openUserProfile}>
+            <Button className="nav-menu-button" onClick={() => openUserProfile(0)}>
               <img src="my_library.svg" alt="Моя библиотека" />
               Моя библиотека
             </Button>

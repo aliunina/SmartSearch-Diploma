@@ -9,7 +9,10 @@ import RedirectSearchBar from "../../components/RedirectSearchBar/RedirectSearch
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useContext } from "react";
 import NavMenu from "../../components/NavMenu/NavMenu";
-import { showErrorMessageToast, showSuccessMessageToast } from "../../helpers/util";
+import {
+  showErrorMessageToast,
+  showSuccessMessageToast
+} from "../../helpers/util";
 import { UserContext } from "../../contexts/UserContext/UserContext";
 import axios from "axios";
 import { SERVER_PARAMS } from "../../constants";
@@ -70,13 +73,14 @@ export default function Main() {
     navigate("/sign-in");
   };
 
-  const openUserProfile = (tab = 0) => {
+  const openUserProfile = (tab) => {
     navigate("/my-profile", {
       state: {
-        tab
+        tab: tab
       }
     });
-    
+  };
+
   const signOut = () => {
     axios
       .get(SERVER_PARAMS.url + "/user/sign-out", {

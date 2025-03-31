@@ -153,10 +153,10 @@ export default function ExtendedSearchDialog({
           </div>
         </div>
         <div className="dialog-buttons-container">
-          <Button onClick={clear} type="button" className="dialog-clear-button">
+          <Button onClick={clear} type="button" className="dialog-cancel-button">
             Очистить
           </Button>
-          <Button className="dialog-search-button">Поиск</Button>
+          <Button className="dialog-submit-button">Поиск</Button>
         </div>
       </form>
     </div>

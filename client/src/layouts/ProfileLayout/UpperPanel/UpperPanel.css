@@ -1,0 +1,7 @@
+.upper-panel {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 3em;
+  justify-content: center;
+  margin-top: 3em;
+}

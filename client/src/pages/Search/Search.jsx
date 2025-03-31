@@ -306,7 +306,8 @@ export default function Search() {
         tab
       }
     });
-    
+  };
+
   const signOut = () => {
     axios
       .get(SERVER_PARAMS.url + "/user/sign-out", {
