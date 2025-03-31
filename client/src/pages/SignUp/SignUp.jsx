@@ -22,7 +22,7 @@ export default function SignUp() {
 
   const signUp = (values) => {
     axios
-      .post(SERVER_PARAMS.url + "/register/user", values)
+      .post(SERVER_PARAMS.url + "/user/register", values)
       .then((response) => {
         if (response.status === 200) {
           showSuccessMessageToast(

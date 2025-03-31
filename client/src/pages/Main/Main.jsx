@@ -9,17 +9,19 @@ import RedirectSearchBar from "../../components/RedirectSearchBar/RedirectSearch
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useContext } from "react";
 import NavMenu from "../../components/NavMenu/NavMenu";
-import { showErrorMessageToast } from "../../helpers/util";
+import { showErrorMessageToast, showSuccessMessageToast } from "../../helpers/util";
 import { UserContext } from "../../contexts/UserContext/UserContext";
+import axios from "axios";
+import { SERVER_PARAMS } from "../../constants";
 
-export default function Main() {  
-  const {user} = useContext(UserContext);
+export default function Main() {
+  const { user, setUser } = useContext(UserContext);
   const searchBarRef = useRef();
   const navigate = useNavigate();
 
   const [searchValue, setSearchValue] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
-  
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState({});
 
@@ -56,7 +58,7 @@ export default function Main() {
       q: searchValue,
       ...filters
     });
-    
+
     navigate("/search?" + urlParams.toString());
   };
 
@@ -68,18 +70,44 @@ export default function Main() {
     navigate("/sign-in");
   };
 
+  const signOut = () => {
+    axios
+      .get(SERVER_PARAMS.url + "/user/sign-out", {
+        withCredentials: true
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setUser(null);
+          showSuccessMessageToast("Вы вышли из аккаунта.");
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+        setMenuOpen(false);
+      })
+      .catch((response) => {
+        console.log(response.data);
+        showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+        setMenuOpen(false);
+      });
+  };
+
   return (
     <>
       <Header className="main-header">
         <Button className="menu-button" onClick={openMenu}>
           <img src="menu.svg" alt="Меню" />
-        </Button>    
-        {!user && <Button className="sign-in-button" onClick={signIn}>Войти</Button>}
+        </Button>
+        {!user && (
+          <Button className="sign-in-button" onClick={signIn}>
+            Войти
+          </Button>
+        )}
         {menuOpen && (
           <NavMenu
             setMenuOpen={setMenuOpen}
             openESDialog={handleOpenESDialog}
             signUp={signUp}
+            signOut={signOut}
           />
         )}
         {dialogOpen && (

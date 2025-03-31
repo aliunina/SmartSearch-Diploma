@@ -5,7 +5,12 @@ import { UserContext } from "../../contexts/UserContext/UserContext";
 import Avatar from "../Avatar/Avatar";
 import Logo from "../Logo/Logo";
 
-export default function NavMenu({ setMenuOpen, openESDialog, signUp }) {
+export default function NavMenu({
+  setMenuOpen,
+  openESDialog,
+  signUp,
+  signOut
+}) {
   const { user } = useContext(UserContext);
 
   const close = () => {
@@ -41,7 +46,7 @@ export default function NavMenu({ setMenuOpen, openESDialog, signUp }) {
             </p>
             <Button
               type="button"
-              className="nav-menu-signin-button"
+              className="nav-menu-signup-button"
               onClick={signUp}
             >
               Регистрация в БНТУ Умный поиск
@@ -96,6 +101,14 @@ export default function NavMenu({ setMenuOpen, openESDialog, signUp }) {
           Справка
         </Button>
       </div>
+      {user && (
+        <div className="nav-menu-button-container">
+          <Button className="nav-menu-button" onClick={signOut}>
+            <img src="sign_out.svg" alt="Выход" />
+            Выход
+          </Button>
+        </div>
+      )}
     </nav>
   );
 }

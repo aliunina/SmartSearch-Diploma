@@ -8,7 +8,6 @@ import jwt from "jsonwebtoken";
 import User from "../model/userModel.js";
 import UserVerification from "../model/userVerificationModel.js";
 import UserResetPassword from "../model/userResetPasswordModel.js";
-import { request } from "http";
 
 const saltRounds = 10;
 
@@ -31,7 +30,7 @@ transporter.verify((error, success) => {
   }
 });
 
-const sendVerificationEmail = ({ _id, email }, response) => {
+const sendVerificationEmail = ({ _id, email }, res) => {
   const currentUrl = process.env.APP_URL;
   const uniqueString = uuidv4() + _id;
   const mailOptions = {
@@ -62,32 +61,32 @@ const sendVerificationEmail = ({ _id, email }, response) => {
           transporter
             .sendMail(mailOptions)
             .then(() => {
-              return response.status(200).json({
+              return res.status(200).json({
                 message: "Verification email sent.",
               });
             })
             .catch((error) => {
-              return response.status(500).json({
+              return res.status(500).json({
                 errorMessage:
                   "An error occured while sending verification email.",
               });
             });
         })
         .catch((error) => {
-          return response.status(500).json({
+          return res.status(500).json({
             errorMessage: "An error occured while saving verification email.",
           });
         });
     })
     .catch(() => {
-      response.status(500).json({
+      res.status(500).json({
         errorMessage: "An error occured while hashing email data.",
       });
     });
 };
 
-export const verifyUser = (request, response) => {
-  const { id, uniqueString } = request.params;
+export const verifyUser = (req, res) => {
+  const { id, uniqueString } = req.params;
   UserVerification.find({ userId: id })
     .then((result) => {
       if (result.length > 0) {
@@ -101,22 +100,18 @@ export const verifyUser = (request, response) => {
                 .then((result) => {
                   let message =
                     "Срок действия ссылки истёк. Пожалуйста, пройдите регистрацию еще раз.";
-                  response.redirect(
-                    `/api/verified?error=true&message=${message}`
-                  );
+                  res.redirect(`/api/verified?error=true&message=${message}`);
                 })
                 .catch((error) => {
                   let message =
                     "Произошла ошибка при удалении пользовательской записи.";
-                  response.redirect(
-                    `/api/verified?error=true&message=${message}`
-                  );
+                  res.redirect(`/api/verified?error=true&message=${message}`);
                 });
             })
             .catch((error) => {
               let message =
                 "Произошла ошибка при удалении записи для верификации.";
-              response.redirect(`/api/verified?error=true&message=${message}`);
+              res.redirect(`/api/verified?error=true&message=${message}`);
             });
         } else {
           bcrypt
@@ -127,12 +122,12 @@ export const verifyUser = (request, response) => {
                   .then((result) => {
                     UserVerification.deleteOne({ userId: id })
                       .then((result) => {
-                        response.redirect(`/api/verified?error=false`);
+                        res.redirect(`/api/verified?error=false`);
                       })
                       .catch((error) => {
                         let message =
                           "Произошла ошибка при удалении записи об успешной верификации.";
-                        response.redirect(
+                        res.redirect(
                           `/api/verified?error=true&message=${message}`
                         );
                       });
@@ -140,48 +135,44 @@ export const verifyUser = (request, response) => {
                   .catch((error) => {
                     let message =
                       "Произошла ошибка при подтверждении аккаунта.";
-                    response.redirect(
-                      `/api/verified?error=true&message=${message}`
-                    );
+                    res.redirect(`/api/verified?error=true&message=${message}`);
                   });
               } else {
                 let message =
                   "Переданы некорректные данные для подтверждения. Проверьте свой почтовый ящик.";
-                response.redirect(
-                  `/api/verified?error=true&message=${message}`
-                );
+                res.redirect(`/api/verified?error=true&message=${message}`);
               }
             })
             .catch((error) => {
               let message = "Произошла ошибка при сравнении уникальной строки.";
-              response.redirect(`/api/verified?error=true&message=${message}`);
+              res.redirect(`/api/verified?error=true&message=${message}`);
             });
         }
       } else {
         let message =
           "Запись для верификации не существует или верификация уже пройдена. Пожалуйста, выполните вход или зарегистрируйтесь.";
-        response.redirect(`/api/verified?error=true&message=${message}`);
+        res.redirect(`/api/verified?error=true&message=${message}`);
       }
     })
     .catch((error) => {
       let message =
         "Произошла ошибка при проверке на существование записи для верификации.";
-      response.redirect(`/api/verified?error=true&message=${message}`);
+      res.redirect(`/api/verified?error=true&message=${message}`);
     });
 };
 
-export const verified = (request, response) => {
-  response.sendFile(path.resolve("views/verified.html"));
+export const verified = (req, res) => {
+  res.sendFile(path.resolve("views/verified.html"));
 };
 
-export const registerUser = async (request, response) => {
+export const registerUser = async (req, res) => {
   try {
-    const newUser = new User(request.body);
+    const newUser = new User(req.body);
 
     const { email } = newUser;
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return response.status(400).json({
+      return res.status(400).json({
         errorMessage: "User with this email alredy exists.",
       });
     }
@@ -199,43 +190,43 @@ export const registerUser = async (request, response) => {
           .save()
           .then((result) => {
             //Verification
-            sendVerificationEmail(result, response);
+            sendVerificationEmail(result, res);
           })
           .catch((error) =>
-            response.status(500).json({
+            res.status(500).json({
               errorMessage: error.message,
             })
           );
       })
       .catch((error) => {
-        response.status(500).json({
+        res.status(500).json({
           errorMessage: "An error occured while hashing password.",
         });
       });
   } catch (error) {
-    response.status(500).json({
+    res.status(500).json({
       errorMessage: error.message,
     });
   }
 };
 
-export const getAllUsers = async (request, response) => {
+export const getAllUsers = async (req, res) => {
   try {
     const userData = await User.find();
     if (!userData || userData.length === 0) {
-      return response.status(404).json({
+      return res.status(404).json({
         errorMessage: "Users not found.",
       });
     }
-    response.status(200).json(userData);
+    res.status(200).json(userData);
   } catch (error) {
-    response.status(500).json({
+    res.status(500).json({
       errorMessage: error.message,
     });
   }
 };
 
-const sendResetPasswordEmail = ({ _id, email }, response) => {
+const sendResetPasswordEmail = ({ _id, email }, res) => {
   UserResetPassword.deleteMany({ userId: _id })
     .then(() => {
       const resetCode = Math.floor(100000 + Math.random() * 900000) + "";
@@ -262,42 +253,42 @@ const sendResetPasswordEmail = ({ _id, email }, response) => {
               transporter
                 .sendMail(mailOptions)
                 .then(() => {
-                  return response.status(200).json({
+                  return res.status(200).json({
                     message: "Reset password email sent.",
                   });
                 })
                 .catch((error) => {
-                  return response.status(500).json({
+                  return res.status(500).json({
                     errorMessage:
                       "An error occured while sending reset password email.",
                   });
                 });
             })
             .catch((error) => {
-              response.status(500).json({
+              res.status(500).json({
                 errorMessage:
                   "An error occured while saving user reset password record.",
               });
             });
         })
         .catch((error) => {
-          response.status(500).json({
+          res.status(500).json({
             errorMessage: "An error occured while hashing reset password code.",
           });
         });
     })
     .catch((error) => {
-      response.status(500).json({
+      res.status(500).json({
         errorMessage: "An error occured while deleting reset password records.",
       });
     });
 };
 
-export const resetPassword = async (request, response) => {
-  const { password, email } = new User(request.body);
+export const resetPassword = async (req, res) => {
+  const { password, email } = req.body;
   const userData = await User.findOne({ email });
   if (!userData) {
-    return response.status(204).json({
+    return res.status(204).json({
       errorMessage: "User not found.",
     });
   } else {
@@ -305,21 +296,21 @@ export const resetPassword = async (request, response) => {
       userId: userData._id,
     });
     if (!userResetPasswordData) {
-      return response.status(204).json({
+      return res.status(204).json({
         errorMessage: "Reset password entry for this user is not found.",
       });
     } else {
       bcrypt.compare(
-        request.body.code,
+        req.body.code,
         userResetPasswordData.resetCode,
         (error, result) => {
           if (result) {
             bcrypt.compare(
-              request.body.password,
+              req.body.password,
               userData.password,
               (error, result) => {
                 if (result) {
-                  return response.status(400).json({
+                  return res.status(400).json({
                     errorMessage: "Password can't be the same as the old one.",
                   });
                 } else {
@@ -332,19 +323,19 @@ export const resetPassword = async (request, response) => {
                       };
                       User.findByIdAndUpdate(userData._id, forUpdateData)
                         .then((result) => {
-                          response.status(200).json({
+                          res.status(200).json({
                             message: "Password is updated.",
                           });
                         })
                         .catch((error) => {
-                          response.status(500).json({
+                          res.status(500).json({
                             errorMessage:
                               "An error occured while reseting password.",
                           });
                         });
                     })
                     .catch((error) => {
-                      response.status(500).json({
+                      res.status(500).json({
                         errorMessage:
                           "An error occured while hashing password.",
                       });
@@ -353,7 +344,7 @@ export const resetPassword = async (request, response) => {
               }
             );
           } else {
-            response.status(401).json({
+            res.status(401).json({
               errorMessage: "Wrong code.",
             });
           }
@@ -363,12 +354,11 @@ export const resetPassword = async (request, response) => {
   }
 };
 
-export const checkCode = async (request, response) => {
-  const code = request.params.code;
-  const email = request.params.email;
+export const checkCode = async (req, res) => {
+  const { code, email } = req.body;
   const userData = await User.findOne({ email });
   if (!userData) {
-    return response.status(204).json({
+    return res.status(204).json({
       errorMessage: "User not found.",
     });
   } else {
@@ -376,7 +366,7 @@ export const checkCode = async (request, response) => {
       userId: userData._id,
     });
     if (!userResetPasswordData) {
-      return response.status(204).json({
+      return res.status(204).json({
         errorMessage: "Reset password entry for this user is not found.",
       });
     } else {
@@ -386,12 +376,12 @@ export const checkCode = async (request, response) => {
       if (expiresAt < Date.now()) {
         UserResetPassword.deleteOne({ userId: userData._id })
           .then(() => {
-            return response.status(410).json({
+            return res.status(410).json({
               errorMessage: "The code has expired.",
             });
           })
           .catch(() => {
-            return response.status(500).json({
+            return res.status(500).json({
               errorMessage:
                 "An error occured while deleting reset password entry for this user.",
             });
@@ -399,9 +389,9 @@ export const checkCode = async (request, response) => {
       } else {
         bcrypt.compare(code, hashedCode, (error, result) => {
           if (result) {
-            response.status(200).json(userData);
+            res.status(200).json(userData);
           } else {
-            response.status(401).json({
+            res.status(401).json({
               errorMessage: "Wrong code.",
             });
           }
@@ -411,33 +401,33 @@ export const checkCode = async (request, response) => {
   }
 };
 
-export const recoveryUser = async (request, response) => {
+export const recoveryUser = async (req, res) => {
   try {
-    const email = request.params.email;
+    const email = req.params.email;
     const userData = await User.findOne({ email });
 
     if (!userData) {
-      return response.status(204).json({
+      return res.status(204).json({
         errorMessage: "User not found.",
       });
     }
     if (!userData.verified) {
-      return response.status(403).json({
+      return res.status(403).json({
         errorMessage: "Email is not verified.",
       });
     }
 
-    sendResetPasswordEmail(userData, response);
+    sendResetPasswordEmail(userData, res);
   } catch (error) {
-    response.status(500).json({
+    res.status(500).json({
       errorMessage: error.message,
     });
   }
 };
 
-export const authorizeUser = async (request, response) => {
+export const authorizeUser = async (req, res) => {
   try {
-    const credentials = new User(request.body);
+    const credentials = new User(req.body);
     const { email, password } = credentials;
 
     User.findOne({ email })
@@ -446,7 +436,7 @@ export const authorizeUser = async (request, response) => {
 
         //Check if email is verified
         if (!userData.verified) {
-          response.status(403).json({
+          res.status(403).json({
             errorMessage: "Email is not verified.",
           });
         } else {
@@ -458,87 +448,111 @@ export const authorizeUser = async (request, response) => {
                 { expiresIn: "7d" }
               );
 
-              response.cookie("token", token, {
+              res.cookie("token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-                maxAge: 7 * 24 * 60 * 60 * 1000
+                sameSite:
+                  process.env.NODE_ENV === "production" ? "none" : "strict",
+                maxAge: 7 * 24 * 60 * 60 * 1000,
               });
-              response.status(200).json(userData);
+              res.status(200).json(userData);
             } else {
-              response.status(401).json({
-                errorMessage: "Wrong password.",
+              res.status(401).json({
+                errorMessage: "Wrong email or password.",
               });
             }
           });
         }
       })
       .catch((error) => {
-        return response.status(404).json({
-          errorMessage: "User with this email is not found.",
+        return res.status(401).json({
+          errorMessage: "Wrong email or password.",
         });
       });
   } catch (error) {
-    response.status(500).json({
+    res.status(500).json({
       errorMessage: error.message,
     });
   }
 };
 
-export const updateUser = async (request, response) => {
+export const updateUser = async (req, res) => {
   try {
-    const id = request.params.id;
+    const id = req.params.id;
     const userExists = await User.findById(id);
     if (!userExists) {
-      return response.status(404).json({
+      return res.status(404).json({
         errorMessage: "User not found.",
       });
     }
 
-    const forUpdateData = { ...request.body, updatedAt: Date.now() };
+    const forUpdateData = { ...req.body, updatedAt: Date.now() };
     const updatedData = await User.findByIdAndUpdate(id, forUpdateData, {
       new: true,
     });
-    response.status(200).json(updatedData);
+    res.status(200).json(updatedData);
   } catch (error) {
-    response.status(500).json({
+    res.status(500).json({
       errorMessage: error.message,
     });
   }
 };
 
-export const deleteUser = async (request, response) => {
+export const deleteUser = async (req, res) => {
   try {
-    const id = request.params.id;
+    const id = req.params.id;
     const userExists = await User.findById(id);
     if (!userExists) {
-      return response.status(404).json({
+      return res.status(404).json({
         errorMessage: "User not found.",
       });
     }
     await User.findByIdAndDelete(id);
-    response.status(200).json({
+    res.status(200).json({
       message: `User with id '${id}' has been deleted.`,
     });
   } catch (error) {
-    response.status(500).json({
+    res.status(500).json({
       errorMessage: error.message,
     });
   }
 };
 
-export const logOut = async (request, response) => {
+export const signOutUser = async (req, res) => {
   try {
-    response.clearCookie("token", {
+    res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     });
-    response.status(200).json({
+    res.status(200).json({
       message: `Successfully logged out.`,
     });
   } catch (error) {
-    response.status(500).json({
+    res.status(500).json({
+      errorMessage: error.message,
+    });
+  }
+};
+
+export const isAuthentificated = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const userData = await User.findById(userId);
+    if (userData) {
+      res.status(200).json({
+        userData,
+        message: `User is authentificated.`,
+      });
+    } else {
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
       errorMessage: error.message,
     });
   }
