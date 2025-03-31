@@ -10,6 +10,7 @@ import SignUp from "./pages/SignUp/SignUp";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SignIn from "./pages/SignIn/SignIn.jsx";
 import Recovery from "./pages/Recovery/Recovery.jsx";
+import Profile from "./pages/Profile/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/account-recovery",
     element: <Recovery />
+  },
+  {
+    path: "/my-profile",
+    element: <Profile />
   }
 ]);
 

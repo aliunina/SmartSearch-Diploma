@@ -12,14 +12,14 @@ import NavMenu from "../../components/NavMenu/NavMenu";
 import { showErrorMessageToast } from "../../helpers/util";
 import { UserContext } from "../../contexts/UserContext/UserContext";
 
-export default function Main() {  
-  const {user} = useContext(UserContext);
+export default function Main() {
+  const { user } = useContext(UserContext);
   const searchBarRef = useRef();
   const navigate = useNavigate();
 
   const [searchValue, setSearchValue] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
-  
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState({});
 
@@ -56,7 +56,7 @@ export default function Main() {
       q: searchValue,
       ...filters
     });
-    
+
     navigate("/search?" + urlParams.toString());
   };
 
@@ -68,18 +68,31 @@ export default function Main() {
     navigate("/sign-in");
   };
 
+  const openUserProfile = (tab = 0) => {
+    navigate("/my-profile", {
+      state: {
+        tab
+      }
+    });
+  };
+
   return (
     <>
       <Header className="main-header">
         <Button className="menu-button" onClick={openMenu}>
           <img src="menu.svg" alt="Меню" />
-        </Button>    
-        {!user && <Button className="sign-in-button" onClick={signIn}>Войти</Button>}
+        </Button>
+        {!user && (
+          <Button className="sign-in-button" onClick={signIn}>
+            Войти
+          </Button>
+        )}
         {menuOpen && (
           <NavMenu
             setMenuOpen={setMenuOpen}
             openESDialog={handleOpenESDialog}
             signUp={signUp}
+            openUserProfile={openUserProfile}
           />
         )}
         {dialogOpen && (

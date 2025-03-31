@@ -1,11 +1,14 @@
 import "./NavMenu.css";
+
 import Button from "../Button/Button";
-import { useContext } from "react";
-import { UserContext } from "../../contexts/UserContext/UserContext";
 import Avatar from "../Avatar/Avatar";
 import Logo from "../Logo/Logo";
 
-export default function NavMenu({ setMenuOpen, openESDialog, signUp }) {
+import { useContext } from "react";
+
+import { UserContext } from "../../contexts/UserContext/UserContext";
+
+export default function NavMenu({ setMenuOpen, openESDialog, signUp, openUserProfile }) {
   const { user } = useContext(UserContext);
 
   const close = () => {
@@ -52,25 +55,25 @@ export default function NavMenu({ setMenuOpen, openESDialog, signUp }) {
       {user && (
         <ul className="nav-menu-actions-list">
           <li>
-            <Button className="nav-menu-button">
+            <Button className="nav-menu-button" onClick={openUserProfile}>
               <img src="my_profile.svg" alt="Мой профиль" />
               Мой профиль
             </Button>
           </li>
           <li>
-            <Button className="nav-menu-button">
+            <Button className="nav-menu-button" onClick={openUserProfile}>
               <img src="my_library.svg" alt="Моя библиотека" />
               Моя библиотека
             </Button>
           </li>
           <li>
-            <Button className="nav-menu-button">
+            <Button className="nav-menu-button" onClick={() => openUserProfile(1)}>
               <img src="notifications_by_theme.svg" alt="Оповещения по теме" />
               Оповещения по теме
             </Button>
           </li>
           <li>
-            <Button className="nav-menu-button">
+            <Button className="nav-menu-button" onClick={() => openUserProfile(2)}>
               <img
                 src="notifications_by_article.svg"
                 alt="Оповещения по журналам"

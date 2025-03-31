@@ -19,11 +19,13 @@ import { getPagesCount, showErrorMessageToast } from "../../helpers/util";
 
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OrderFilter from "../../components/OrderFilter/OrderFilter";
 import SourceFilter from "../../components/SourceFilter/SourceFilter";
 
 export default function Search() {
+  const navigate = useNavigate();
+
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [urlParams, setUrlParams] = useState({});
@@ -286,6 +288,14 @@ export default function Search() {
     navigate("/sign-up");
   };
 
+  const openUserProfile = (tab = 0) => {
+    navigate("/my-profile", {
+      state: {
+        tab
+      }
+    });
+  };
+
   return (
     <>
       <Header>
@@ -305,6 +315,7 @@ export default function Search() {
             setMenuOpen={setMenuOpen}
             openESDialog={handleOpenESDialog}
             signUp={signUp}
+            openUserProfile={openUserProfile}
           />
         )}
       </Header>
