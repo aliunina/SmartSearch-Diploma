@@ -1,32 +1,37 @@
 import express from "express";
+import userAuth from "../middleware/userAuth.js";
 import {
-  createUser,
+  authorizeUser,
   deleteUser,
   getAllUsers,
-  getUserByCredentials,
+  registerUser,
   checkCode,
   recoveryUser,
   resetPassword,
   updateUser,
   verifyUser,
   verified,
+  signOutUser,
+  isAuthentificated,
 } from "../controller/userController.js";
 
 const userRoute = express.Router();
 
-userRoute.post("/register/user", createUser);
-userRoute.post("/authorize/user", getUserByCredentials);
+userRoute.post("/register", registerUser);
+userRoute.post("/authorize", authorizeUser);
+userRoute.get("/sign-out", signOutUser);
+userRoute.get("/is-auth", userAuth, isAuthentificated);
 
-userRoute.get("/users", getAllUsers);
+userRoute.get("/all", getAllUsers);
 
-userRoute.put("/update/user/:id", updateUser);
-userRoute.delete("/delete/user/:id", deleteUser);
+userRoute.put("/update/:id", userAuth, updateUser);
+userRoute.delete("/delete/:id", userAuth, deleteUser);
 
-userRoute.get("/verify/user/:id/:uniqueString", verifyUser);
+userRoute.get("/verify/:id/:uniqueString", verifyUser);
 userRoute.get("/verified", verified);
 
-userRoute.get("/recovery/user/:email", recoveryUser);
-userRoute.get("/recovery/check-code/:email/:code", checkCode);
-userRoute.put("/recovery/reset-password", resetPassword);
+userRoute.get("/recovery/:email", recoveryUser);
+userRoute.post("/check-code/:email/:code", checkCode);
+userRoute.put("/reset-password", resetPassword);
 
 export default userRoute;

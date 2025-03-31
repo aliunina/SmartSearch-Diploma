@@ -21,11 +21,13 @@ export default function SignIn() {
 
   const signIn = (credentials) => {
     axios
-      .post(SERVER_PARAMS.url + "/authorize/user", credentials)
+      .post(SERVER_PARAMS.url + "/user/authorize", credentials, {
+        withCredentials: true
+      })
       .then((response) => {
         if (response.status === 200) {
           setUser(response.data);
-          navigate("/");
+          navigate(-1);
           showSuccessMessageToast("Вход успешно выполнен.");
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
@@ -33,10 +35,8 @@ export default function SignIn() {
       })
       .catch((response) => {
         console.log(response.data);
-        if (response.status === 404) {
-          showErrorMessageToast("Пользователь с таким email не найден.");
-        } else if (response.status === 401) {
-          showErrorMessageToast("Неверный пароль.");
+        if (response.status === 401) {
+          showErrorMessageToast("Неверный email или пароль.");
         } else if (response.status === 403) {
           showErrorMessageToast(
             "Email не подтвержден. Проверьте ваш почтовый ящик."

@@ -17,7 +17,7 @@ export default function Recovery() {
 
   const checkEmail = (email) => {
     axios
-      .get(SERVER_PARAMS.url + "/recovery/user/" + email)
+      .get(SERVER_PARAMS.url + "/user/recovery/" + email)
       .then((response) => {
         if (response.status === 200) {
           setUserEmail(email);
@@ -42,7 +42,7 @@ export default function Recovery() {
 
   const checkCode = (code) => {
     axios
-      .get(SERVER_PARAMS.url + "/recovery/check-code/" + userEmail + "/" + code)
+      .post(SERVER_PARAMS.url + "/user/check-code", { email: userEmail, code })
       .then((response) => {
         if (response.status === 200) {
           setResetCode(code);
@@ -71,7 +71,7 @@ export default function Recovery() {
 
   const resetPassword = (password) => {
     axios
-      .put(SERVER_PARAMS.url + "/recovery/reset-password", {
+      .put(SERVER_PARAMS.url + "/user/reset-password", {
         password,
         email: userEmail,
         code: resetCode

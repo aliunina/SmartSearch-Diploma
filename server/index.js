@@ -3,12 +3,14 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import userRoute from "./routes/userRoute.js";
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({origin: true, credentials: true }));
 dotenv.config();
 
 const PORT = process.env.PORT || 7000;
@@ -26,4 +28,4 @@ mongoose
     console.log(error);
   });
 
-app.use("/api", userRoute);
+app.use("/api/user", userRoute);
