@@ -48,7 +48,6 @@
   justify-content: center;
   gap: 1em;
   cursor: pointer;
-  z-index: 6;
   font-weight: 500;
   background-color: white;
   border: 1px solid #cccccc;
@@ -62,14 +61,6 @@
 
 .profile-edit-button:active {
   background-color: #b4b4b4;
-}
-
-.profile-user-avatar {
-    height: 100%;
-}
-
-.profile-user-avatar-container {
-    min-width: 13em;
 }
 
 .profile-tabs {

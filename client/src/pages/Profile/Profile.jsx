@@ -10,33 +10,80 @@ import Avatar from "../../components/Avatar/Avatar";
 import Logo from "../../components/Logo/Logo";
 
 import { useContext, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import EditProfileDialog from "../../components/EditProfileDialog/EditProfileDialog";
+import axios from "axios";
+import { SERVER_PARAMS } from "../../constants";
+import {
+  showErrorMessageToast,
+  showSuccessMessageToast
+} from "../../helpers/util";
 
 export default function Profile() {
-  const { user } = useContext(UserContext);
-
+  const navigate = useNavigate();
   const location = useLocation();
+  const { user, setUser } = useContext(UserContext);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/sign-in");
+    }
+  }, [user, navigate]);
 
   const [tab, setTab] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(user);
+  const [dialogBusy, setDialogBusy] = useState(false);
 
   useEffect(() => {
     setTab(location.state?.tab ? location.state.tab : 0);
   }, [location]);
 
-  useEffect(() => {
-    setDialogState(user);
-  }, [user]);
-
   const editUserProfile = () => {
+    const state = { ...user };
+    if (user?.themes) {
+      state.themes = user.themes.join(", ");
+    }
+    setDialogState(state);
     setDialogOpen(true);
   };
 
-  const saveUser = () => {
+  const updateUser = (values) => {
+    if (values.themes) {
+      values.themes = values.themes.split(",").map((elem) => elem.trim());
+    }
 
+    setDialogBusy(true);
+    axios
+      .put(SERVER_PARAMS.url + "/user/update", values, {
+        withCredentials: true
+      })
+      .then((response) => {
+        if (response.status === 200 && response.data) {
+          setUser(response.data);
+          showSuccessMessageToast("Данные успешно обновлены.");
+          setDialogOpen(false);
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+        setDialogBusy(false);
+      })
+      .catch((response) => {
+        console.log(response.data);
+        if (response.status === 404) {
+          showErrorMessageToast(
+            "Попытка редактирования несуществующего пользователя."
+          );
+        } else if (response.status === 401) {
+          showErrorMessageToast(
+            "Вы не авторизованы. Пожалуйста, выполните вход."
+          );
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+        setDialogBusy(false);
+      });
   };
 
   return (
@@ -52,16 +99,16 @@ export default function Profile() {
                 dialogState={dialogState}
                 setDialogOpen={setDialogOpen}
                 setDialogState={setDialogState}
-                saveUser={saveUser}
+                updateUser={updateUser}
+                dialogBusy={dialogBusy}
               />
             )}
           </Header>
           <Body>
             <UpperPanel>
               <Avatar
+                size={"11em"}
                 title="Профиль"
-                parentClassName="profile-user-avatar-container"
-                className="profile-user-avatar"
               />
               <div className="profile-user-details">
                 <div className="profile-user-name-edit-button">

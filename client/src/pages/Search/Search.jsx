@@ -29,6 +29,7 @@ import OrderFilter from "../../components/OrderFilter/OrderFilter";
 import SourceFilter from "../../components/SourceFilter/SourceFilter";
 import { UserContext } from "../../contexts/UserContext/UserContext";
 import Button from "../../components/Button/Button";
+import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
 
 export default function Search() {
   const { user, setUser } = useContext(UserContext);
@@ -39,6 +40,7 @@ export default function Search() {
   const [urlParams, setUrlParams] = useState({});
   const [menuOpen, setMenuOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   const [page, setPage] = useState(1);
   const [orderFilter, setOrderFilter] = useState("relevance");
@@ -309,6 +311,7 @@ export default function Search() {
   };
 
   const signOut = () => {
+    setBusy(true);
     axios
       .get(SERVER_PARAMS.url + "/user/sign-out", {
         withCredentials: true
@@ -321,16 +324,23 @@ export default function Search() {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
         setMenuOpen(false);
+        setBusy(false);
       })
       .catch((response) => {
         console.log(response.data);
         showErrorMessageToast("Произошла ошибка, попробуйте позже.");
         setMenuOpen(false);
+        setBusy(false);
       });
   };
 
   return (
     <>
+      {busy && (
+        <div className="darkened-background">
+          <BusyIndicator />
+        </div>
+      )}
       <Header>
         <Link to="/">
           <Logo className="header-logo" />
@@ -342,7 +352,14 @@ export default function Search() {
           setDialogOpen={setDialogOpen}
           extendedSearch={handleExtendedSearch}
         />
-        {user && <Avatar onClick={openMenu} title="Профиль" />}
+        {user && (
+          <Avatar
+            onClick={openMenu}
+            title="Профиль"
+            clickable={true}
+            size={"4em"}
+          />
+        )}
         {!user && (
           <div className="search-header-buttons">
             <Button className="menu-button" onClick={openMenu}>

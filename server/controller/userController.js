@@ -478,15 +478,26 @@ export const authorizeUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.body.userId;
     const userExists = await User.findById(id);
     if (!userExists) {
       return res.status(404).json({
         errorMessage: "User not found.",
       });
     }
+    
+    const forUpdateData = {
+      lastName: req.body.lastName,
+      firstName: req.body.firstName,
+      patronymic: req.body.patronymic,
+      country: req.body.country,
+      birthday: req.body.birthday,
+      employment: req.body.employment,
+      themes: req.body.themes,
+      status: req.body.status,
+      updatedAt: Date.now()
+    };
 
-    const forUpdateData = { ...req.body, updatedAt: Date.now() };
     const updatedData = await User.findByIdAndUpdate(id, forUpdateData, {
       new: true,
     });

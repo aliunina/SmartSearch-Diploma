@@ -16,6 +16,7 @@ import {
 import { UserContext } from "../../contexts/UserContext/UserContext";
 import axios from "axios";
 import { SERVER_PARAMS } from "../../constants";
+import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
 
 export default function Main() {
   const { user, setUser } = useContext(UserContext);
@@ -24,6 +25,7 @@ export default function Main() {
 
   const [searchValue, setSearchValue] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState({});
@@ -82,6 +84,7 @@ export default function Main() {
   };
 
   const signOut = () => {
+    setBusy(true);
     axios
       .get(SERVER_PARAMS.url + "/user/sign-out", {
         withCredentials: true
@@ -94,16 +97,23 @@ export default function Main() {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
         setMenuOpen(false);
+        setBusy(false);
       })
       .catch((response) => {
         console.log(response.data);
         showErrorMessageToast("Произошла ошибка, попробуйте позже.");
         setMenuOpen(false);
+        setBusy(false);
       });
   };
 
   return (
     <>
+      {busy && (
+        <div className="darkened-background">
+          <BusyIndicator />
+        </div>
+      )}
       <Header className="main-header">
         <Button className="menu-button" onClick={openMenu}>
           <img src="menu.svg" alt="Меню" />

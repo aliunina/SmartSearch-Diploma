@@ -6,11 +6,14 @@ import LeftPanel from "../../layouts/SignUpLayout/LeftPanel/LeftPanel";
 import RightPanel from "../../layouts/SignUpLayout/RightPanel/RightPanel";
 import SignUpStep from "../../components/SignUpStep/SignUpStep";
 import SignUpForm from "../../components/SignUpForm/SignUpForm";
+import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+
 import { SERVER_PARAMS } from "../../constants";
+
 import {
   showErrorMessageToast,
   showSuccessMessageToast
@@ -19,8 +22,10 @@ import {
 export default function SignUp() {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
+  const [busy, setBusy] = useState(false);
 
   const signUp = (values) => {
+    setBusy(true);
     axios
       .post(SERVER_PARAMS.url + "/user/register", values)
       .then((response) => {
@@ -32,6 +37,7 @@ export default function SignUp() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       })
       .catch((response) => {
         if (response.status === 400) {
@@ -39,11 +45,17 @@ export default function SignUp() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       });
   };
 
   return (
     <>
+      {busy && (
+        <div className="darkened-background">
+          <BusyIndicator />
+        </div>
+      )}
       <Header>
         <Link to="/">
           <Logo className="header-logo" />

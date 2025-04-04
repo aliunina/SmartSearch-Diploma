@@ -8,14 +8,17 @@ import { useState } from "react";
 import { SERVER_PARAMS } from "../../constants";
 import axios from "axios";
 import { showErrorMessageToast } from "../../helpers/util";
+import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
 
 export default function Recovery() {
   const [userEmail, setUserEmail] = useState(null);
   const [resetCode, setResetCode] = useState(null);
   const [step, setStep] = useState(0);
   const [validAcc, setValidAcc] = useState(true);
+  const [busy, setBusy] = useState(false);
 
   const checkEmail = (email) => {
+    setBusy(true);
     axios
       .get(SERVER_PARAMS.url + "/user/recovery/" + email)
       .then((response) => {
@@ -27,6 +30,7 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       })
       .catch((response) => {
         console.log(response);
@@ -37,10 +41,12 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       });
   };
 
   const checkCode = (code) => {
+    setBusy(true);
     axios
       .post(SERVER_PARAMS.url + "/user/check-code", { email: userEmail, code })
       .then((response) => {
@@ -54,6 +60,7 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       })
       .catch((response) => {
         console.log(response);
@@ -66,10 +73,12 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       });
   };
 
   const resetPassword = (password) => {
+    setBusy(true);
     axios
       .put(SERVER_PARAMS.url + "/user/reset-password", {
         password,
@@ -86,6 +95,7 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       })
       .catch((response) => {
         console.log(response);
@@ -100,11 +110,17 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       });
   };
 
   return (
     <>
+      {busy && (
+        <div className="darkened-background">
+          <BusyIndicator />
+        </div>
+      )}
       <Header>
         <Link to="/">
           <Logo className="header-logo" />

@@ -39,7 +39,7 @@ export default function NavMenu({
             <p className="nav-menu-user-name">
               {user.lastName} {user.firstName}
             </p>
-            <Avatar />
+            <Avatar size={"4em"}/>
           </>
         )}
         {!user && (
