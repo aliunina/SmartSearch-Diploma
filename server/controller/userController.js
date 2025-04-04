@@ -162,7 +162,7 @@ export const verifyUser = (req, res) => {
 };
 
 export const verified = (req, res) => {
-  res.sendFile(path.resolve("views/verified.html"));
+  res.sendFile(path.resolve("templates/verifiedTemplate.html"));
 };
 
 export const registerUser = async (req, res) => {

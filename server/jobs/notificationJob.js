@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import nodemailer from "nodemailer";
-import mongoose from "mongoose";
 import axios from "axios";
+import fs from "fs";
 
 import User from "../model/userModel.js";
 
@@ -23,18 +23,16 @@ transporter.verify((error, success) => {
   }
 });
 
-// cron.schedule(cronExpression, () => {
-//   console.log("job is running");
-//   sendNotifications();
-// });
-
 const sendNotifications = async (req, res) => {
   try {
     const notifiedUsers = await User.find({ themes: { $ne: [] } });
     notifiedUsers.forEach((user) => {
-      user.themes.forEach((theme) => {
-        const articles = getNewArticles(theme);
-        sendNotificationEmail(user, theme.text, articles);
+      const { email, firstName } = user;
+      user.themes.forEach(async (theme) => {
+        const articles = await getNewArticles(theme);
+        if (articles.length > 0) {
+          sendNotificationEmail(email, firstName, theme.text, articles);
+        }
       });
     });
   } catch (error) {
@@ -48,7 +46,7 @@ const getNewArticles = async (theme) => {
       cx: process.env.SEARCH_ENGINE_CX,
       key: process.env.SEARCH_ENGINE_KEY,
       q: theme.text,
-      sort: date,
+      sort: "date",
     });
 
     const response = await axios.get(
@@ -65,37 +63,55 @@ const getNewArticles = async (theme) => {
     );
 
     const articles = [];
-    for (i = 0; i < newArticlesCount; i++) {
-      articles.push(response.data.items);
+    for (let i = 0; i < newArticlesCount; i++) {
+      articles.push(response.data.items[i]);
     }
+    return articles;
   } catch (error) {
     console.error("Error fetching data:", error);
     return [];
   }
 };
 
-const sendNotificationEmail = (user, theme, articles) => {
-  const templatePath = path.resolve("templates/notificationTemplate.html");
+const sendNotificationEmail = (email, name, theme, articles) => {
+  const templatePath = "./templates/notificationTemplate.html";
   let htmlTemplate = fs.readFileSync(templatePath, "utf-8");
 
-  let htmlArticles;
+  let htmlArticles = "";
   articles.forEach((article) => {
     htmlArticles += `
-        <div class="article-container">
-            <a class="article-title" target="_blank" href="${article.link}">${article.title}</a>
-            <a class="article-site" target="_blank" href="${article.link}">${article.displayLink}</a>
-            <p class="article-snippet">${article.snippet}</p>
+        <div style="padding-bottom: 2em;">
+          <a
+            style="
+              margin: 0;
+              font-weight: 500;
+              font-size: 1.2em;
+              text-decoration: none;
+              color: #1155cc;
+            "
+            target="_blank"
+            href="${article.link}"
+            >${article.title}</a
+          >
+          <div>
+          <a
+            style="margin: 0; text-decoration: none; color: #008054"
+            target="_blank"
+            href="${article.link}"
+            >${article.displayLink}</a
+          ></div>
+          <div>${article.snippet}</div>
         </div>`;
   });
 
   const emailContent = htmlTemplate
-    .replace("{{name}}", user.name)
+    .replace("{{name}}", name)
     .replace("{{theme}}", theme)
     .replace("{{articles}}", htmlArticles);
 
   const mailOptions = {
     from: process.env.SENDER_EMAIL,
-    to: user.email,
+    to: email,
     subject: "Новые статьи по теме",
     html: emailContent,
   };
@@ -103,15 +119,17 @@ const sendNotificationEmail = (user, theme, articles) => {
   transporter
     .sendMail(mailOptions)
     .then(() => {
-      return res.status(200).json({
-        message: "Notification email sent.",
-      });
+      console.log("Notification email sent.");
     })
     .catch((error) => {
-      return res.status(500).json({
-        errorMessage: "An error occured while sending notification email.",
-      });
+      console.log("An error occured while sending notification email.");
+      console.log(error);
     });
 };
 
 sendNotifications();
+
+// cron.schedule(cronExpression, () => {
+//   console.log("job is running");
+//   sendNotifications();
+// });

@@ -4,66 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Email Template</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 20px;
-      }
-      .container {
+  </head>
+  <body
+    style="
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    "
+  >
+    <div
+      style="
         background-color: #ffffff;
         padding: 20px;
         border-radius: 5px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      }
-      h1 {
-        color: #333;
-      }
-      .articles {
-        display: flex;
-        flex-direction: column;
-        gap: 2em;
-        justify-items: center;
-      }
-      .article-container {
-        display: flex;
-        flex-direction: column;
-        gap: 0.4em;
-      }
-      .article-title {
-        margin: 0;
-        font-weight: 500;
-        font-size: 1.2em;
-        text-decoration: none;
-        color: #1155cc;
-      }
-      .article-title:visited {
-        color: #3600ae;
-      }
-      .article-title:hover {
-        text-decoration: underline;
-      }
-
-      .article-site:hover {
-        text-decoration: underline;
-      }
-      .article-site {
-        margin: 0;
-        text-decoration: none;
-        color: #008054;
-      }
-
-      .article-snippet {
-        margin: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Добрый день, {{name}}!</h1>
+      "
+    >
+      <h1 style="color: #333">Добрый день, {{name}}!</h1>
       <p>Эти статьи на тему {{theme}} могут быть вам интересны.</p>
-      <div class="articles">{{articles}}</div>
+      <div>
+        {{articles}}
+      </div>
       <p>Благодарим за использование БНТУ Умный поиск!</p>
     </div>
   </body>
