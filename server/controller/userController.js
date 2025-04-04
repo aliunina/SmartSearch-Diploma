@@ -41,7 +41,7 @@ const sendVerificationEmail = ({ _id, email }, res) => {
       "<p>Подтвердите свой Email-адрес для БНТУ Умный поиск, чтобы завершить регистрацию и войти в свой аккаунт.</p>" +
       "<p>Срок действия ссылки - 6 часов.</p>" +
       `<p><a href="${
-        currentUrl + "api/verify/user/" + _id + "/" + uniqueString
+        currentUrl + "api/user/verify/" + _id + "/" + uniqueString
       }">Перейдите по ссылке, чтобы подтвердить</a></p>`,
   };
 
@@ -100,18 +100,18 @@ export const verifyUser = (req, res) => {
                 .then((result) => {
                   let message =
                     "Срок действия ссылки истёк. Пожалуйста, пройдите регистрацию еще раз.";
-                  res.redirect(`/api/verified?error=true&message=${message}`);
+                  res.redirect(`/api/user/verified?error=true&message=${message}`);
                 })
                 .catch((error) => {
                   let message =
                     "Произошла ошибка при удалении пользовательской записи.";
-                  res.redirect(`/api/verified?error=true&message=${message}`);
+                  res.redirect(`/api/user/verified?error=true&message=${message}`);
                 });
             })
             .catch((error) => {
               let message =
                 "Произошла ошибка при удалении записи для верификации.";
-              res.redirect(`/api/verified?error=true&message=${message}`);
+              res.redirect(`/api/user/verified?error=true&message=${message}`);
             });
         } else {
           bcrypt
@@ -122,42 +122,42 @@ export const verifyUser = (req, res) => {
                   .then((result) => {
                     UserVerification.deleteOne({ userId: id })
                       .then((result) => {
-                        res.redirect(`/api/verified?error=false`);
+                        res.redirect(`/api/user/verified?error=false`);
                       })
                       .catch((error) => {
                         let message =
                           "Произошла ошибка при удалении записи об успешной верификации.";
                         res.redirect(
-                          `/api/verified?error=true&message=${message}`
+                          `/api/user/verified?error=true&message=${message}`
                         );
                       });
                   })
                   .catch((error) => {
                     let message =
                       "Произошла ошибка при подтверждении аккаунта.";
-                    res.redirect(`/api/verified?error=true&message=${message}`);
+                    res.redirect(`/api/user/verified?error=true&message=${message}`);
                   });
               } else {
                 let message =
                   "Переданы некорректные данные для подтверждения. Проверьте свой почтовый ящик.";
-                res.redirect(`/api/verified?error=true&message=${message}`);
+                res.redirect(`/api/user/verified?error=true&message=${message}`);
               }
             })
             .catch((error) => {
               let message = "Произошла ошибка при сравнении уникальной строки.";
-              res.redirect(`/api/verified?error=true&message=${message}`);
+              res.redirect(`/api/user/verified?error=true&message=${message}`);
             });
         }
       } else {
         let message =
           "Запись для верификации не существует или верификация уже пройдена. Пожалуйста, выполните вход или зарегистрируйтесь.";
-        res.redirect(`/api/verified?error=true&message=${message}`);
+        res.redirect(`/api/user/verified?error=true&message=${message}`);
       }
     })
     .catch((error) => {
       let message =
         "Произошла ошибка при проверке на существование записи для верификации.";
-      res.redirect(`/api/verified?error=true&message=${message}`);
+      res.redirect(`/api/user/verified?error=true&message=${message}`);
     });
 };
 
