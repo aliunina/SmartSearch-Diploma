@@ -50,24 +50,9 @@
   text-align: center;
 }
 
-.loader-container {
+.results-busy-container {
   display: flex;
   justify-content: center;
   min-height: 40em;
   align-items: center;
-}
-
-.loader {
-  height: 4em;
-  width: 4em;
-  border: 0.3em solid #008054;
-  border-color: #008054 transparent #008054 transparent;
-  border-radius: 50%;
-  animation: load 1s linear infinite;
-}
-
-@keyframes load {
-  to {
-    transform: rotate(360deg);
-  }
 }

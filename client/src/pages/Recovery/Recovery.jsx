@@ -5,19 +5,22 @@ import "./Recovery.css";
 import Logo from "../../components/Logo/Logo";
 import RecoveryForm from "../../components/RecoveryForm/RecoveryForm";
 import { useState } from "react";
-import { SERVER_PARAMS } from "../../constants";
 import axios from "axios";
 import { showErrorMessageToast } from "../../helpers/util";
+import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
 
 export default function Recovery() {
   const [userEmail, setUserEmail] = useState(null);
   const [resetCode, setResetCode] = useState(null);
   const [step, setStep] = useState(0);
   const [validAcc, setValidAcc] = useState(true);
+  const [busy, setBusy] = useState(false);
 
   const checkEmail = (email) => {
+    setBusy(true);    
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .get(SERVER_PARAMS.url + "/user/recovery/" + email)
+      .get(serverUrl + "/user/recovery/" + email)
       .then((response) => {
         if (response.status === 200) {
           setUserEmail(email);
@@ -27,6 +30,7 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       })
       .catch((response) => {
         console.log(response);
@@ -37,12 +41,15 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       });
   };
 
   const checkCode = (code) => {
+    setBusy(true);    
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .post(SERVER_PARAMS.url + "/user/check-code", { email: userEmail, code })
+      .post(serverUrl + "/user/check-code", { email: userEmail, code })
       .then((response) => {
         if (response.status === 200) {
           setResetCode(code);
@@ -54,6 +61,7 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       })
       .catch((response) => {
         console.log(response);
@@ -66,12 +74,15 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       });
   };
 
   const resetPassword = (password) => {
+    setBusy(true);
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .put(SERVER_PARAMS.url + "/user/reset-password", {
+      .put(serverUrl + "/user/reset-password", {
         password,
         email: userEmail,
         code: resetCode
@@ -86,6 +97,7 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       })
       .catch((response) => {
         console.log(response);
@@ -100,11 +112,17 @@ export default function Recovery() {
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
+        setBusy(false);
       });
   };
 
   return (
     <>
+      {busy && (
+        <div className="darkened-background">
+          <BusyIndicator />
+        </div>
+      )}
       <Header>
         <Link to="/">
           <Logo className="header-logo" />

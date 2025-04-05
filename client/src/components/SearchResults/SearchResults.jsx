@@ -1,5 +1,7 @@
+import BusyIndicator from "../BusyIndicator/BusyIndicator";
 import SearchResult from "../SearchResult/SearchResult";
 import "./SearchResults.css";
+import { OrbitProgress } from "react-loading-indicators";
 
 export default function SearchResults({
   items,
@@ -15,8 +17,8 @@ export default function SearchResults({
 
   if (isLoading) {
     return (
-      <div className="loader-container">
-        <div className="loader"></div>;
+      <div className="results-busy-container">
+        <BusyIndicator removeClasses={true}/>
       </div>
     );
   }

@@ -105,7 +105,11 @@ export default function RecoveryForm({
   };
 
   const signIn = () => {
-    navigate("/sign-in");
+    navigate("/sign-in", {
+      state: {
+        navBack: false
+      }
+    });
   };
 
   const onChange = (event) => {

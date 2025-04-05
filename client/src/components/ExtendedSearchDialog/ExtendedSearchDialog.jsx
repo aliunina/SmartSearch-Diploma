@@ -11,7 +11,7 @@ export default function ExtendedSearchDialog({
   setDialogOpen,
   extendedSearch
 }) {
-  const search = (event) => {
+  const submitForm = (event) => {
     event.preventDefault();
     const formProps = Object.fromEntries(new FormData(event.target));
     const result = {};
@@ -57,8 +57,8 @@ export default function ExtendedSearchDialog({
   };
 
   return (
-    <div className="dialog-background">
-      <form className="dialog-wrap" onSubmit={search}>
+    <div className="darkened-background">
+      <form className="dialog-size dialog-wrap" onSubmit={submitForm}>
         <div className="dialog-close-button-container">
           <Button
             className="dialog-close-button"
@@ -153,10 +153,10 @@ export default function ExtendedSearchDialog({
           </div>
         </div>
         <div className="dialog-buttons-container">
-          <Button onClick={clear} type="button" className="dialog-clear-button">
+          <Button onClick={clear} type="button" className="dialog-cancel-button">
             Очистить
           </Button>
-          <Button className="dialog-search-button">Поиск</Button>
+          <Button className="dialog-submit-button">Поиск</Button>
         </div>
       </form>
     </div>

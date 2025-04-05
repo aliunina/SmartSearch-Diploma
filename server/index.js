@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 
 import userRoute from "./routes/userRoute.js";
 
+import "./jobs/notificationJob.js";
+
 const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());

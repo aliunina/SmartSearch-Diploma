@@ -1,0 +1,95 @@
+.profile-user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.profile-user-name {
+  margin: 0;
+  font-weight: 700;
+  font-size: 2em;
+}
+
+.profile-user-name-edit-button {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+}
+
+.profile-user-employment {
+  margin: 0;
+  color: #5c5c5c;
+  font-weight: 500;
+}
+
+.profile-user-themes {
+  display: flex;
+  gap: 0.5em;
+}
+
+.profile-user-themes-title {
+  margin: 0;
+  margin-bottom: 0.5em;
+  font-weight: 500;
+}
+
+.profile-user-theme {
+  background-color: #eeeeee;
+  border-radius: 8px;
+  color: #5c5c5c;
+  padding: 0.5em;
+  font-weight: 500;
+}
+
+.profile-edit-button {
+  padding: 1eangm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  cursor: pointer;
+  font-weight: 500;
+  background-color: white;
+  border: 1px solid #cccccc;
+  border-radius: 12px;
+  padding: 0.8em;
+}
+
+.profile-edit-button:hover {
+  background-color: #e6e6e6;
+}
+
+.profile-edit-button:active {
+  background-color: #b4b4b4;
+}
+
+.profile-tabs {
+  display: flex;
+  gap: 1em;
+  border-bottom: 1px solid #E8E8E8;
+}
+
+.profile-tab {
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding-bottom: 1em;
+  gap: 0.5em;
+  font-weight: 400;
+  color: #5C5C5C;
+}
+
+.profile-tab-active {
+  color: #008054;
+  border-bottom: 3px solid #008054;
+  margin-bottom: -3px;
+}
+
+.profile-tab svg {
+  width: 1.5em;
+}
+
+.profile-tab:first-child {
+  margin-left: 15em;
+}
