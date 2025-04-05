@@ -5,7 +5,6 @@ import "./Recovery.css";
 import Logo from "../../components/Logo/Logo";
 import RecoveryForm from "../../components/RecoveryForm/RecoveryForm";
 import { useState } from "react";
-import { SERVER_PARAMS } from "../../constants";
 import axios from "axios";
 import { showErrorMessageToast } from "../../helpers/util";
 import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
@@ -18,9 +17,10 @@ export default function Recovery() {
   const [busy, setBusy] = useState(false);
 
   const checkEmail = (email) => {
-    setBusy(true);
+    setBusy(true);    
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .get(SERVER_PARAMS.url + "/user/recovery/" + email)
+      .get(serverUrl + "/user/recovery/" + email)
       .then((response) => {
         if (response.status === 200) {
           setUserEmail(email);
@@ -46,9 +46,10 @@ export default function Recovery() {
   };
 
   const checkCode = (code) => {
-    setBusy(true);
+    setBusy(true);    
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .post(SERVER_PARAMS.url + "/user/check-code", { email: userEmail, code })
+      .post(serverUrl + "/user/check-code", { email: userEmail, code })
       .then((response) => {
         if (response.status === 200) {
           setResetCode(code);
@@ -79,8 +80,9 @@ export default function Recovery() {
 
   const resetPassword = (password) => {
     setBusy(true);
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .put(SERVER_PARAMS.url + "/user/reset-password", {
+      .put(serverUrl + "/user/reset-password", {
         password,
         email: userEmail,
         code: resetCode

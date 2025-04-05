@@ -16,8 +16,6 @@ import {
   showSuccessMessageToast
 } from "../../helpers/util";
 
-import { SERVER_PARAMS } from "../../constants";
-
 export default function SignIn() {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
@@ -25,8 +23,9 @@ export default function SignIn() {
 
   const signIn = (credentials) => {
     setBusy(true);
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .post(SERVER_PARAMS.url + "/user/authorize", credentials, {
+      .post(serverUrl + "/user/authorize", credentials, {
         withCredentials: true
       })
       .then((response) => {

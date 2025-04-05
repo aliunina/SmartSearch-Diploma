@@ -1,13 +1,3 @@
-export const SEARCH_ENGINE = {
-  url: "https://www.googleapis.com/customsearch/v1",
-  key: "AIzaSyD2ABTD5HZhnnBfIDXSxs_66E72TQVLUr8",
-  cx: "f5a24536d2c834267"
-};
-
-export const SERVER_PARAMS = {
-  url: "http://localhost:7000/api"
-};
-
 export const PERIOD_FILTER = {
   "all": {
     text: "За всё время",

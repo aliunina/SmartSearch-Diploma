@@ -12,8 +12,6 @@ import PeriodFilter from "../../components/PeriodFilter/PeriodFilter";
 
 import {
   PERIOD_FILTER,
-  SEARCH_ENGINE,
-  SERVER_PARAMS,
   SOURCE_FILTER
 } from "../../constants/index";
 import {
@@ -186,14 +184,19 @@ export default function Search() {
         }
       }
       delete newFilters.authors;
+
+      
+    const engineUrl = import.meta.env.VITE_SEARCH_ENGINE_URL;
+    const cx = import.meta.env.VITE_SEARCH_ENGINE_CX;
+    const key = import.meta.env.VITE_SEARCH_ENGINE_KEY;
       const fullParams = new URLSearchParams({
-        cx: SEARCH_ENGINE.cx,
-        key: SEARCH_ENGINE.key,
+        cx,
+        key,
         ...newFilters
       });
 
       axios
-        .get(`${SEARCH_ENGINE.url}?${fullParams.toString()}`)
+        .get(`${engineUrl}?${fullParams.toString()}`)
         .then((response) => {
           let results = response.data.items;
           if (!results || results?.length === 0) {
@@ -312,8 +315,9 @@ export default function Search() {
 
   const signOut = () => {
     setBusy(true);
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .get(SERVER_PARAMS.url + "/user/sign-out", {
+      .get(serverUrl + "/user/sign-out", {
         withCredentials: true
       })
       .then((response) => {

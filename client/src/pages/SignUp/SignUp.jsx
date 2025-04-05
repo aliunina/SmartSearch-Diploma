@@ -12,8 +12,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { SERVER_PARAMS } from "../../constants";
-
 import {
   showErrorMessageToast,
   showSuccessMessageToast
@@ -26,8 +24,9 @@ export default function SignUp() {
 
   const signUp = (values) => {
     setBusy(true);
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .post(SERVER_PARAMS.url + "/user/register", values)
+      .post(serverUrl + "/user/register", values)
       .then((response) => {
         if (response.status === 200) {
           showSuccessMessageToast(

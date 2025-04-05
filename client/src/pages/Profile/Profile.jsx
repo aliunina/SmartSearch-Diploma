@@ -14,7 +14,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import EditProfileDialog from "../../components/EditProfileDialog/EditProfileDialog";
 import axios from "axios";
-import { SERVER_PARAMS } from "../../constants";
 import {
   showErrorMessageToast,
   showSuccessMessageToast
@@ -54,9 +53,10 @@ export default function Profile() {
       values.themes = values.themes.split(",").map((elem) => elem.trim());
     }
 
-    setDialogBusy(true);
+    setDialogBusy(true);    
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .put(SERVER_PARAMS.url + "/user/update", values, {
+      .put(serverUrl + "/user/update", values, {
         withCredentials: true
       })
       .then((response) => {

@@ -15,7 +15,6 @@ import {
 } from "../../helpers/util";
 import { UserContext } from "../../contexts/UserContext/UserContext";
 import axios from "axios";
-import { SERVER_PARAMS } from "../../constants";
 import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
 
 export default function Main() {
@@ -85,8 +84,9 @@ export default function Main() {
 
   const signOut = () => {
     setBusy(true);
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .get(SERVER_PARAMS.url + "/user/sign-out", {
+      .get(serverUrl + "/user/sign-out", {
         withCredentials: true
       })
       .then((response) => {
