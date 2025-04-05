@@ -7,7 +7,7 @@ import SignInForm from "../../components/SignInForm/SignInForm";
 import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
 
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext/UserContext";
 import { useContext, useState } from "react";
 
@@ -16,23 +16,27 @@ import {
   showSuccessMessageToast
 } from "../../helpers/util";
 
-import { SERVER_PARAMS } from "../../constants";
-
 export default function SignIn() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
   const [busy, setBusy] = useState(false);
 
   const signIn = (credentials) => {
     setBusy(true);
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .post(SERVER_PARAMS.url + "/user/authorize", credentials, {
+      .post(serverUrl + "/user/authorize", credentials, {
         withCredentials: true
       })
       .then((response) => {
         if (response.status === 200) {
           setUser(response.data);
-          navigate(-1);
+          if (location.state?.navBack) {
+            navigate(-1);
+          } else {
+            navigate("/");
+          }
           showSuccessMessageToast("Вход успешно выполнен.");
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");

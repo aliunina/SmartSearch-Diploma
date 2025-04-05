@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import path from "path";
 import jwt from "jsonwebtoken";
+import fs from "fs";
 
 import User from "../model/userModel.js";
 import UserVerification from "../model/userVerificationModel.js";
@@ -30,20 +31,10 @@ transporter.verify((error, success) => {
   }
 });
 
-const sendVerificationEmail = ({ _id, email }, res) => {
+const sendVerificationEmail = ({ _id, email, firstName }, res) => {
   const currentUrl = process.env.APP_URL;
   const uniqueString = uuidv4() + _id;
-  const mailOptions = {
-    from: process.env.SENDER_EMAIL,
-    to: email,
-    subject: "Подтвердите ваш Email",
-    html:
-      "<p>Подтвердите свой Email-адрес для БНТУ Умный поиск, чтобы завершить регистрацию и войти в свой аккаунт.</p>" +
-      "<p>Срок действия ссылки - 6 часов.</p>" +
-      `<p><a href="${
-        currentUrl + "api/verify/user/" + _id + "/" + uniqueString
-      }">Перейдите по ссылке, чтобы подтвердить</a></p>`,
-  };
+  const link = `${currentUrl + "api/user/verify/" + _id + "/" + uniqueString}`;
 
   bcrypt
     .hash(uniqueString, saltRounds)
@@ -57,7 +48,19 @@ const sendVerificationEmail = ({ _id, email }, res) => {
 
       newVerification
         .save()
-        .then((result) => {
+        .then(() => {
+          const templatePath = "./templates/verificationTemplate.html";
+          let htmlTemplate = fs.readFileSync(templatePath, "utf-8");
+          const emailContent = htmlTemplate
+            .replace("{{name}}", firstName)
+            .replace("{{link}}", link);
+          const mailOptions = {
+            from: process.env.SENDER_EMAIL,
+            to: email,
+            subject: "Подтвердите ваш Email",
+            html: emailContent,
+          };
+
           transporter
             .sendMail(mailOptions)
             .then(() => {
@@ -100,18 +103,22 @@ export const verifyUser = (req, res) => {
                 .then((result) => {
                   let message =
                     "Срок действия ссылки истёк. Пожалуйста, пройдите регистрацию еще раз.";
-                  res.redirect(`/api/verified?error=true&message=${message}`);
+                  res.redirect(
+                    `/api/user/verified?error=true&message=${message}`
+                  );
                 })
                 .catch((error) => {
                   let message =
                     "Произошла ошибка при удалении пользовательской записи.";
-                  res.redirect(`/api/verified?error=true&message=${message}`);
+                  res.redirect(
+                    `/api/user/verified?error=true&message=${message}`
+                  );
                 });
             })
             .catch((error) => {
               let message =
                 "Произошла ошибка при удалении записи для верификации.";
-              res.redirect(`/api/verified?error=true&message=${message}`);
+              res.redirect(`/api/user/verified?error=true&message=${message}`);
             });
         } else {
           bcrypt
@@ -122,47 +129,51 @@ export const verifyUser = (req, res) => {
                   .then((result) => {
                     UserVerification.deleteOne({ userId: id })
                       .then((result) => {
-                        res.redirect(`/api/verified?error=false`);
+                        res.redirect(`/api/user/verified?error=false`);
                       })
                       .catch((error) => {
                         let message =
                           "Произошла ошибка при удалении записи об успешной верификации.";
                         res.redirect(
-                          `/api/verified?error=true&message=${message}`
+                          `/api/user/verified?error=true&message=${message}`
                         );
                       });
                   })
                   .catch((error) => {
                     let message =
                       "Произошла ошибка при подтверждении аккаунта.";
-                    res.redirect(`/api/verified?error=true&message=${message}`);
+                    res.redirect(
+                      `/api/user/verified?error=true&message=${message}`
+                    );
                   });
               } else {
                 let message =
                   "Переданы некорректные данные для подтверждения. Проверьте свой почтовый ящик.";
-                res.redirect(`/api/verified?error=true&message=${message}`);
+                res.redirect(
+                  `/api/user/verified?error=true&message=${message}`
+                );
               }
             })
             .catch((error) => {
               let message = "Произошла ошибка при сравнении уникальной строки.";
-              res.redirect(`/api/verified?error=true&message=${message}`);
+              res.redirect(`/api/user/verified?error=true&message=${message}`);
             });
         }
       } else {
         let message =
           "Запись для верификации не существует или верификация уже пройдена. Пожалуйста, выполните вход или зарегистрируйтесь.";
-        res.redirect(`/api/verified?error=true&message=${message}`);
+        res.redirect(`/api/user/verified?error=true&message=${message}`);
       }
     })
     .catch((error) => {
       let message =
         "Произошла ошибка при проверке на существование записи для верификации.";
-      res.redirect(`/api/verified?error=true&message=${message}`);
+      res.redirect(`/api/user/verified?error=true&message=${message}`);
     });
 };
 
 export const verified = (req, res) => {
-  res.sendFile(path.resolve("views/verified.html"));
+  res.sendFile(path.resolve("templates/verifiedTemplate.html"));
 };
 
 export const registerUser = async (req, res) => {
@@ -226,16 +237,10 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-const sendResetPasswordEmail = ({ _id, email }, res) => {
+const sendResetPasswordEmail = ({ _id, email, firstName }, res) => {
   UserResetPassword.deleteMany({ userId: _id })
     .then(() => {
       const resetCode = Math.floor(100000 + Math.random() * 900000) + "";
-      const mailOptions = {
-        from: process.env.SENDER_EMAIL,
-        to: email,
-        subject: "Сброс пароля",
-        html: `<p>Код для сброса пароля на сайте БНТУ Умный поиск: ${resetCode}</p>`,
-      };
 
       bcrypt
         .hash(resetCode, 10)
@@ -250,6 +255,18 @@ const sendResetPasswordEmail = ({ _id, email }, res) => {
           newUserResetPassword
             .save()
             .then(() => {
+              const templatePath = "./templates/resetPasswordTemplate.html";
+              let htmlTemplate = fs.readFileSync(templatePath, "utf-8");
+              const emailContent = htmlTemplate
+                .replace("{{name}}", firstName)
+                .replace("{{code}}", resetCode);
+              const mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: email,
+                subject: "Сброс пароля",
+                html: emailContent,
+              };
+
               transporter
                 .sendMail(mailOptions)
                 .then(() => {
@@ -320,6 +337,7 @@ export const resetPassword = async (req, res) => {
                       const forUpdateData = {
                         unhashedPassword: password,
                         password: hashedPassword,
+                        updatedAt: Date.now(),
                       };
                       User.findByIdAndUpdate(userData._id, forUpdateData)
                         .then((result) => {
@@ -485,7 +503,7 @@ export const updateUser = async (req, res) => {
         errorMessage: "User not found.",
       });
     }
-    
+
     const forUpdateData = {
       lastName: req.body.lastName,
       firstName: req.body.firstName,
@@ -495,13 +513,70 @@ export const updateUser = async (req, res) => {
       employment: req.body.employment,
       themes: req.body.themes,
       status: req.body.status,
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
 
     const updatedData = await User.findByIdAndUpdate(id, forUpdateData, {
       new: true,
     });
     res.status(200).json(updatedData);
+  } catch (error) {
+    res.status(500).json({
+      errorMessage: error.message,
+    });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  try {
+    const id = req.body.userId;
+    const userData = await User.findById(id);
+    if (!userData) {
+      return res.status(404).json({
+        errorMessage: "User not found.",
+      });
+    }
+
+    const { oldPassword, newPassword, repeatPassword } = req.body;
+
+    if (oldPassword === newPassword) {
+      return res.status(400).json({
+        errorMessage: "Password can't be the same as the old one.",
+      });
+    }
+
+    bcrypt.compare(oldPassword, userData.password, (error, result) => {
+      if (result) {
+        bcrypt
+          .hash(newPassword, saltRounds)
+          .then(async (hashedPassword) => {
+            let forUpdateData = {
+              unhashedPassword: newPassword,
+              password: hashedPassword,
+              updatedAt: Date.now(),
+            };
+
+            const updatedData = await User.findByIdAndUpdate(
+              id,
+              forUpdateData,
+              {
+                new: true,
+              }
+            );
+
+            res.status(200).json(userData);
+          })
+          .catch((error) => {
+            res.status(500).json({
+              errorMessage: "An error occured while hashing password.",
+            });
+          });
+      } else {
+        res.status(403).json({
+          errorMessage: "Wrong password.",
+        });
+      }
+    });
   } catch (error) {
     res.status(500).json({
       errorMessage: error.message,
