@@ -71,7 +71,11 @@ export default function Main() {
   };
 
   const signIn = () => {
-    navigate("/sign-in");
+    navigate("/sign-in", {
+      state: {
+        navBack: true
+      }
+    });
   };
 
   const openUserProfile = (tab) => {

@@ -3,7 +3,7 @@ import { UserContext } from "./UserContext";
 import axios from "axios";
 
 export const UserContextProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(undefined);
 
   const getUserData = async () => {
     const serverUrl = import.meta.env.VITE_SERVER_API_URL;
@@ -13,6 +13,9 @@ export const UserContextProvider = ({ children }) => {
         if (response.status === 200) {
           setUser(response.data.userData);
         }
+      })
+      .catch(() => {
+        setUser(null);
       });
   };
 

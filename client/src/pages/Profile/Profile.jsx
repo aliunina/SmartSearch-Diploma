@@ -18,6 +18,7 @@ import {
   showErrorMessageToast,
   showSuccessMessageToast
 } from "../../helpers/util";
+import ChangePasswordDialog from "../../components/ChangePasswordDialog/ChangePasswordDialog";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -25,8 +26,12 @@ export default function Profile() {
   const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
-    if (!user) {
-      navigate("/sign-in");
+    if (user === null) {
+      navigate("/sign-in", {
+        state: {
+          navBack: true
+        }
+      });
     }
   }, [user, navigate]);
 
@@ -34,6 +39,15 @@ export default function Profile() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(user);
   const [dialogBusy, setDialogBusy] = useState(false);
+
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  const INITIAL_PASSWORD_DIALOG_STATE = {
+    oldPassword: "",
+    newPassword: "",
+    repeatPassword: ""
+  };
+  const [passwordDialogState, setPasswordDialogState] = useState(INITIAL_PASSWORD_DIALOG_STATE);
+  const [passwordDialogBusy, setPasswordDialogBusy] = useState(false);
 
   useEffect(() => {
     setTab(location.state?.tab ? location.state.tab : 0);
@@ -53,7 +67,7 @@ export default function Profile() {
       values.themes = values.themes.split(",").map((elem) => elem.trim());
     }
 
-    setDialogBusy(true);    
+    setDialogBusy(true);
     const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
       .put(serverUrl + "/user/update", values, {
@@ -86,6 +100,52 @@ export default function Profile() {
       });
   };
 
+  const openPasswordDialog = () => {
+    setPasswordDialogState(INITIAL_PASSWORD_DIALOG_STATE);
+    setPasswordDialogOpen(true);
+  };
+
+  const changePassword = (values) => {
+    setPasswordDialogBusy(true);
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
+    axios
+      .post(serverUrl + "/user/change-password", values, {
+        withCredentials: true
+      })
+      .then((response) => {
+        if (response.status === 200 && response.data) {
+          showSuccessMessageToast("Пароль успешно изменен.");
+          setPasswordDialogOpen(false);
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+        setPasswordDialogBusy(false);
+      })
+      .catch((response) => {
+        console.log(response.data);
+        if (response.status === 404) {
+          showErrorMessageToast(
+            "Попытка редактирования несуществующего пользователя."
+          );
+        } else if (response.status === 401) {
+          showErrorMessageToast(
+            "Вы не авторизованы. Пожалуйста, выполните вход."
+          );
+        } else if (response.status === 403) {
+          showErrorMessageToast(
+            "Неверный текущий пароль."
+          );
+        }  else if (response.status === 400) {
+          showErrorMessageToast(
+            "Новый пароль не может быть равен старому."
+          );
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+        setPasswordDialogBusy(false);
+      });
+  };
+
   return (
     <>
       {user && (
@@ -97,19 +157,25 @@ export default function Profile() {
             {dialogOpen && (
               <EditProfileDialog
                 dialogState={dialogState}
+                dialogBusy={dialogBusy}
                 setDialogOpen={setDialogOpen}
                 setDialogState={setDialogState}
                 updateUser={updateUser}
-                dialogBusy={dialogBusy}
+              />
+            )}
+            {passwordDialogOpen && (
+              <ChangePasswordDialog
+                dialogState={passwordDialogState}
+                dialogBusy={passwordDialogBusy}
+                setDialogOpen={setPasswordDialogOpen}
+                setDialogState={setPasswordDialogState}
+                changePassword={changePassword}
               />
             )}
           </Header>
           <Body>
             <UpperPanel>
-              <Avatar
-                size={"11em"}
-                title="Профиль"
-              />
+              <Avatar size={"11em"} title="Профиль" />
               <div className="profile-user-details">
                 <div className="profile-user-name-edit-button">
                   <p className="profile-user-name">
@@ -119,8 +185,14 @@ export default function Profile() {
                     className="profile-edit-button"
                     onClick={editUserProfile}
                   >
-                    <img src="edit-profile.svg" alt="Изменить" />
-                    Изменить профиль
+                    <img src="edit-profile.svg" alt="Редактировать" />
+                    Редактировать профиль
+                  </Button>
+                  <Button
+                    className="profile-edit-button"
+                    onClick={openPasswordDialog}
+                  >
+                    Изменить пароль
                   </Button>
                 </div>
                 <p className="profile-user-employment">{user.employment}</p>
@@ -197,8 +269,8 @@ export default function Profile() {
                       d="M4.5 14H11.5V12H4.5V14ZM4.5 10H14.5V8.00003H4.5V10ZM4.5 6.00003H14.5V4.00003H4.5V6.00003ZM2.5 18C1.95 18 1.479 17.804 1.087 17.412C0.695002 17.02 0.499335 16.5494 0.500002 16V2.00003C0.500002 1.45003 0.696002 0.979032 1.088 0.587032C1.48 0.195032 1.95067 -0.000634451 2.5 3.22154e-05H16.5C17.05 3.22154e-05 17.521 0.196032 17.913 0.588032C18.305 0.980032 18.5007 1.4507 18.5 2.00003V16C18.5 16.55 18.304 17.021 17.912 17.413C17.52 17.805 17.0493 18.0007 16.5 18H2.5Z"
                       fill={`${tab === 2 ? "#008054" : "#5C5C5C"}`}
                     />
-                  </svg>
-                  Оповещения по журналам
+                  </svg>  
+                  Новые статьи в источниках
                 </p>
               </div>
             </LowerPanel>

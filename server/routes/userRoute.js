@@ -13,6 +13,7 @@ import {
   verified,
   signOutUser,
   isAuthentificated,
+  changePassword
 } from "../controller/userController.js";
 
 const userRoute = express.Router();
@@ -25,13 +26,14 @@ userRoute.get("/is-auth", userAuth, isAuthentificated);
 userRoute.get("/all", getAllUsers);
 
 userRoute.put("/update", userAuth, updateUser);
+userRoute.post("/change-password", userAuth, changePassword);
 userRoute.delete("/delete", userAuth, deleteUser);
 
 userRoute.get("/verify/:id/:uniqueString", verifyUser);
 userRoute.get("/verified", verified);
 
 userRoute.get("/recovery/:email", recoveryUser);
-userRoute.post("/check-code/:email/:code", checkCode);
+userRoute.post("/check-code", checkCode);
 userRoute.put("/reset-password", resetPassword);
 
 export default userRoute;

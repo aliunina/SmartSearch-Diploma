@@ -298,7 +298,11 @@ export default function Search() {
   };
 
   const signIn = () => {
-    navigate("/sign-in");
+    navigate("/sign-in", {
+      state: {
+        navBack: true
+      }
+    });
   };
 
   const signUp = () => {

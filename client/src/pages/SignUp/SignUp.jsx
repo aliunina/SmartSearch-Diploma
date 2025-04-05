@@ -32,7 +32,7 @@ export default function SignUp() {
           showSuccessMessageToast(
             "Письмо с подтверждением отправлено на указанную при регистрации почту."
           );
-          navigate(-1);
+          navigate("/");
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }

@@ -6,7 +6,6 @@ import Hint from "../Hint/Hint";
 import Label from "../Label/Label";
 import CustomDatePicker from "../CustomDatePicker/CustomDatePicker";
 import { useEffect, useRef, useState } from "react";
-import { OrbitProgress } from "react-loading-indicators";
 import BusyIndicator from "../BusyIndicator/BusyIndicator";
 
 export default function EditProfileDialog({
@@ -116,7 +115,7 @@ export default function EditProfileDialog({
         </div>
         <p className="dialog-title">Изменить профиль</p>
         <div className="dialog-content">
-          <div className="editProfileContainer">
+          <div className="edit-profile-container">
             <Label required={true} htmlFor="editProfileLastName">
               Фамилия
             </Label>
@@ -135,7 +134,7 @@ export default function EditProfileDialog({
               title={isValid.lastName ? "" : "Поле не может быть пустым."}
             />
           </div>
-          <div className="editProfileContainer">
+          <div className="edit-profile-container">
             <Label required={true} htmlFor="editProfileFirstName">
               Имя
             </Label>
@@ -154,7 +153,7 @@ export default function EditProfileDialog({
               title={isValid.firstName ? "" : "Поле не может быть пустым."}
             />
           </div>
-          <div className="editProfileContainer">
+          <div className="edit-profile-container">
             <Label htmlFor="editProfilePatronymic">Отчество</Label>
             <Input
               id="editProfilePatronymic"
@@ -168,7 +167,7 @@ export default function EditProfileDialog({
               autoComplete="new-password"
             />
           </div>
-          <div className="editProfileContainer">
+          <div className="edit-profile-container">
             <Label required={true} htmlFor="editProfileCountry">
               Страна
             </Label>
@@ -187,7 +186,7 @@ export default function EditProfileDialog({
               title={isValid.country ? "" : "Поле не может быть пустым."}
             />
           </div>
-          <div className="editProfileContainer">
+          <div className="edit-profile-container">
             <Label required={true} htmlFor="editProfileBirthday">
               Дата рождения
             </Label>
@@ -211,7 +210,7 @@ export default function EditProfileDialog({
               }
             />
           </div>
-          <div className="editProfileContainer">
+          <div className="edit-profile-container">
             <Label required={true} htmlFor="editProfileEmployment">
               Место работы/учёбы
             </Label>
@@ -233,7 +232,7 @@ export default function EditProfileDialog({
               <Hint text="Например, профессор физико-математических наук, БНТУ" />
             </Input>
           </div>
-          <div className="editProfileContainer">
+          <div className="edit-profile-container">
             <Label htmlFor="editProfileThemes">Интересующие вас темы</Label>
             <Input
               type="text"
@@ -249,7 +248,7 @@ export default function EditProfileDialog({
               <Hint text="Например, наночастицы диоксида титана, квантовая механика" />
             </Input>
           </div>
-          <div className="editProfileContainer">
+          <div className="edit-profile-container">
             <Label required={true} htmlFor="editProfileStatus">
               Статус
             </Label>
