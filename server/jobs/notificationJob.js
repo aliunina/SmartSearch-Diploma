@@ -26,31 +26,33 @@ transporter.verify((error, success) => {
 
 const sendNotifications = async (req, res) => {
   try {
-    const notifiedUsers = await User.find({ themes: { $ne: [] } });
+    const notifiedUsers = await User.find({
+      $and: [
+        {
+          themes: { $ne: [] },
+        },
+        {
+          verified: true,
+        },
+      ],
+    });
     notifiedUsers.forEach(async (user) => {
       const { _id, email, firstName } = user;
       let htmlArticles = "";
       const articlesToSave = [];
-      const length = user.themes.length;
+      const themesToSave = [];
 
-      user.themes.forEach(async (theme, i) => {
-        getNewArticles(theme).then((articles) => {
-          if (articles.length > 0) {
-            htmlArticles += `<p style="font-size: medium;">Эти статьи на тему <b>"${theme.text}"</b> могут быть вам интересны:</p>`;
+      const themePromises = user.themes.map(async (theme) => {
+        const { count, articles } = await getNewArticles(theme);
+        themesToSave.push({
+          text: theme.text,
+          count,
+        });
+        if (articles.length > 0) {
+          htmlArticles += `<p style="font-size: medium;">Эти статьи на тему <b>"${theme.text}"</b> могут быть вам интересны:</p>`;
 
-            articles.forEach((article) => {
-              const newArticle = new Article({
-                userId: _id,
-                link: article.link,
-                theme: theme.text,
-                title: article.title,
-                displayLink: article.displayLink,
-                snippet: article.snippet,
-                newArticle: true,
-                createdAt: Date.now(),
-              });
-              articlesToSave.push(newArticle);
-              htmlArticles += `
+          articles.forEach((article) => {
+            htmlArticles += `
                     <div style="padding-bottom: 2em;">
                       <a
                         style="
@@ -73,15 +75,34 @@ const sendNotifications = async (req, res) => {
                       ></div>
                       <div>${article.snippet}</div>
                     </div>`;
-            });
-          }
 
-          if (i === length - 1) {
-            sendNotificationEmail(_id, email, firstName, htmlArticles);
-            Article.create(articlesToSave);
-          }
-        });
+            const newArticle = new Article({
+              userId: _id,
+              link: article.link,
+              theme: theme.text,
+              title: article.title,
+              displayLink: article.displayLink,
+              snippet: article.snippet,
+              newArticle: true,
+              createdAt: Date.now(),
+            });
+            articlesToSave.push(newArticle);
+          });
+        }
       });
+
+      await Promise.all(themePromises);
+
+      if (articlesToSave.length > 0) {
+        sendNotificationEmail(_id, email, firstName, htmlArticles);
+        await Article.create(articlesToSave);
+
+        const userData = await User.findByIdAndUpdate(
+          { _id },
+          { themes: themesToSave },
+          { new: true }
+        );
+      }
     });
   } catch (error) {
     console.log(error);
@@ -114,7 +135,10 @@ const getNewArticles = async (theme) => {
     for (let i = 0; i < newArticlesCount; i++) {
       articles.push(response.data.items[i]);
     }
-    return articles;
+    return {
+      count: response.data.searchInformation.totalResults,
+      articles,
+    };
   } catch (error) {
     console.error("Error fetching data:", error);
     return [];
@@ -147,7 +171,7 @@ const sendNotificationEmail = (id, email, name, htmlArticles) => {
     });
 };
 
-// sendNotifications();
+sendNotifications();
 
 // cron.schedule(cronExpression, () => {
 //   console.log("job is running");
