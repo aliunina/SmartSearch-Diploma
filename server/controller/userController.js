@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import path from "path";
 import jwt from "jsonwebtoken";
 import fs from "fs";
+import axios from "axios";
 
 import User from "../model/userModel.js";
 import UserVerification from "../model/userVerificationModel.js";
@@ -88,6 +89,30 @@ const sendVerificationEmail = ({ _id, email, firstName }, res) => {
     });
 };
 
+const saveUserThemesWithCount = async (userId) => {
+  const userData = await User.findOne({ _id: userId });
+
+  const forUpdateThemes = await Promise.all(
+    userData.themes.map(async (theme) => {
+      const urlParams = new URLSearchParams({
+        cx: process.env.SEARCH_ENGINE_CX,
+        key: process.env.SEARCH_ENGINE_KEY,
+        q: theme,
+      });
+
+      const response = await axios.get(`
+      ${process.env.SEARCH_ENGINE_URL}?${urlParams.toString()}`);
+
+      return {
+        text: theme,
+        count: new Number(response.data.searchInformation.totalResults),
+      };
+    })
+  );
+
+  User.findByIdAndUpdate(userId, { themes: forUpdateThemes });
+};
+
 export const verifyUser = (req, res) => {
   const { id, uniqueString } = req.params;
   UserVerification.find({ userId: id })
@@ -97,17 +122,17 @@ export const verifyUser = (req, res) => {
         const hashedUniqueString = result[0].uniqueString;
 
         if (expiresAt < Date.now()) {
-          UserVerification.deleteOne({ userId })
+          UserVerification.deleteOne({ userId: id })
             .then((result) => {
-              User.deleteOne({ _id: userId })
-                .then((result) => {
+              User.deleteOne({ _id: id })
+                .then(() => {
                   let message =
                     "Срок действия ссылки истёк. Пожалуйста, пройдите регистрацию еще раз.";
                   res.redirect(
                     `/api/user/verified?error=true&message=${message}`
                   );
                 })
-                .catch((error) => {
+                .catch(() => {
                   let message =
                     "Произошла ошибка при удалении пользовательской записи.";
                   res.redirect(
@@ -115,7 +140,7 @@ export const verifyUser = (req, res) => {
                   );
                 });
             })
-            .catch((error) => {
+            .catch(() => {
               let message =
                 "Произошла ошибка при удалении записи для верификации.";
               res.redirect(`/api/user/verified?error=true&message=${message}`);
@@ -126,12 +151,13 @@ export const verifyUser = (req, res) => {
             .then((result) => {
               if (result) {
                 User.updateOne({ _id: id }, { verified: true })
-                  .then((result) => {
+                  .then(() => {
                     UserVerification.deleteOne({ userId: id })
-                      .then((result) => {
+                      .then(() => {
+                        saveUserThemesWithCount(id);
                         res.redirect(`/api/user/verified?error=false`);
                       })
-                      .catch((error) => {
+                      .catch(() => {
                         let message =
                           "Произошла ошибка при удалении записи об успешной верификации.";
                         res.redirect(
@@ -139,7 +165,7 @@ export const verifyUser = (req, res) => {
                         );
                       });
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     let message =
                       "Произошла ошибка при подтверждении аккаунта.";
                     res.redirect(
@@ -154,7 +180,7 @@ export const verifyUser = (req, res) => {
                 );
               }
             })
-            .catch((error) => {
+            .catch(() => {
               let message = "Произошла ошибка при сравнении уникальной строки.";
               res.redirect(`/api/user/verified?error=true&message=${message}`);
             });
@@ -165,7 +191,7 @@ export const verifyUser = (req, res) => {
         res.redirect(`/api/user/verified?error=true&message=${message}`);
       }
     })
-    .catch((error) => {
+    .catch(() => {
       let message =
         "Произошла ошибка при проверке на существование записи для верификации.";
       res.redirect(`/api/user/verified?error=true&message=${message}`);
@@ -197,6 +223,12 @@ export const registerUser = async (req, res) => {
       .then((hashedPassword) => {
         newUser.unhashedPassword = newUser.password;
         newUser.password = hashedPassword;
+        newUser.themes = newUser.themes.map((theme) => {
+          return {
+            text: theme,
+            count: 0,
+          };
+        });
         newUser
           .save()
           .then((result) => {
