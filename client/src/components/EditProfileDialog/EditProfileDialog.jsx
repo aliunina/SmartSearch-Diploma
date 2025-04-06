@@ -233,22 +233,6 @@ export default function EditProfileDialog({
             </Input>
           </div>
           <div className="edit-profile-container">
-            <Label htmlFor="editProfileThemes">Интересующие вас темы</Label>
-            <Input
-              type="text"
-              id="editProfileThemes"
-              value={dialogState.themes}
-              maxLength="1000"
-              onChange={(e) =>
-                setDialogState({ ...dialogState, themes: e.target.value })
-              }
-              autoComplete="new-password"
-              placeholder="Введите темы через запятую"
-            >
-              <Hint text="Например, наночастицы диоксида титана, квантовая механика" />
-            </Input>
-          </div>
-          <div className="edit-profile-container">
             <Label required={true} htmlFor="editProfileStatus">
               Статус
             </Label>

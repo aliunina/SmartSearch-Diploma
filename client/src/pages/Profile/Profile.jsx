@@ -46,7 +46,9 @@ export default function Profile() {
     newPassword: "",
     repeatPassword: ""
   };
-  const [passwordDialogState, setPasswordDialogState] = useState(INITIAL_PASSWORD_DIALOG_STATE);
+  const [passwordDialogState, setPasswordDialogState] = useState(
+    INITIAL_PASSWORD_DIALOG_STATE
+  );
   const [passwordDialogBusy, setPasswordDialogBusy] = useState(false);
 
   useEffect(() => {
@@ -55,18 +57,11 @@ export default function Profile() {
 
   const editUserProfile = () => {
     const state = { ...user };
-    if (user?.themes) {
-      state.themes = user.themes.join(", ");
-    }
     setDialogState(state);
     setDialogOpen(true);
   };
 
   const updateUser = (values) => {
-    if (values.themes) {
-      values.themes = values.themes.split(",").map((elem) => elem.trim());
-    }
-
     setDialogBusy(true);
     const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
@@ -132,19 +127,17 @@ export default function Profile() {
             "Вы не авторизованы. Пожалуйста, выполните вход."
           );
         } else if (response.status === 403) {
-          showErrorMessageToast(
-            "Неверный текущий пароль."
-          );
-        }  else if (response.status === 400) {
-          showErrorMessageToast(
-            "Новый пароль не может быть равен старому."
-          );
+          showErrorMessageToast("Неверный текущий пароль.");
+        } else if (response.status === 400) {
+          showErrorMessageToast("Новый пароль не может быть равен старому.");
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
         }
         setPasswordDialogBusy(false);
       });
   };
+
+  const editUserThemes = () => {};
 
   return (
     <>
@@ -198,14 +191,23 @@ export default function Profile() {
                 <p className="profile-user-employment">{user.employment}</p>
                 <div>
                   <p className="profile-user-themes-title">Области интересов</p>
-                  <div className="profile-user-themes">
-                    {user.themes.map((theme) => {
-                      return (
-                        <div className="profile-user-theme" key={theme}>
-                          {theme}
-                        </div>
-                      );
-                    })}
+                  <div className="profile-edit-themes-container">
+                    <div className="profile-user-themes">
+                      {user.themes.map((theme, i) => {
+                        return (
+                          <div className="profile-user-theme" key={i}>
+                            {theme.text}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <Button
+                      className="profile-edit-themes-button"
+                      title="Редактировать области интересов"
+                      onClick={editUserThemes}
+                    >
+                      <img src="edit-profile.svg" alt="Редактировать" />
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -269,7 +271,7 @@ export default function Profile() {
                       d="M4.5 14H11.5V12H4.5V14ZM4.5 10H14.5V8.00003H4.5V10ZM4.5 6.00003H14.5V4.00003H4.5V6.00003ZM2.5 18C1.95 18 1.479 17.804 1.087 17.412C0.695002 17.02 0.499335 16.5494 0.500002 16V2.00003C0.500002 1.45003 0.696002 0.979032 1.088 0.587032C1.48 0.195032 1.95067 -0.000634451 2.5 3.22154e-05H16.5C17.05 3.22154e-05 17.521 0.196032 17.913 0.588032C18.305 0.980032 18.5007 1.4507 18.5 2.00003V16C18.5 16.55 18.304 17.021 17.912 17.413C17.52 17.805 17.0493 18.0007 16.5 18H2.5Z"
                       fill={`${tab === 2 ? "#008054" : "#5C5C5C"}`}
                     />
-                  </svg>  
+                  </svg>
                   Новые статьи в источниках
                 </p>
               </div>

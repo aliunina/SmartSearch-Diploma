@@ -171,7 +171,7 @@ const sendNotificationEmail = (id, email, name, htmlArticles) => {
     });
 };
 
-sendNotifications();
+// sendNotifications();
 
 // cron.schedule(cronExpression, () => {
 //   console.log("job is running");

@@ -42,7 +42,6 @@
 }
 
 .profile-edit-button {
-  padding: 1eangm;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,6 +52,7 @@
   border: 1px solid #cccccc;
   border-radius: 12px;
   padding: 0.8em;
+  height: 3em;
 }
 
 .profile-edit-button:hover {
@@ -92,4 +92,32 @@
 
 .profile-tab:first-child {
   margin-left: 15em;
+}
+
+.profile-edit-themes-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.profile-edit-themes-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  cursor: pointer;
+  font-weight: 500;
+  background-color: white;
+  border: 0;
+  border-radius: 12px;
+  padding: 0.8em;
+  height: 3em;
+}
+
+.profile-edit-themes-button:hover {
+  background-color: #e6e6e6;
+}
+
+.profile-edit-themes-button:active {
+  background-color: #b4b4b4;
 }
