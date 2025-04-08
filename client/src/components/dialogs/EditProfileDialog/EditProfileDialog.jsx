@@ -55,11 +55,11 @@ export default function EditProfileDialog({
     );
 
     setIsValid(res);
-    Object.keys(res).forEach((key) => {
+    for (const key of Object.keys(res)) {
       if (!res[key]) {
         return false;
       }
-    });
+    }
     return true;
   };
 

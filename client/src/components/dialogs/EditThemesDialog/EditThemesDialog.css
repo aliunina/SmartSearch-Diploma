@@ -6,12 +6,13 @@
 .dialog-edit-themes-container {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 0.5em;
 }
 
 .dialog-edit-themes-theme {
   display: flex;
-  gap: 1em;
+  gap: 0.5em;
+  align-items: center;
 }
 
 .dialog-edit-themes-theme > div {
@@ -21,4 +22,34 @@
 .dialog-edit-themes-input {
   padding: 0.5em;
   border-radius: 8px;
+}
+
+.dialog-edit-theme-delete-button {
+  color: var(--hint-color);
+}
+
+.dialog-edit-theme-add-button {
+  margin-top: -0.5em;
+  align-self: center;
+  border: 0;
+  padding: 0.9em;
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 12px;
+  font-weight: 600;
+  width: 8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  height: 3em;
+  color: var(--accent-green);
+}
+
+.dialog-edit-theme-add-button:hover {
+  background-color: var(--light-gray);
+}
+
+.dialog-edit-theme-add-button:active {
+  background-color: var(--dark-gray);
 }

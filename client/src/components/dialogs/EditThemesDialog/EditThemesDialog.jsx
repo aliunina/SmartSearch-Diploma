@@ -3,6 +3,8 @@ import "./EditThemesDialog.css";
 import Button from "../../inputs/Button/Button";
 import BusyIndicator from "../../visuals/BusyIndicator/BusyIndicator";
 import Input from "../../inputs/Input/Input";
+import { DeleteFilled, PlusOutlined } from "@ant-design/icons";
+import { showErrorMessageToast } from "../../../helpers/util";
 
 export default function EditThemesDialog({
   dialogBusy,
@@ -19,21 +21,46 @@ export default function EditThemesDialog({
     setDialogOpen(false);
   };
 
-  const submitForm = () => {};
+  const submitForm = () => {
+    let valid = true;
+    dialogState.themes.forEach((theme) => {
+      valid = valid && theme.text?.trim().length > 0;
+    });
+    if (valid) {
+      updateThemes(dialogState.themes);
+    } else {
+      showErrorMessageToast(
+        "Тема не может быть пустой, исправьте пустые тематики"
+      );
+    }
+  };
 
-  const deleteTheme = (index) => {};
+  const deleteTheme = (index) => {
+    const arr = dialogState.themes;
+    arr.splice(index, 1);
+    setDialogState({ ...dialogState, themes: arr });
+  };
+
+  const addTheme = () => {
+    const arr = dialogState.themes;
+    arr.push({
+      text: "",
+      count: 0
+    });
+    setDialogState({ ...dialogState, themes: arr });
+  };
 
   return (
     <div className="darkened-background">
-      {dialogBusy && (
-        <div className="dialog-size dialog-busy-background dialog-edit-themes">
-          <BusyIndicator />
-        </div>
-      )}
       <form
         className="dialog-size dialog-wrap dialog-edit-themes"
         onSubmit={submitForm}
       >
+        {dialogBusy && (
+          <div className="dialog-size dialog-busy-background">
+            <BusyIndicator />
+          </div>
+        )}
         <div className="dialog-close-button-container">
           <Button
             className="close-button"
@@ -53,29 +80,44 @@ export default function EditThemesDialog({
                   <Input
                     className="dialog-edit-themes-input"
                     type="text"
-                    maxLength="20"
+                    maxLength="50"
+                    onChange={(event) => {
+                      const arr = dialogState.themes;
+                      arr[i] = {
+                        text: event.target.value,
+                        count: arr[i].count
+                      };
+                      setDialogState({ ...dialogState, themes: arr });
+                    }}
                     value={theme.text}
                   />
-                  <Button onClick={() => deleteTheme(i)}></Button>
+                  <Button
+                    type="button"
+                    onClick={() => deleteTheme(i)}
+                    className="default-button dialog-edit-theme-delete-button"
+                  >
+                    <DeleteFilled />
+                  </Button>
                 </div>
               );
             })}
           </div>
-          <Button>Добавить</Button>
+          <Button
+            type="button"
+            hidden={dialogState.themes.length === 5}
+            className="dialog-edit-theme-add-button"
+            onClick={addTheme}
+            title="Удалить"
+          >
+            <PlusOutlined style={{ fontSize: "1.5em" }} />
+            Добавить
+          </Button>
         </div>
         <div className="dialog-buttons-container">
-          <Button
-            onClick={cancel}
-            type="button"
-            className="transparent-button"
-          >
+          <Button onClick={cancel} type="button" className="transparent-button">
             Отменить
           </Button>
-          <Button
-            type="button"
-            className="accent-button"
-            onClick={submitForm}
-          >
+          <Button type="button" className="accent-button" onClick={submitForm}>
             Сохранить
           </Button>
         </div>

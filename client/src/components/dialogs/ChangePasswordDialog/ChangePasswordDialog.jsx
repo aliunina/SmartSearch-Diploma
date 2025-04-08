@@ -43,11 +43,11 @@ export default function ChangePasswordDialog({
 
     setIsValid(res);
 
-    Object.keys(res).forEach((key) => {
+    for (const key of Object.keys(res)) {
       if (!res[key]) {
         return false;
       }
-    });
+    }
     return true;
   };
 
@@ -84,15 +84,15 @@ export default function ChangePasswordDialog({
 
   return (
     <div className="darkened-background">
-      {dialogBusy && (
-        <div className="dialog-size dialog-change-password dialog-busy-background">
-          <BusyIndicator />
-        </div>
-      )}
       <form
         className="dialog-size dialog-change-password dialog-wrap"
         onSubmit={submitForm}
       >
+        {dialogBusy && (
+          <div className="dialog-size dialog-busy-background">
+            <BusyIndicator />
+          </div>
+        )}
         <div className="dialog-close-button-container">
           <Button
             className="close-button"
@@ -168,7 +168,7 @@ export default function ChangePasswordDialog({
           </div>
           <div className="change-password-container">
             <Label required={true} htmlFor="changeRepeatPassword">
-            Подтвердите пароль
+              Подтвердите пароль
             </Label>
             <Input
               type={repeatInputType}
@@ -178,7 +178,10 @@ export default function ChangePasswordDialog({
               name="repeatPassword"
               value={dialogState.repeatPassword}
               onChange={(e) =>
-                setDialogState({ ...dialogState, repeatPassword: e.target.value })
+                setDialogState({
+                  ...dialogState,
+                  repeatPassword: e.target.value
+                })
               }
               ref={repeatPasswordRef}
               valid={isValid.repeatPassword}
@@ -201,18 +204,10 @@ export default function ChangePasswordDialog({
           </div>
         </div>
         <div className="dialog-buttons-container">
-          <Button
-            onClick={cancel}
-            type="button"
-            className="transparent-button"
-          >
+          <Button onClick={cancel} type="button" className="transparent-button">
             Отменить
           </Button>
-          <Button
-            type="button"
-            className="accent-button"
-            onClick={submitForm}
-          >
+          <Button type="button" className="accent-button" onClick={submitForm}>
             Сохранить
           </Button>
         </div>
