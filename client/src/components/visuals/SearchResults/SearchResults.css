@@ -20,12 +20,12 @@
 
 .page {
   font-size: 1.2em;
-  color: #008054;
+  color: var(--accent-green);
   cursor: pointer;
 }
 
 .page:hover {
-  color: #006642;
+  color: var(--accent-dark-green);
 }
 
 .page-active {

@@ -21,7 +21,7 @@
 
 .sign-up-step-description {
     margin: 0;
-    color: #767676;
+    color: var(--hint-color);
 }
 
 .sign-up-step-description-inactive {

@@ -19,7 +19,7 @@
 }
 
 .recovery-form-subtitle {
-  color: #767676;
+  color: var(--hint-color);
   margin: 0;
   text-align: center;
 }
@@ -71,41 +71,22 @@
   background: transparent;
   border: 0;
   cursor: pointer;
-  color: #929292;
+  color: var(--gray);
   font-size: 1.4em;
-}
-
-.recovery-form-forward-button {
-  padding: 0.7em;
-  color: white;
-  width: 100%;
-  font-weight: 600;
-  background-color: #008054;
-  border-radius: 12px;
-  cursor: pointer;
-  border: 0;
-}
-
-.recovery-form-forward-button:hover {
-  background-color: #006642;
-}
-
-.recovery-form-forward-button:active {
-  background-color: #014931;
 }
 
 .recovery-form-back-to-signin {
   font-size: 0.8em;
-  color: #929292;
+  color: var(--gray);;
   cursor: pointer;
   text-align: center;
   text-decoration: underline;
 }
 
 .recovery-form-back-to-signin:hover {
-  color: #757575;
+  color: var(--gray-text-color);
 }
 
 .recovery-form-back-to-signin:active {
-  color: #4c4c4c;
+  color: var(--darker-gray-text-color);
 }

@@ -4,5 +4,5 @@
 }
 
 .input-label-required {
-    color: #008054;
+    color: var(--accent-green);
 }

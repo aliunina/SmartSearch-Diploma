@@ -372,10 +372,10 @@ export default function Search() {
         )}
         {!user && (
           <div className="search-header-buttons">
-            <Button className="menu-button" onClick={openMenu}>
+            <Button className="default-button" onClick={openMenu}>
               <img src="menu.svg" alt="Меню" />
             </Button>
-            <Button className="sign-in-button" onClick={signIn}>
+            <Button className="accent-button header-sign-in-button" onClick={signIn}>
               Войти
             </Button>
           </div>

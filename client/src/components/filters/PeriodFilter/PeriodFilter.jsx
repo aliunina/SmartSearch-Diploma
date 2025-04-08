@@ -90,7 +90,7 @@ export default function PeriodFilter({
         {currentFilter.text === PERIOD_FILTER["custom"].text && (
           <Button
             type="button"
-            className="custom-period-button"
+            className="transparent-button"
             onClick={setCustomFilter}
           >
             Применить

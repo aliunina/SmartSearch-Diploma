@@ -27,7 +27,7 @@ const RedirectSearchBar = forwardRef(function RedirectSearchBar({ searchValue, s
           placeholder="Введите запрос"
         />
       </div>
-      <Button onClick={executeSearch} className="redirect-search-button">
+      <Button onClick={executeSearch} className="accent-button redirect-search-button">
         Искать
       </Button>
     </form>

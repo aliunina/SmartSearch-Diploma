@@ -5,6 +5,6 @@
 .filter-radio {
   margin: 0;
   margin-right: 1.2em;
-  accent-color: #008054;
+  accent-color: var(--accent-green);
   transform: scale(1.4);
 }

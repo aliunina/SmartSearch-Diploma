@@ -456,7 +456,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
         <div className="sign-up-form-buttons">
           <Button
             type="button"
-            className="sign-up-form-back-button"
+            className="transparent-button sign-up-form-button"
             hidden={selectedTab === 0}
             onClick={navBack}
           >
@@ -464,7 +464,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
           </Button>
           <Button
             type="button"
-            className="sign-up-form-forward-button"
+            className="accent-button sign-up-form-button"
             onClick={navForward}
           >
             Продолжить

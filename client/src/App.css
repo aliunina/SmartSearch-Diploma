@@ -9,12 +9,26 @@ body {
 .message-toast {
   font-family: "Roboto", sans-serif !important;
   font-size: 0.87em;
-  border: 1px solid #cccccc;
+  border: 1px solid var(--border-color);
 }
 
 :root {
   --toastify-color-success: #008054;
   --toastify-color-error: #b3261e;
+  --invalid-error: #b3261e;
+  --transparent-color: white;
+  --transparent-hover-color: #e6e6e6;
+  --transparent-active-color: #b4b4b4;
+  --border-color: #cccccc;
+  --light-gray: #eeeeee;
+  --dark-gray: #d5d5d5;
+  --gray-text-color: #5c5c5c;
+  --darker-gray-text-color: #4c4c4c;
+  --gray: #929292;
+  --hint-color: #767676;
+  --accent-green: #008054;
+  --accent-dark-green: #006642;
+  --accent-darker-green: #014931;
 }
 
 body:has(.darkened-background) {
@@ -91,23 +105,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .dialog-close-button-container {
   display: flex;
   justify-content: right;
-}
-
-.dialog-close-button {
-  border: none;
-  cursor: pointer;
-  background: transparent;
-  margin-right: 2em;
-  padding: 0.5em;
-  border-radius: 8px;
-}
-
-.dialog-close-button:hover {
-  background-color: #eeeeee;
-}
-
-.dialog-close-button:active {
-  background-color: #d5d5d5;
+  margin-right: 1.8em;
 }
 
 .dialog-title {
@@ -129,48 +127,78 @@ input[type="search"]::-webkit-search-results-decoration {
   margin-bottom: 1em;
 }
 
-.dialog-cancel-button {
-  padding: 0.7em;
-  font-weight: 600;
-  width: 7em;
-  cursor: pointer;
-  background-color: white;
-  border-radius: 12px;
-  border: 1px solid #cccccc;
-}
-
-.dialog-cancel-button:hover {
-  background-color: #e6e6e6;
-}
-
-.dialog-cancel-button:active {
-  background-color: #b4b4b4;
-}
-
-.dialog-submit-button {
-  padding: 0.7em;
-  width: 7em;
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-  background-color: #008054;
-  border-radius: 12px;
-  border: 0;
-}
-
-.dialog-submit-button:hover {
-  background-color: #006642;
-}
-
-.dialog-submit-button:active {
-  background-color: #014931;
-}
-
 .dialog-buttons-container {
-  border-top: 1px solid #cccccc;
+  border-top: 1px solid var(--border-color);
   padding-top: 1em;
   display: flex;
   gap: 1em;
   padding-right: 1em;
   justify-content: end;
+}
+
+.accent-button {
+  padding: 0.9em;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  background-color: var(--accent-green);
+  border-radius: 12px;
+  border: 0;
+}
+
+.accent-button:hover {
+  background-color: var(--accent-dark-green);
+}
+
+.accent-button:active {
+  background-color: var(--accent-darker-green);
+}
+
+.default-button {
+  border: 0;
+  padding: 0.9em;
+  height: 3em;
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 12px;
+}
+
+.close-button {
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  padding: 0.5em;
+  border-radius: 8px;
+}
+
+.default-button:hover,
+.close-button:hover {
+  background-color: var(--light-gray);
+}
+
+.default-button:active,
+.close-button:active {
+  background-color: var(--dark-gray);
+}
+
+.transparent-button {
+  padding: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: var(--transparent-color);
+  border-radius: 12px;
+  border: 0;
+  outline: 1px solid var(--border-color);
+}
+
+.transparent-button:hover {
+  background-color: var(--transparent-hover-color);
+}
+
+.transparent-button:active {
+  background-color: var(--transparent-active-color);
+}
+
+.header-sign-in-button {
+  margin-left: 1em;
 }

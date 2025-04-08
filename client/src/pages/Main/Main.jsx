@@ -122,11 +122,11 @@ export default function Main() {
         </div>
       )}
       <Header className="main-header">
-        <Button className="menu-button" onClick={openMenu}>
+        <Button className="default-button" onClick={openMenu}>
           <img src="menu.svg" alt="Меню" />
         </Button>
         {!user && (
-          <Button className="sign-in-button" onClick={signIn}>
+          <Button className="accent-button header-sign-in-button" onClick={signIn}>
             Войти
           </Button>
         )}

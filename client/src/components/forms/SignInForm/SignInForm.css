@@ -18,40 +18,17 @@
   height: 0.8em;
 }
 
-.sign-in-form-google-button {
-  padding: 1em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1em;
-  width: 100%;
-  cursor: pointer;
-  z-index: 6;
-  font-weight: 500;
-  background-color: white;
-  border: 1px solid #cccccc;
-  border-radius: 12px;
-}
-
-.sign-in-form-google-button:hover {
-  background-color: #e6e6e6;
-}
-
-.sign-in-form-google-button:active {
-  background-color: #b4b4b4;
-}
-
 .sign-in-form-divider {
   width: 100%;
   align-items: center;
   display: flex;
-  color: #929292;
+  color: var(--gray);;
   gap: 1em;
 }
 
 .sign-in-form-divider-line {
   width: 50%;
-  border-bottom: 1px solid #dcdcdc;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .sign-in-form-container {
@@ -97,41 +74,22 @@
   background: transparent;
   border: 0;
   cursor: pointer;
-  color: #929292;
+  color: var(--gray);;
   font-size: 1.4em;
-}
-
-.sign-in-form-forward-button {
-  padding: 0.7em;
-  color: white;
-  width: 100%;
-  font-weight: 600;
-  background-color: #008054;
-  border-radius: 12px;
-  cursor: pointer;
-  border: 0;
-}
-
-.sign-in-form-forward-button:hover {
-  background-color: #006642;
-}
-
-.sign-in-form-forward-button:active {
-  background-color: #014931;
 }
 
 .sign-in-form-forgot-password {
   font-size: 0.8em;
-  color: #929292;
+  color: var(--gray);
   cursor: pointer;
   text-align: center;
   text-decoration: underline;
 }
 
 .sign-in-form-forgot-password:hover {
-  color: #757575;
+  color: var(--gray-text-color);
 }
 
 .sign-in-form-forgot-password:active {
-  color: #4c4c4c;
+  color: var(--darker-gray-text-color);
 }

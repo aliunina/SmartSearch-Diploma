@@ -95,7 +95,7 @@ export default function ChangePasswordDialog({
       >
         <div className="dialog-close-button-container">
           <Button
-            className="dialog-close-button"
+            className="close-button"
             type="button"
             title="Закрыть"
             onClick={close}
@@ -204,13 +204,13 @@ export default function ChangePasswordDialog({
           <Button
             onClick={cancel}
             type="button"
-            className="dialog-cancel-button"
+            className="transparent-button"
           >
             Отменить
           </Button>
           <Button
             type="button"
-            className="dialog-submit-button"
+            className="accent-button"
             onClick={submitForm}
           >
             Сохранить

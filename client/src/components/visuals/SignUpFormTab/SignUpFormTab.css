@@ -14,7 +14,7 @@
 
 .sign-up-form-title-details {
   margin: 0;
-  color: #767676;
+  color: var(--hint-color);
 }
 
 .sign-up-form-body {

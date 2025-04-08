@@ -1,7 +1,7 @@
 import "./RecoveryForm.css";
 import { INITIAL_STATE, formReducer } from "./RecoveryForm.state";
 
-import Label from "../../visuals/Logo/Logo";
+import Label from "../../visuals/Label/Label";
 import Input from "../../inputs/Input/Input";
 import Button from "../../inputs/Button/Button";
 
@@ -284,21 +284,21 @@ export default function RecoveryForm({
       )}
       <Button
         hidden={step === 3 || !validAcc}
-        className="recovery-form-forward-button"
+        className="accent-button"
         onClick={navForward}
       >
         Продолжить
       </Button>
       <Button
         hidden={step !== 3 || !validAcc}
-        className="recovery-form-forward-button"
+        className="accent-button"
         onClick={signIn}
       >
         Войти
       </Button>
       <Button
         hidden={validAcc}
-        className="recovery-form-forward-button"
+        className="accent-button"
         onClick={recoveryAcc}
       >
         Восстановить аккаунт

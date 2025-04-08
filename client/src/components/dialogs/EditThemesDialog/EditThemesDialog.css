@@ -1,0 +1,24 @@
+.dialog-edit-themes {
+  height: auto;
+  overflow-y: hidden;
+}
+
+.dialog-edit-themes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.dialog-edit-themes-theme {
+  display: flex;
+  gap: 1em;
+}
+
+.dialog-edit-themes-theme > div {
+  width: 100%;
+}
+
+.dialog-edit-themes-input {
+  padding: 0.5em;
+  border-radius: 8px;
+}

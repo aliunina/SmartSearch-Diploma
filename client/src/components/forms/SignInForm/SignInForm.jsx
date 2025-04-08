@@ -135,7 +135,7 @@ export default function SignInForm({ signIn }) {
         </div>
         <Button
           type="button"
-          className="sign-in-form-forward-button"
+          className="accent-button"
           onClick={navForward}
         >
           Продолжить

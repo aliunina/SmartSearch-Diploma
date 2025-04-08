@@ -27,7 +27,7 @@
 .search-result-site {
     margin: 0;
     text-decoration: none;
-    color: #008054;
+    color: var(--accent-green);
 }
 
 .search-result-snippet {

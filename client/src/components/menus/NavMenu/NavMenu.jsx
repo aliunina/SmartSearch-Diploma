@@ -26,7 +26,7 @@ export default function NavMenu({
       <div className="nav-menu-header">
         <div className="nav-menu-close-button-container">
           <Button
-            className="nav-menu-close-button"
+            className="close-button nav-menu-close-button"
             type="button"
             title="Закрыть"
             onClick={close}
@@ -50,7 +50,7 @@ export default function NavMenu({
             </p>
             <Button
               type="button"
-              className="nav-menu-signup-button"
+              className="accent-button"
               onClick={signUp}
             >
               Регистрация в БНТУ Умный поиск

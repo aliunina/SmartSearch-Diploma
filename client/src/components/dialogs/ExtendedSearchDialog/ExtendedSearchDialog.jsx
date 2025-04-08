@@ -63,7 +63,7 @@ export default function ExtendedSearchDialog({
       <form className="dialog-size dialog-wrap" onSubmit={submitForm}>
         <div className="dialog-close-button-container">
           <Button
-            className="dialog-close-button"
+            className="close-button"
             type="button"
             title="Закрыть"
             onClick={close}
@@ -155,10 +155,10 @@ export default function ExtendedSearchDialog({
           </div>
         </div>
         <div className="dialog-buttons-container">
-          <Button onClick={clear} type="button" className="dialog-cancel-button">
+          <Button onClick={clear} type="button" className="transparent-button">
             Очистить
           </Button>
-          <Button className="dialog-submit-button">Поиск</Button>
+          <Button className="accent-button">Поиск</Button>
         </div>
       </form>
     </div>
