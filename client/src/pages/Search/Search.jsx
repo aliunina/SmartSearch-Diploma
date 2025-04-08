@@ -3,17 +3,22 @@ import Header from "../../layouts/SearchLayout/Header/Header";
 import LeftPanel from "../../layouts/SearchLayout/LeftPanel/LeftPanel";
 import Body from "../../layouts/SearchLayout/Body/Body";
 
-import SearchResults from "../../components/SearchResults/SearchResults";
-import SearchBar from "../../components/SearchBar/SearchBar";
-import Logo from "../../components/Logo/Logo";
-import NavMenu from "../../components/NavMenu/NavMenu";
-import Avatar from "../../components/Avatar/Avatar";
-import PeriodFilter from "../../components/PeriodFilter/PeriodFilter";
+import SearchResults from "../../components/visuals/SearchResults/SearchResults";
+import SearchBar from "../../components/inputs/SearchBar/SearchBar";
+import Logo from "../../components/visuals/Logo/Logo";
+import NavMenu from "../../components/menus/NavMenu/NavMenu";
+import Avatar from "../../components/visuals/Avatar/Avatar";
+import PeriodFilter from "../../components/filters/PeriodFilter/PeriodFilter";
+import OrderFilter from "../../components/filters/OrderFilter/OrderFilter";
+import SourceFilter from "../../components/filters/SourceFilter/SourceFilter";
+import Button from "../../components/inputs/Button/Button";
+import BusyIndicator from "../../components/visuals/BusyIndicator/BusyIndicator";
 
 import {
   PERIOD_FILTER,
   SOURCE_FILTER
 } from "../../constants/index";
+
 import {
   getPagesCount,
   showErrorMessageToast,
@@ -23,11 +28,8 @@ import {
 import { useState, useCallback, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import OrderFilter from "../../components/OrderFilter/OrderFilter";
-import SourceFilter from "../../components/SourceFilter/SourceFilter";
+
 import { UserContext } from "../../contexts/UserContext/UserContext";
-import Button from "../../components/Button/Button";
-import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
 
 export default function Search() {
   const { user, setUser } = useContext(UserContext);

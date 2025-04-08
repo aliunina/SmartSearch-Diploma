@@ -1,13 +1,17 @@
-import { Link } from "react-router-dom";
+import "./Recovery.css";
+
 import Body from "../../layouts/CommonLayout/Body/Body";
 import Header from "../../layouts/CommonLayout/Header/Header";
-import "./Recovery.css";
-import Logo from "../../components/Logo/Logo";
-import RecoveryForm from "../../components/RecoveryForm/RecoveryForm";
+
+import Logo from "../../components/visuals/Logo/Logo";
+import RecoveryForm from "../../components/forms/RecoveryForm/RecoveryForm";
+import BusyIndicator from "../../components/visuals/BusyIndicator/BusyIndicator";
+
+import { showErrorMessageToast } from "../../helpers/util";
+
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import { showErrorMessageToast } from "../../helpers/util";
-import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
 
 export default function Recovery() {
   const [userEmail, setUserEmail] = useState(null);

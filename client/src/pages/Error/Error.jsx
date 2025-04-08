@@ -1,5 +1,7 @@
-import Button from "../../components/Button/Button";
 import "./Error.css";
+
+import Button from "../../components/inputs/Button/Button";
+
 import { useNavigate } from "react-router-dom";
 
 export default function Error() {

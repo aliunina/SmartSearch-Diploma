@@ -6,19 +6,20 @@ import Header from "../../layouts/CommonLayout/Header/Header";
 import UpperPanel from "../../layouts/ProfileLayout/UpperPanel/UpperPanel";
 import LowerPanel from "../../layouts/ProfileLayout/LowerPanel/LowerPanel";
 
-import Avatar from "../../components/Avatar/Avatar";
-import Logo from "../../components/Logo/Logo";
+import Avatar from "../../components/visuals/Avatar/Avatar";
+import Logo from "../../components/visuals/Logo/Logo";
+import EditProfileDialog from "../../components/dialogs/EditProfileDialog/EditProfileDialog";
+import ChangePasswordDialog from "../../components/dialogs/ChangePasswordDialog/ChangePasswordDialog";
+import Button from "../../components/inputs/Button/Button";
 
-import { useContext, useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Button from "../../components/Button/Button";
-import EditProfileDialog from "../../components/EditProfileDialog/EditProfileDialog";
-import axios from "axios";
 import {
   showErrorMessageToast,
   showSuccessMessageToast
 } from "../../helpers/util";
-import ChangePasswordDialog from "../../components/ChangePasswordDialog/ChangePasswordDialog";
+
+import { useContext, useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -137,7 +138,9 @@ export default function Profile() {
       });
   };
 
-  const editUserThemes = () => {};
+  const editUserThemes = () => {
+    
+  };
 
   return (
     <>
