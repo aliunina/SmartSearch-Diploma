@@ -83,7 +83,7 @@ const sendNotifications = async (req, res) => {
               title: article.title,
               displayLink: article.displayLink,
               snippet: article.snippet,
-              newArticle: true,
+              notification: true,
               createdAt: Date.now(),
             });
             articlesToSave.push(newArticle);

@@ -11,8 +11,10 @@ import EditProfileDialog from "../../components/dialogs/EditProfileDialog/EditPr
 import ChangePasswordDialog from "../../components/dialogs/ChangePasswordDialog/ChangePasswordDialog";
 import Button from "../../components/inputs/Button/Button";
 import EditThemesDialog from "../../components/dialogs/EditThemesDialog/EditThemesDialog";
+import PeriodFilter from "../../components/filters/PeriodFilter/PeriodFilter";
 
 import {
+  getPagesCount,
   showErrorMessageToast,
   showSuccessMessageToast
 } from "../../helpers/util";
@@ -22,6 +24,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { UserContext } from "../../contexts/UserContext/UserContext";
+import SearchResults from "../../components/visuals/SearchResults/SearchResults";
+import { PERIOD_FILTER } from "../../constants";
+import LeftPanel from "../../layouts/SearchLayout/LeftPanel/LeftPanel";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -30,6 +35,15 @@ export default function Profile() {
   const { user, setUser } = useContext(UserContext);
 
   const [tab, setTab] = useState(0);
+
+  const [libraryPage, setLibraryPage] = useState(1);
+  const [libraryArticles, setLibraryArticles] = useState([]);
+  const [libraryFilter, setLibraryFilter] = useState(PERIOD_FILTER.all);
+  const [libraryState, setLibraryState] = useState({
+    isLoading: false,
+    items: [],
+    count: 0
+  });
 
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [profileDialogState, setProfileDialogState] = useState(user);
@@ -59,6 +73,57 @@ export default function Profile() {
       });
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    if (user !== null) {
+      setLibraryState({
+        items: [],
+        count: 0,
+        isLoading: true
+      });
+      const serverUrl = import.meta.env.VITE_SERVER_API_URL;
+      axios
+        .get(serverUrl + "/user/get-articles", {
+          withCredentials: true
+        })
+        .then((response) => {
+          if (response.status === 200 && response.data) {
+            setLibraryArticles(response.data);
+            setLibraryState({
+              items: response.data.slice(0, 10),
+              count: getPagesCount(response.data.length),
+              isLoading: false
+            });
+          } else {
+            setLibraryState({
+              items: [],
+              count: 0,
+              isLoading: false,
+              issueText: "Отсутствуют статьи в библиотеке."
+            });
+          }
+        })
+        .catch((response) => {
+          console.log(response.data);
+          if (response.status === 404) {
+            showErrorMessageToast(
+              "Попытка редактирования несуществующего пользователя."
+            );
+          } else if (response.status === 401) {
+            showErrorMessageToast(
+              "Вы не авторизованы. Пожалуйста, выполните вход."
+            );
+          }
+
+          setLibraryState({
+            items: [],
+            count: 0,
+            isLoading: false,
+            issueText: "Произошла ошибка, попробуйте еще раз."
+          });
+        });
+    }
+  }, [user, setLibraryState]);
 
   useEffect(() => {
     setTab(location.state?.tab ? location.state.tab : 0);
@@ -113,7 +178,7 @@ export default function Profile() {
     setPasswordDialogBusy(true);
     const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .post(serverUrl + "/user/change-password", values, {
+      .put(serverUrl + "/user/change-password", values, {
         withCredentials: true
       })
       .then((response) => {
@@ -155,10 +220,52 @@ export default function Profile() {
 
   const updateThemes = (themes) => {
     setThemesDialogBusy(true);
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
+    axios
+      .put(
+        serverUrl + "/user/update-themes",
+        { themes },
+        {
+          withCredentials: true
+        }
+      )
+      .then((response) => {
+        if (response.status === 200 && response.data) {
+          setUser(response.data);
+          showSuccessMessageToast("Области интересов успешно изменены.");
+          setThemesDialogOpen(false);
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+        setThemesDialogBusy(false);
+      })
+      .catch((response) => {
+        console.log(response.data);
+        if (response.status === 404) {
+          showErrorMessageToast(
+            "Попытка редактирования несуществующего пользователя."
+          );
+        } else if (response.status === 401) {
+          showErrorMessageToast(
+            "Вы не авторизованы. Пожалуйста, выполните вход."
+          );
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+        setThemesDialogBusy(false);
+      });
+  };
+
+  const handleUpdateLibraryPage = (page) => {
+    setLibraryPage(Number(page));
+    setLibraryState({
+      ...libraryState,
+      items: libraryArticles.slice((page - 1) * 10, (page - 1) * 10 + 10)
+    });
   };
 
   return (
-    <>
+    <div className="profile-root">
       {user && (
         <>
           <Header>
@@ -315,9 +422,34 @@ export default function Profile() {
                 </p>
               </div>
             </LowerPanel>
+            <div className="profile-content">
+              {tab === 0 && (
+                <div className="library">
+                  <LeftPanel>
+                    <PeriodFilter
+                      currentFilter={libraryFilter}
+                      // updateFilter={handlePeriodFilterUpdate}
+                      // changeFrom={(newFrom) => setFrom(newFrom)}
+                      // changeTo={(newTo) => setTo(newTo)}
+                      // from={from}
+                      // to={to}
+                    />
+                  </LeftPanel>
+                  <SearchResults
+                    items={libraryState.items}
+                    hideSaveButton={true}
+                    count={libraryState.count}
+                    isLoading={libraryState.isLoading}
+                    issueText={libraryState.issueText}
+                    selectedPage={libraryPage}
+                    updatePage={handleUpdateLibraryPage}
+                  />
+                </div>
+              )}
+            </div>
           </Body>
         </>
       )}
-    </>
+    </div>
   );
 }

@@ -19,7 +19,7 @@ const articleSchema = mongoose.Schema({
     snippet: {
         type: String
     },
-    newArticle: {
+    notification: {
         type: Boolean
     },
     createdAt: {

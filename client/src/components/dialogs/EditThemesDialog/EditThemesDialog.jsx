@@ -73,7 +73,7 @@ export default function EditThemesDialog({
         </div>
         <p className="dialog-title">Редактировать области интересов</p>
         <div className="dialog-content dialog-edit-themes">
-          <div className="dialog-edit-themes-container">
+          <div className={`${dialogState.themes.length === 0 ? "non-displayed" : ""} dialog-edit-themes-container`}>
             {dialogState.themes.map((theme, i) => {
               return (
                 <div className="dialog-edit-themes-theme" key={i}>

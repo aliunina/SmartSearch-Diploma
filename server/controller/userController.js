@@ -8,6 +8,7 @@ import fs from "fs";
 import axios from "axios";
 
 import User from "../model/userModel.js";
+import Article from "../model/articleModel.js";
 import UserVerification from "../model/userVerificationModel.js";
 import UserResetPassword from "../model/userResetPasswordModel.js";
 
@@ -104,7 +105,7 @@ const saveUserThemesWithCount = async (userId) => {
       ${process.env.SEARCH_ENGINE_URL}?${urlParams.toString()}`);
 
       return {
-        text: theme,
+        text: theme.trim(),
         count: new Number(response.data.searchInformation.totalResults),
       };
     })
@@ -526,6 +527,92 @@ export const authorizeUser = async (req, res) => {
   }
 };
 
+export const updateThemes = async (req, res) => {
+  try {
+    const id = req.body.userId;
+    const userData = await User.findById(id);
+    if (!userData) {
+      return res.status(404).json({
+        errorMessage: "User not found.",
+      });
+    }
+
+    const forUpdateThemes = await Promise.all(
+      req.body.themes.map(async (theme) => {
+        if (Number(theme.count) === Number(0)) {
+          const urlParams = new URLSearchParams({
+            cx: process.env.SEARCH_ENGINE_CX,
+            key: process.env.SEARCH_ENGINE_KEY,
+            q: theme.text,
+          });
+
+          const response = await axios.get(`
+          ${process.env.SEARCH_ENGINE_URL}?${urlParams.toString()}`);
+
+          return {
+            text: theme.text.trim(),
+            count: new Number(response.data.searchInformation.totalResults),
+          };
+        } else {
+          return {
+            text: theme.text,
+            count: new Number(theme.count),
+          };
+        }
+      })
+    );
+
+    userData.themes.forEach((theme) => {
+      if (!forUpdateThemes.find(theme.text)) {
+        Article.deleteMany({ theme: theme.text });
+      }
+    });
+
+    const updatedData = await User.findByIdAndUpdate(
+      id,
+      { themes: forUpdateThemes },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json(updatedData);
+  } catch (error) {
+    res.status(500).json({
+      errorMessage: error.message,
+    });
+  }
+};
+
+export const saveArticle = async (req, res) => {
+  try {
+    const id = req.body.userId;
+    const userData = await User.findById(id);
+    if (!userData) {
+      return res.status(404).json({
+        errorMessage: "User not found.",
+      });
+    }
+
+    const newArticle = new Article({
+      userId: id,
+      link: req.body.link,
+      displayLink: req.body.displayLink,
+      title: req.body.title,
+      theme: null,
+      snippet: req.body.snippet,
+      notification: false,
+      createdAt: new Date(),
+    });
+
+    const savedData = await newArticle.save();
+    res.status(200).json(savedData);
+  } catch (error) {
+    res.status(500).json({
+      errorMessage: error.message,
+    });
+  }
+};
+
 export const updateUser = async (req, res) => {
   try {
     const id = req.body.userId;
@@ -669,6 +756,37 @@ export const isAuthentificated = async (req, res) => {
         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       });
     }
+  } catch (error) {
+    res.status(500).json({
+      errorMessage: error.message,
+    });
+  }
+};
+
+export const getArticles = async (req, res) => {
+  try {
+    const id = req.body.userId;
+    const userData = await User.findById(id);
+    if (!userData) {
+      return res.status(404).json({
+        errorMessage: "User not found.",
+      });
+    }
+
+    const articles = await Article.find({
+      $and: [
+        {
+          notification: false,
+        },
+        {
+          userId: id,
+        },
+      ],
+    })
+      .sort({ createdAt: -1 })
+      .exec();
+
+    res.status(200).json(articles);
   } catch (error) {
     res.status(500).json({
       errorMessage: error.message,

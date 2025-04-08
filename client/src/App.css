@@ -4,6 +4,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  scrollbar-gutter: stable;
 }
 
 .message-toast {
@@ -69,6 +70,10 @@ input[type="search"]::-webkit-search-results-decoration {
 .main {
   display: flex;
   flex-direction: row;
+}
+
+.non-displayed {
+  display: none !important;
 }
 
 .darkened-background {

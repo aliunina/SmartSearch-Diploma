@@ -33,3 +33,27 @@
 .search-result-snippet {
     margin: 0;
 }
+
+.search-result-save-button {
+    padding: 0;
+    color: var(--accent-green);
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.2em;
+    font-weight: 500;
+}
+
+.search-result-save-button:hover {
+    color: var(--accent-dark-green)
+}
+
+.search-result-save-button:active {
+    color: var(--accent-darker-green)
+}
+
+.search-result-save-button span {
+    font-size: 1.3em;
+}

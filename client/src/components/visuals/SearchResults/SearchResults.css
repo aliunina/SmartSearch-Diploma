@@ -1,5 +1,5 @@
 .search-results-container {
-  margin: 3em;
+  /* margin: 3em; */
   display: flex;
   flex-direction: column;
   gap: 2em;

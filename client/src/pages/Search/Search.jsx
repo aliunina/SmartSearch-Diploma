@@ -14,10 +14,7 @@ import SourceFilter from "../../components/filters/SourceFilter/SourceFilter";
 import Button from "../../components/inputs/Button/Button";
 import BusyIndicator from "../../components/visuals/BusyIndicator/BusyIndicator";
 
-import {
-  PERIOD_FILTER,
-  SOURCE_FILTER
-} from "../../constants/index";
+import { PERIOD_FILTER, SOURCE_FILTER } from "../../constants/index";
 
 import {
   getPagesCount,
@@ -187,10 +184,9 @@ export default function Search() {
       }
       delete newFilters.authors;
 
-      
-    const engineUrl = import.meta.env.VITE_SEARCH_ENGINE_URL;
-    const cx = import.meta.env.VITE_SEARCH_ENGINE_CX;
-    const key = import.meta.env.VITE_SEARCH_ENGINE_KEY;
+      const engineUrl = import.meta.env.VITE_SEARCH_ENGINE_URL;
+      const cx = import.meta.env.VITE_SEARCH_ENGINE_CX;
+      const key = import.meta.env.VITE_SEARCH_ENGINE_KEY;
       const fullParams = new URLSearchParams({
         cx,
         key,
@@ -338,8 +334,46 @@ export default function Search() {
       })
       .catch((response) => {
         console.log(response.data);
-        showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+        if (response.status === 404) {
+          showErrorMessageToast(
+            "Попытка редактирования статей несуществующего пользователя."
+          );
+        } else if (response.status === 401) {
+          showErrorMessageToast(
+            "Вы не авторизованы. Пожалуйста, выполните вход."
+          );
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+        }
         setMenuOpen(false);
+        setBusy(false);
+      });
+  };
+
+  const saveToLibrary = (index) => {
+    setBusy(true);
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
+    axios
+      .post(
+        serverUrl + "/user/save-to-library",
+        { ...appState.items[index] },
+        {
+          withCredentials: true
+        }
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          showSuccessMessageToast(
+            "Статья успешно сохранена в вашей библиотеке."
+          );
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+        setBusy(false);
+      })
+      .catch((response) => {
+        console.log(response.data);
+        showErrorMessageToast("Произошла ошибка, попробуйте позже.");
         setBusy(false);
       });
   };
@@ -375,7 +409,10 @@ export default function Search() {
             <Button className="default-button" onClick={openMenu}>
               <img src="menu.svg" alt="Меню" />
             </Button>
-            <Button className="accent-button header-sign-in-button" onClick={signIn}>
+            <Button
+              className="accent-button header-sign-in-button"
+              onClick={signIn}
+            >
               Войти
             </Button>
           </div>
@@ -410,14 +447,18 @@ export default function Search() {
           />
         </LeftPanel>
         <Body>
-          <SearchResults
-            isLoading={appState.isLoading}
-            issueText={appState.issueText}
-            items={appState.items}
-            selectedPage={page}
-            updatePage={handleUpdatePage}
-            count={appState.count}
-          />
+          <div className="search-page-results">
+            <SearchResults
+              isLoading={appState.isLoading}
+              issueText={appState.issueText}
+              items={appState.items}
+              selectedPage={page}
+              updatePage={handleUpdatePage}
+              hideSaveButton={!user}
+              count={appState.count}
+              saveToLibrary={saveToLibrary}
+            />
+          </div>
         </Body>
       </div>
     </>

@@ -89,3 +89,10 @@
 .profile-edit-themes-button {
   height: 3em;
 }
+
+.library {
+  padding-top: 3em;
+  padding-bottom: 3em;
+  display: flex;
+  margin-right: 15em;
+}

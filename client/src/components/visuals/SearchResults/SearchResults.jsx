@@ -8,7 +8,9 @@ export default function SearchResults({
   selectedPage,
   updatePage,
   issueText,
-  isLoading
+  isLoading,
+  hideSaveButton,
+  saveToLibrary
 }) {
   const setPage = (event) => {
     updatePage(Number(event.target.text));
@@ -17,7 +19,7 @@ export default function SearchResults({
   if (isLoading) {
     return (
       <div className="results-busy-container">
-        <BusyIndicator removeClasses={true}/>
+        <BusyIndicator removeClasses={true} />
       </div>
     );
   }
@@ -37,7 +39,12 @@ export default function SearchResults({
     <div className="search-results-container">
       <div className="search-results">
         {items.map((el, i) => (
-          <SearchResult key={i} {...el}></SearchResult>
+          <SearchResult
+            key={i}
+            {...el}
+            hideSaveButton={hideSaveButton}
+            saveToLibrary={() => saveToLibrary(i)}
+          ></SearchResult>
         ))}
       </div>
       <div className="pagination">
