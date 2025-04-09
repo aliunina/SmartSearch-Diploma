@@ -428,12 +428,13 @@ export default function Search() {
         )}
       </Header>
       <div className="main">
-        <LeftPanel>
+        <LeftPanel className="search-left-panel">
           <OrderFilter
             currentFilter={orderFilter}
             updateFilter={handleOrderFilterUpdate}
           />
           <PeriodFilter
+            title="Период"
             currentFilter={periodFilter}
             updateFilter={handlePeriodFilterUpdate}
             changeFrom={(newFrom) => setFrom(newFrom)}

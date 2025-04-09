@@ -14,7 +14,9 @@ import EditThemesDialog from "../../components/dialogs/EditThemesDialog/EditThem
 import PeriodFilter from "../../components/filters/PeriodFilter/PeriodFilter";
 
 import {
+  getFilterDate,
   getPagesCount,
+  getSortFunction,
   showErrorMessageToast,
   showSuccessMessageToast
 } from "../../helpers/util";
@@ -27,6 +29,7 @@ import { UserContext } from "../../contexts/UserContext/UserContext";
 import SearchResults from "../../components/visuals/SearchResults/SearchResults";
 import { PERIOD_FILTER } from "../../constants";
 import LeftPanel from "../../layouts/SearchLayout/LeftPanel/LeftPanel";
+import DateFilter from "../../components/filters/DateFilter/DateFilter";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -39,6 +42,7 @@ export default function Profile() {
   const [libraryPage, setLibraryPage] = useState(1);
   const [libraryArticles, setLibraryArticles] = useState([]);
   const [libraryFilter, setLibraryFilter] = useState(PERIOD_FILTER.all);
+  const [librarySort, setLibrarySort] = useState("new");
   const [libraryState, setLibraryState] = useState({
     isLoading: false,
     items: [],
@@ -256,12 +260,49 @@ export default function Profile() {
       });
   };
 
-  const handleUpdateLibraryPage = (page) => {
+  const handleLibraryPageUpdate = (page) => {
     setLibraryPage(Number(page));
     setLibraryState({
       ...libraryState,
       items: libraryArticles.slice((page - 1) * 10, (page - 1) * 10 + 10)
     });
+  };
+
+  const handleLibraryFilterUpdate = (newFilter) => {
+    setLibraryFilter(newFilter);
+
+    const sortFunction = getSortFunction(librarySort);   
+    const filterDate = getFilterDate(newFilter.value);
+
+    applyLibraryFilters(sortFunction, filterDate);    
+  };
+
+  const handleLibrarySortUpdate = (newSort) => {
+    setLibrarySort(newSort);
+
+    const sortFunction = getSortFunction(newSort);        
+    const filterDate = getFilterDate(libraryFilter.value);
+
+    applyLibraryFilters(sortFunction, filterDate);
+  };
+
+  const applyLibraryFilters = (sortFunction, filterDate) => {
+    setLibraryPage(1);
+
+    const newLibraryState = { ...libraryState };
+
+    newLibraryState.items = libraryArticles.sort(sortFunction);
+    if (filterDate) {
+      newLibraryState.items = libraryArticles.filter(
+        (article) => new Date(article.createdAt) > filterDate
+      );
+      newLibraryState.count = getPagesCount(newLibraryState.items.length);
+    } else {
+      newLibraryState.items = libraryArticles;
+      newLibraryState.count = getPagesCount(libraryArticles.length);
+    }
+
+    setLibraryState(newLibraryState);
   };
 
   return (
@@ -426,13 +467,15 @@ export default function Profile() {
               {tab === 0 && (
                 <div className="library">
                   <LeftPanel>
+                    <DateFilter
+                      currentFilter={librarySort}
+                      updateFilter={handleLibrarySortUpdate}
+                    />
                     <PeriodFilter
+                      title="Добавлено"
                       currentFilter={libraryFilter}
-                      // updateFilter={handlePeriodFilterUpdate}
-                      // changeFrom={(newFrom) => setFrom(newFrom)}
-                      // changeTo={(newTo) => setTo(newTo)}
-                      // from={from}
-                      // to={to}
+                      updateFilter={handleLibraryFilterUpdate}
+                      showCustomPeriod={false}
                     />
                   </LeftPanel>
                   <SearchResults
@@ -442,7 +485,7 @@ export default function Profile() {
                     isLoading={libraryState.isLoading}
                     issueText={libraryState.issueText}
                     selectedPage={libraryPage}
-                    updatePage={handleUpdateLibraryPage}
+                    updatePage={handleLibraryPageUpdate}
                   />
                 </div>
               )}
