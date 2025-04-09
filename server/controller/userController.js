@@ -583,36 +583,6 @@ export const updateThemes = async (req, res) => {
   }
 };
 
-export const saveArticle = async (req, res) => {
-  try {
-    const id = req.body.userId;
-    const userData = await User.findById(id);
-    if (!userData) {
-      return res.status(404).json({
-        errorMessage: "User not found.",
-      });
-    }
-
-    const newArticle = new Article({
-      userId: id,
-      link: req.body.link,
-      displayLink: req.body.displayLink,
-      title: req.body.title,
-      theme: null,
-      snippet: req.body.snippet,
-      notification: false,
-      createdAt: new Date(),
-    });
-
-    const savedData = await newArticle.save();
-    res.status(200).json(savedData);
-  } catch (error) {
-    res.status(500).json({
-      errorMessage: error.message,
-    });
-  }
-};
-
 export const updateUser = async (req, res) => {
   try {
     const id = req.body.userId;
@@ -756,37 +726,6 @@ export const isAuthentificated = async (req, res) => {
         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       });
     }
-  } catch (error) {
-    res.status(500).json({
-      errorMessage: error.message,
-    });
-  }
-};
-
-export const getArticles = async (req, res) => {
-  try {
-    const id = req.body.userId;
-    const userData = await User.findById(id);
-    if (!userData) {
-      return res.status(404).json({
-        errorMessage: "User not found.",
-      });
-    }
-
-    const articles = await Article.find({
-      $and: [
-        {
-          notification: false,
-        },
-        {
-          userId: id,
-        },
-      ],
-    })
-      .sort({ createdAt: -1 })
-      .exec();
-
-    res.status(200).json(articles);
   } catch (error) {
     res.status(500).json({
       errorMessage: error.message,

@@ -373,7 +373,13 @@ export default function Search() {
       })
       .catch((response) => {
         console.log(response.data);
-        showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+        if (response.status === 409) {
+          showErrorMessageToast("Статья уже сохранена в вашей библиотеке.");
+        } else if (response.status === 429) {
+          showErrorMessageToast("Библиотека переполнена. Пожалуйста, удалите одну из статей в библиотеке, чтобы продолжить.");
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+        }
         setBusy(false);
       });
   };

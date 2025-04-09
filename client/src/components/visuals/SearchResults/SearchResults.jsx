@@ -9,6 +9,7 @@ export default function SearchResults({
   updatePage,
   issueText,
   isLoading,
+  hideDeleteButton = true,
   hideSaveButton,
   saveToLibrary
 }) {
@@ -42,6 +43,7 @@ export default function SearchResults({
           <SearchResult
             key={i}
             {...el}
+            hideDeleteButton={hideDeleteButton}
             hideSaveButton={hideSaveButton}
             saveToLibrary={() => saveToLibrary(i)}
           ></SearchResult>

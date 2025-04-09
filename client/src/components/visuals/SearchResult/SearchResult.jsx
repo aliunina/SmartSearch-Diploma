@@ -11,6 +11,7 @@ export default function SearchResult({
   displayLink,
   title,
   snippet,
+  hideDeleteButton,
   hideSaveButton,
   saveToLibrary
 }) {  

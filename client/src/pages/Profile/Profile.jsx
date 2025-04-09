@@ -480,6 +480,7 @@ export default function Profile() {
                   </LeftPanel>
                   <SearchResults
                     items={libraryState.items}
+                    hideDeleteButton={false}
                     hideSaveButton={true}
                     count={libraryState.count}
                     isLoading={libraryState.isLoading}
