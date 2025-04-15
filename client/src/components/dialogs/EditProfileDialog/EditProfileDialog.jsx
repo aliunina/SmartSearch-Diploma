@@ -7,13 +7,15 @@ import Label from "../../visuals/Label/Label";
 import CustomDatePicker from "../../inputs/CustomDatePicker/CustomDatePicker";
 import { useEffect, useRef, useState } from "react";
 import BusyIndicator from "../../visuals/BusyIndicator/BusyIndicator";
+import { DeleteFilled } from "@ant-design/icons";
 
 export default function EditProfileDialog({
   dialogBusy,
   dialogState,
   setDialogState,
   setDialogOpen,
-  updateUser
+  updateUser,
+  deleteUser
 }) {
   const [isValid, setIsValid] = useState({
     lastName: true,
@@ -99,7 +101,7 @@ export default function EditProfileDialog({
     <div className="darkened-background">
       {dialogBusy && (
         <div className="dialog-size dialog-busy-background">
-          <BusyIndicator/>
+          <BusyIndicator />
         </div>
       )}
       <form className="dialog-size dialog-wrap" onSubmit={submitForm}>
@@ -130,7 +132,7 @@ export default function EditProfileDialog({
               maxLength="50"
               placeholder="Введите фамилию"
               valid={isValid.lastName}
-              autoComplete="new-password"
+              autoComplete="off"
               title={isValid.lastName ? "" : "Поле не может быть пустым."}
             />
           </div>
@@ -149,7 +151,7 @@ export default function EditProfileDialog({
               maxLength="50"
               placeholder="Введите имя"
               valid={isValid.firstName}
-              autoComplete="new-password"
+              autoComplete="off"
               title={isValid.firstName ? "" : "Поле не может быть пустым."}
             />
           </div>
@@ -164,7 +166,7 @@ export default function EditProfileDialog({
               type="text"
               maxLength="50"
               placeholder="Введите отчество"
-              autoComplete="new-password"
+              autoComplete="off"
             />
           </div>
           <div className="edit-profile-container">
@@ -182,7 +184,7 @@ export default function EditProfileDialog({
               maxLength="50"
               placeholder="Введите страну"
               valid={isValid.country}
-              autoComplete="new-password"
+              autoComplete="off"
               title={isValid.country ? "" : "Поле не может быть пустым."}
             />
           </div>
@@ -202,7 +204,7 @@ export default function EditProfileDialog({
               onChange={(e) =>
                 setDialogState({ ...dialogState, birthday: e.target.value })
               }
-              autoComplete="new-password"
+              autoComplete="off"
               title={
                 isValid.birthday
                   ? ""
@@ -226,7 +228,7 @@ export default function EditProfileDialog({
                 setDialogState({ ...dialogState, employment: e.target.value })
               }
               placeholder="Введите место работы/учёбы"
-              autoComplete="new-password"
+              autoComplete="off"
               title={isValid.employment ? "" : "Поле не может быть пустым."}
             >
               <Hint text="Например, профессор физико-математических наук, БНТУ" />
@@ -246,27 +248,23 @@ export default function EditProfileDialog({
               onChange={(e) =>
                 setDialogState({ ...dialogState, status: e.target.value })
               }
-              autoComplete="new-password"
+              autoComplete="off"
               placeholder="Введите статус"
               title={isValid.status ? "" : "Поле не может быть пустым."}
             >
               <Hint text="Например, обучающийся или специалист" />
             </Input>
           </div>
+          <Button className="transparent-button delete-profile-button" type="button" onClick={deleteUser}>
+            <DeleteFilled />
+            Удалить профиль
+          </Button>
         </div>
         <div className="dialog-buttons-container">
-          <Button
-            onClick={cancel}
-            type="button"
-            className="transparent-button"
-          >
+          <Button onClick={cancel} type="button" className="transparent-button">
             Отменить
           </Button>
-          <Button
-            type="button"
-            className="accent-button"
-            onClick={submitForm}
-          >
+          <Button type="button" className="accent-button" onClick={submitForm}>
             Сохранить
           </Button>
         </div>

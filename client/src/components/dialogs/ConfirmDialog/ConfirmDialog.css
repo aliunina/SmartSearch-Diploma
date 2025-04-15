@@ -1,6 +1,7 @@
 .confirm-dialog-wrap {
     height: auto;
     overflow: hidden;
+    z-index: 11;
 }
 
 .confirm-dialog-title {
@@ -26,4 +27,12 @@
 
 .confirm-dialog-delete-button:active {
     background-color: var(--delete-active-color);
+}
+
+.confirm-dialog-darkened-background {
+    z-index: 10;
+}
+
+.confirm-dialog-busy-background {
+    z-index: 11;
 }

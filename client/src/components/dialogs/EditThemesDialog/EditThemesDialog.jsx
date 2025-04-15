@@ -45,7 +45,7 @@ export default function EditThemesDialog({
     const arr = dialogState.themes;
     arr.push({
       text: "",
-      count: 0
+      recentArticles: []
     });
     setDialogState({ ...dialogState, themes: arr });
   };
@@ -73,7 +73,11 @@ export default function EditThemesDialog({
         </div>
         <p className="dialog-title">Редактировать области интересов</p>
         <div className="dialog-content dialog-edit-themes">
-          <div className={`${dialogState.themes.length === 0 ? "non-displayed" : ""} dialog-edit-themes-container`}>
+          <div
+            className={`${
+              dialogState.themes.length === 0 ? "non-displayed" : ""
+            } dialog-edit-themes-container`}
+          >
             {dialogState.themes.map((theme, i) => {
               return (
                 <div className="dialog-edit-themes-theme" key={i}>
@@ -81,11 +85,12 @@ export default function EditThemesDialog({
                     className="dialog-edit-themes-input"
                     type="text"
                     maxLength="50"
+                    autoComplete="off"
                     onChange={(event) => {
                       const arr = dialogState.themes;
                       arr[i] = {
                         text: event.target.value,
-                        count: arr[i].count
+                        recentArticles: arr[i].recentArticles
                       };
                       setDialogState({ ...dialogState, themes: arr });
                     }}

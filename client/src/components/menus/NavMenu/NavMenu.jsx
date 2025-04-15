@@ -80,7 +80,7 @@ export default function NavMenu({
           Расширенный поиск
         </Button>
       </div>
-      <div className="nav-menu-button-container">
+      {/* <div className="nav-menu-button-container">
         <Button className="nav-menu-button">
           <img src="confidentiality.svg" alt="Конфиденциальность" />
           Конфиденциальность
@@ -89,7 +89,7 @@ export default function NavMenu({
           <img src="help.svg" alt="Справка" />
           Справка
         </Button>
-      </div>
+      </div> */}
       {user && (
         <div className="nav-menu-button-container">
           <Button className="nav-menu-button" onClick={signOut}>

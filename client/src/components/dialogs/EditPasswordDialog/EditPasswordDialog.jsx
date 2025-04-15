@@ -121,7 +121,7 @@ export default function EditPasswordDialog({
               }
               ref={oldPasswordRef}
               valid={isValid.oldPassword}
-              autoComplete="new-password"
+              autoComplete="off"
               title={
                 isValid.oldPassword
                   ? ""
@@ -145,7 +145,7 @@ export default function EditPasswordDialog({
               }
               ref={newPasswordRef}
               valid={isValid.newPassword}
-              autoComplete="new-password"
+              autoComplete="off"
               title={
                 isValid.newPassword
                   ? ""
@@ -185,7 +185,7 @@ export default function EditPasswordDialog({
               }
               ref={repeatPasswordRef}
               valid={isValid.repeatPassword}
-              autoComplete="new-password"
+              autoComplete="off"
               title={isValid.repeatPassword ? "" : "Пароли не совпадают."}
             >
               <Button

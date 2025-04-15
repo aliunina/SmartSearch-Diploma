@@ -5,6 +5,6 @@ import { getNotifications, saveNotification } from "../controller/notificationCo
 const notificationRoute = express.Router();
 
 notificationRoute.get("/get-notifications", userAuth, getNotifications);
-notificationRoute.post("/save-notification-to-library", userAuth, saveNotification);
+notificationRoute.post("/save-to-library", userAuth, saveNotification);
 
 export default notificationRoute;

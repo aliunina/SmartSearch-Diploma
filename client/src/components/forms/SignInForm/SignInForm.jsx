@@ -102,7 +102,7 @@ export default function SignInForm({ signIn }) {
             onChange={onChange}
             ref={passwordRef}
             valid={isValid.password}
-            autoComplete="new-password"
+            autoComplete="off"
             title={
               isValid.password
                 ? ""

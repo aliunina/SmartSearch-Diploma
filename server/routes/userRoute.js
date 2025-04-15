@@ -26,7 +26,7 @@ userRoute.get("/is-auth", userAuth, isAuthentificated);
 userRoute.put("/update", userAuth, updateUser);
 userRoute.put("/update-password", userAuth, updatePassword);
 userRoute.put("/update-themes", userAuth, updateThemes);
-userRoute.delete("/delete", userAuth, deleteUser);
+userRoute.post("/delete", userAuth, deleteUser);
 
 userRoute.get("/verify/:id/:uniqueString", verifyUser);
 userRoute.get("/verified", verified);

@@ -11,10 +11,9 @@ import {
   showSuccessMessageToast
 } from "../../../helpers/util";
 
-export default function Notifications() {
+export default function Notifications({notifications, setNotifications}) {
   const { user } = useContext(UserContext);
 
-  const [notifications, setNotifications] = useState([]);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -74,7 +73,7 @@ export default function Notifications() {
     setBusy(true);
     const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .post(serverUrl + "/notification/save-notification-to-library", article, {
+      .post(serverUrl + "/notification/save-to-library", article, {
         withCredentials: true
       })
       .then((response) => {

@@ -5,7 +5,7 @@ import { saveArticle, getArticles, deleteArticle } from "../controller/articleCo
 const articleRoute = express.Router();
 
 articleRoute.get("/get-articles", userAuth, getArticles);
-articleRoute.post("/save-article", userAuth, saveArticle);
-articleRoute.post("/delete-article", userAuth, deleteArticle);
+articleRoute.post("/save", userAuth, saveArticle);
+articleRoute.post("/delete", userAuth, deleteArticle);
 
 export default articleRoute;

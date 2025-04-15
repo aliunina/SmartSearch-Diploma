@@ -13,10 +13,10 @@ export default function ConfirmDialog({
   dialogClose
 }) {
   return (
-    <div className="darkened-background">
+    <div className="darkened-background confirm-dialog-darkened-background">
       <form className="dialog-size dialog-wrap confirm-dialog-wrap">
         {dialogBusy && (
-          <div className="dialog-size dialog-busy-background">
+          <div className="dialog-size dialog-busy-background confirm-dialog-busy-background">
             <BusyIndicator />
           </div>
         )}

@@ -18,12 +18,13 @@ import {
   showSuccessMessageToast
 } from "../../helpers/util";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { UserContext } from "../../contexts/UserContext/UserContext";
 import Notifications from "../../components/visuals/Notifications/Notifications";
+import ConfirmDialog from "../../components/dialogs/ConfirmDialog/ConfirmDialog";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function Profile() {
   const { user, setUser } = useContext(UserContext);
 
   const [tab, setTab] = useState(0);
+  const [notifications, setNotifications] = useState([]);
 
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [profileDialogState, setProfileDialogState] = useState(user);
@@ -52,8 +54,18 @@ export default function Profile() {
   const [themesDialogState, setThemesDialogState] = useState(null);
   const [themesDialogBusy, setThemesDialogBusy] = useState(false);
 
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmDialogState, setConfirmDialogState] = useState({
+    text: "",
+    title: "",
+    confirmButtonType: "",
+    confirmButtonText: "",
+    data: {}
+  });
+  const [confirmDialogBusy, setConfirmDialogBusy] = useState(false);
+
   useEffect(() => {
-    if (user === null) {
+    if (user === null && profileDeleted.current === false) {
       navigate("/sign-in", {
         state: {
           navBack: true
@@ -168,7 +180,8 @@ export default function Profile() {
       )
       .then((response) => {
         if (response.status === 200 && response.data) {
-          setUser(response.data);
+          setUser(response.data.user);
+          setNotifications(response.data.notifications);
           showSuccessMessageToast("Области интересов успешно изменены.");
           setThemesDialogOpen(false);
         } else {
@@ -193,6 +206,60 @@ export default function Profile() {
       });
   };
 
+  const deleteUser = () => {
+    setConfirmDialogOpen(true);
+    setConfirmDialogState({
+      isLoading: false,
+      text: "Вы действительно хотите удалить свой профиль?",
+      title: "Подтвердите удаление профиля",
+      confirmButtonType: "delete",
+      confirmButtonText: "Удалить"
+    });
+  };
+
+  const profileDeleted = useRef(false);
+  const handleConfirmDialogClose = (choice) => {
+    if (choice === "confirm") {
+      setConfirmDialogBusy(true);
+      const serverUrl = import.meta.env.VITE_SERVER_API_URL;
+      axios
+        .post(
+          serverUrl + "/user/delete",
+          {},
+          {
+            withCredentials: true
+          }
+        )
+        .then((response) => {
+          if (response.status === 200 && response.data) {
+            showSuccessMessageToast("Ваш профиль был успешно удален.");
+            profileDeleted.current = true;
+            setUser(null);
+            navigate("/");
+          } else {
+            showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+          }
+          setConfirmDialogBusy(false);
+        })
+        .catch((response) => {
+          if (response.status === 404) {
+            showErrorMessageToast(
+              "Попытка редактирования несуществующего пользователя."
+            );
+          } else if (response.status === 401) {
+            showErrorMessageToast(
+              "Вы не авторизованы. Пожалуйста, выполните вход."
+            );
+          } else {
+            showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+          }
+          setConfirmDialogBusy(false);
+        });
+    } else {
+      setConfirmDialogOpen(false);
+    }
+  };
+
   return (
     <div className="profile-root">
       {user && (
@@ -201,6 +268,19 @@ export default function Profile() {
             <Link to="/">
               <Logo className="header-logo" />
             </Link>
+            {confirmDialogOpen && (
+              <ConfirmDialog
+                dialogBusy={confirmDialogBusy}
+                dialogOpen={confirmDialogOpen}
+                setDialogOpen={setConfirmDialogOpen}
+                dialogClose={handleConfirmDialogClose}
+                text={confirmDialogState.text}
+                title={confirmDialogState.title}
+                confirmButtonText={confirmDialogState.confirmButtonText}
+                confirmButtonType={confirmDialogState.confirmButtonType}
+                data={confirmDialogState.data}
+              />
+            )}
             {profileDialogOpen && (
               <EditProfileDialog
                 dialogState={profileDialogState}
@@ -208,6 +288,7 @@ export default function Profile() {
                 setDialogOpen={setProfileDialogOpen}
                 setDialogState={setProfileDialogState}
                 updateUser={updateUser}
+                deleteUser={deleteUser}
               />
             )}
             {passwordDialogOpen && (
@@ -255,21 +336,28 @@ export default function Profile() {
                 <div>
                   <p className="profile-user-themes-title">Области интересов</p>
                   <div className="profile-edit-themes-container">
-                    <div className="profile-user-themes">
-                      {user.themes.map((theme, i) => {
-                        return (
-                          <div className="profile-user-theme" key={i}>
-                            {theme.text}
-                          </div>
-                        );
-                      })}
-                    </div>
+                    {user.themes?.length > 0 && (
+                      <div className="profile-user-themes">
+                        {user.themes?.map((theme, i) => {
+                          return (
+                            <div className="profile-user-theme" key={i}>
+                              {theme.text}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                     <Button
-                      className="default-button profile-edit-themes-button"
+                      className={`default-button profile-edit-themes-button ${
+                        user.themes?.length === 0
+                          ? "profile-edit-themes-button-outlined"
+                          : ""
+                      }`}
                       title="Редактировать области интересов"
                       onClick={editUserThemes}
                     >
                       <img src="edit-profile.svg" alt="Редактировать" />
+                      {user.themes?.length === 0 && <span>Добавить</span>}
                     </Button>
                   </div>
                 </div>
@@ -328,11 +416,12 @@ export default function Profile() {
               </div>
             </LowerPanel>
             <div className="profile-content">
-              {tab === 0 && (
-                <Library/>
-              )}
+              {tab === 0 && <Library />}
               {tab === 1 && (
-                <Notifications/>
+                <Notifications
+                  notifications={notifications}
+                  setNotifications={setNotifications}
+                />
               )}
             </div>
           </Body>

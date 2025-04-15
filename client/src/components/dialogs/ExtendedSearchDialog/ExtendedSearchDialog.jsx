@@ -76,6 +76,7 @@ export default function ExtendedSearchDialog({
           <p className="filter-title">Содержит:</p>
           <Input
             value={dialogState.hq}
+            autoComplete="off"
             onChange={(e) =>
               setDialogState({ ...dialogState, hq: e.target.value })
             }
@@ -87,6 +88,7 @@ export default function ExtendedSearchDialog({
           </Input>
           <Input
             value={dialogState.exactTerms}
+            autoComplete="off"
             onChange={(e) =>
               setDialogState({ ...dialogState, exactTerms: e.target.value })
             }
@@ -98,6 +100,7 @@ export default function ExtendedSearchDialog({
           </Input>
           <Input
             value={dialogState.orTerms}
+            autoComplete="off"
             onChange={(e) =>
               setDialogState({ ...dialogState, orTerms: e.target.value })
             }
@@ -109,6 +112,7 @@ export default function ExtendedSearchDialog({
           </Input>
           <Input
             name="excludeTerms"
+            autoComplete="off"
             value={dialogState.excludeTerms}
             onChange={(e) =>
               setDialogState({ ...dialogState, excludeTerms: e.target.value })
@@ -122,6 +126,7 @@ export default function ExtendedSearchDialog({
           <Input
             type="text"
             name="authors"
+            autoComplete="off"
             value={dialogState.authors}
             onChange={(e) =>
               setDialogState({ ...dialogState, authors: e.target.value })

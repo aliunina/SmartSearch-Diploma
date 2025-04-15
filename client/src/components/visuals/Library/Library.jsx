@@ -204,7 +204,7 @@ export default function Library() {
       const serverUrl = import.meta.env.VITE_SERVER_API_URL;
       axios
         .post(
-          serverUrl + "/article/delete-article",
+          serverUrl + "/article/delete",
           { articleId: data.id },
           {
             withCredentials: true

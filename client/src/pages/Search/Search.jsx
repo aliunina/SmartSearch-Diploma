@@ -362,7 +362,7 @@ export default function Search() {
     setBusy(true);
     const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .post(serverUrl + "/article/save-article", article, {
+      .post(serverUrl + "/article/save", article, {
         withCredentials: true
       })
       .then((response) => {

@@ -88,6 +88,14 @@
 
 .profile-edit-themes-button {
   height: 3em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 500;
+}
+
+.profile-edit-themes-button-outlined {
+  outline: 1px solid var(--border-color);
 }
 
 .profile-change-password-button {

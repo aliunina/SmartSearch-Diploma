@@ -16,7 +16,7 @@ body {
 :root {
   --toastify-color-success: #008054;
   --toastify-color-error: #b3261e;
-  --invalid-error: #b3261e;
+  --invalid-color: #b3261e;
   --delete-color: #b3261e;
   --delete-hover-color: #971e18;
   --delete-active-color: #841b15;
@@ -128,10 +128,14 @@ input[type="search"]::-webkit-search-results-decoration {
   flex-direction: column;
   gap: 1em;
   overflow-y: scroll;
-  padding-left: 2em;
-  padding-right: 1em;
   margin-right: 1em;
   margin-bottom: 1em;
+  padding: 0.5em 1em 0.5em 2em;
+}
+
+.dialog-busy-background {
+  z-index: 6;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .dialog-buttons-container {

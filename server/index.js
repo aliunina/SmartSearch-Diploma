@@ -9,7 +9,8 @@ import userRoute from "./routes/userRoute.js";
 import articleRoute from "./routes/articleRoute.js";
 import notificationRoute from "./routes/notificationRoute.js";
 
-import "./jobs/notificationJob.js";
+import "./jobs/sendNotificationByEmailJob.js";
+import "./jobs/deleteNotificationJob.js";
 
 const app = express();
 app.use(bodyParser.json());

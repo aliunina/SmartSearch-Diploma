@@ -200,7 +200,7 @@ export default function RecoveryForm({
               onChange={onChange}
               ref={passwordRef}
               valid={isValidStep2.password}
-              autoComplete="new-password"
+              autoComplete="off"
               title={
                 isValidStep2.password
                   ? ""
@@ -237,7 +237,7 @@ export default function RecoveryForm({
               value={values.repeatPassword}
               onChange={onChange}
               ref={repeatPasswordRef}
-              autoComplete="new-password"
+              autoComplete="off"
               valid={isValidStep2.repeatPassword}
               title={isValidStep2.repeatPassword ? "" : "Пароли не совпадают."}
             >

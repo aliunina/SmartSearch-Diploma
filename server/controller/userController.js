@@ -5,9 +5,9 @@ import dotenv from "dotenv";
 import path from "path";
 import jwt from "jsonwebtoken";
 import fs from "fs";
-import axios from "axios";
 
 import User from "../model/userModel.js";
+import Article from "../model/articleModel.js";
 import Notification from "../model/notificationModel.js";
 import UserVerification from "../model/userVerificationModel.js";
 import UserResetPassword from "../model/userResetPasswordModel.js";
@@ -90,30 +90,6 @@ const sendVerificationEmail = ({ _id, email, firstName }, res) => {
     });
 };
 
-const saveUserThemesWithCount = async (userId) => {
-  const userData = await User.findOne({ _id: userId });
-
-  const forUpdateThemes = await Promise.all(
-    userData.themes.map(async (theme) => {
-      const urlParams = new URLSearchParams({
-        cx: process.env.SEARCH_ENGINE_CX,
-        key: process.env.SEARCH_ENGINE_KEY,
-        q: theme,
-      });
-
-      const response = await axios.get(`
-      ${process.env.SEARCH_ENGINE_URL}?${urlParams.toString()}`);
-
-      return {
-        text: theme.trim(),
-        count: new Number(response.data.searchInformation.totalResults),
-      };
-    })
-  );
-
-  User.findByIdAndUpdate(userId, { themes: forUpdateThemes });
-};
-
 export const verifyUser = (req, res) => {
   const { id, uniqueString } = req.params;
   UserVerification.find({ userId: id })
@@ -155,7 +131,6 @@ export const verifyUser = (req, res) => {
                   .then(() => {
                     UserVerification.deleteOne({ userId: id })
                       .then(() => {
-                        saveUserThemesWithCount(id);
                         res.redirect(`/api/user/verified?error=false`);
                       })
                       .catch(() => {
@@ -205,7 +180,18 @@ export const verified = (req, res) => {
 
 export const registerUser = async (req, res) => {
   try {
-    const newUser = new User(req.body);
+    const newUser = new User({
+      lastName: req.body.lastName.trim(),
+      firstName: req.body.firstName.trim(),
+      patronymic: req.body.patronymic.trim(),
+      email: req.body.email.trim(),
+      password: req.body.password,
+      country: req.body.country.trim(),
+      birthday: req.body.birthday,
+      employment: req.body.employment.trim(),
+      themes: req.body.themes,
+      status: req.body.status.trim(),
+    });
 
     const { email } = newUser;
     const userExists = await User.findOne({ email });
@@ -222,14 +208,16 @@ export const registerUser = async (req, res) => {
     bcrypt
       .hash(newUser.password, saltRounds)
       .then((hashedPassword) => {
-        newUser.unhashedPassword = newUser.password;
         newUser.password = hashedPassword;
-        newUser.themes = newUser.themes.map((theme) => {
-          return {
-            text: theme,
-            count: 0,
-          };
-        });
+        newUser.themes = newUser.themes
+          .map((theme) => {
+            return {
+              text: theme,
+              recentArticles: [],
+            };
+          })
+          .filter((theme) => theme.text.trim().length > 0)
+          .slice(0, 5);
         newUser
           .save()
           .then((result) => {
@@ -352,7 +340,6 @@ export const resetPassword = async (req, res) => {
                     .hash(password, saltRounds)
                     .then((hashedPassword) => {
                       const forUpdateData = {
-                        unhashedPassword: password,
                         password: hashedPassword,
                         updatedAt: Date.now(),
                       };
@@ -513,53 +500,41 @@ export const authorizeUser = async (req, res) => {
 
 export const updateThemes = async (req, res) => {
   try {
-    const id = req.body.userId;
-    const userData = await User.findById(id);
+    const userId = req.body.userId;
+    const uniqueThemes = req.body.themes.reduce((accumulator, current) => {
+      const duplicate = accumulator.find((theme) => theme.text.trim() === current.text.trim());
+      if (!duplicate) {
+        return accumulator.concat([current]);
+      } else {
+        return accumulator;
+      }
+    }, []);
+
+    const userData = await User.findById(userId);
     if (!userData) {
       return res.status(404).json({
         errorMessage: "User not found.",
       });
     }
 
-    const forUpdateThemes = await Promise.all(
-      req.body.themes.map(async (theme) => {
-        if (Number(theme.count) === Number(0)) {
-          const urlParams = new URLSearchParams({
-            cx: process.env.SEARCH_ENGINE_CX,
-            key: process.env.SEARCH_ENGINE_KEY,
-            q: theme.text,
-          });
-
-          const response = await axios.get(`
-          ${process.env.SEARCH_ENGINE_URL}?${urlParams.toString()}`);
-
-          return {
-            text: theme.text.trim(),
-            count: new Number(response.data.searchInformation.totalResults),
-          };
-        } else {
-          return {
-            text: theme.text,
-            count: new Number(theme.count),
-          };
-        }
-      })
-    );
-
-    userData.themes.forEach((theme) => {
-      if (!forUpdateThemes.find(el => el === theme.text)) {
-        Notification.deleteMany({ theme: theme.text });
+    userData.themes.forEach(async (theme) => {
+      if (!uniqueThemes.find((el) => el.text === theme.text)) {
+        await Notification.deleteMany({ theme: theme.text });
       }
     });
 
     const updatedData = await User.findByIdAndUpdate(
-      id,
-      { themes: forUpdateThemes },
+      userId,
+      { themes: uniqueThemes },
       {
         new: true,
       }
     );
-    res.status(200).json(updatedData);
+    const notifications = await Notification.find({ userId });
+    res.status(200).json({
+      user: updatedData,
+      notifications: notifications ? notifications : [],
+    });
   } catch (error) {
     res.status(500).json({
       errorMessage: error.message,
@@ -578,14 +553,14 @@ export const updateUser = async (req, res) => {
     }
 
     const forUpdateData = {
-      lastName: req.body.lastName,
-      firstName: req.body.firstName,
-      patronymic: req.body.patronymic,
-      country: req.body.country,
+      lastName: req.body.lastName.trim(),
+      firstName: req.body.firstName.trim(),
+      patronymic: req.body.patronymic.trim(),
+      country: req.body.country.trim(),
       birthday: req.body.birthday,
-      employment: req.body.employment,
+      employment: req.body.employment.trim(),
       themes: req.body.themes,
-      status: req.body.status,
+      status: req.body.status.trim(),
       updatedAt: Date.now(),
     };
 
@@ -624,7 +599,6 @@ export const updatePassword = async (req, res) => {
           .hash(newPassword, saltRounds)
           .then(async (hashedPassword) => {
             let forUpdateData = {
-              unhashedPassword: newPassword,
               password: hashedPassword,
               updatedAt: Date.now(),
             };
@@ -659,16 +633,24 @@ export const updatePassword = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    const id = req.params.id;
-    const userExists = await User.findById(id);
+    const userId = req.body.userId;
+    const userExists = await User.findById(userId);
     if (!userExists) {
       return res.status(404).json({
         errorMessage: "User not found.",
       });
     }
-    await User.findByIdAndDelete(id);
+    await User.findByIdAndDelete(userId);
+    await Article.deleteMany({ userId });
+    await Notification.deleteMany({ userId });
+    await UserResetPassword.deleteMany({ userId });
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+    });
     res.status(200).json({
-      message: `User with id '${id}' has been deleted.`,
+      message: `User with id '${userId}' has been deleted.`,
     });
   } catch (error) {
     res.status(500).json({

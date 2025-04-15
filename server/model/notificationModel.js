@@ -10,6 +10,9 @@ const notificationSchema = mongoose.Schema({
     displayLink: {
         type: String
     },
+    theme: {
+        type: String
+    },
     title: {
         type: String
     },

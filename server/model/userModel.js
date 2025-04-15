@@ -28,11 +28,6 @@ const userSchema = mongoose.Schema({
     match: /[0-9a-zA-Z!@#$%^&*]{8,65}/,
     required: true,
   },
-  unhashedPassword: {
-    type: String,
-    match: /[0-9a-zA-Z!@#$%^&*]{8,65}/,
-    required: true,
-  },
   country: {
     type: String,
     maxlength: 50,

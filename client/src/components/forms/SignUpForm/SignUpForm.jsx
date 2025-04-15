@@ -178,7 +178,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                 name="lastName"
                 ref={lastNameRef}
                 valid={isValidTab0.lastName}
-                autoComplete="new-password"
+                autoComplete="off"
                 title={isValidTab0.lastName ? "" : "Поле не может быть пустым."}
               ></Input>
             </div>
@@ -197,7 +197,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                   onChange={onChange}
                   ref={firstNameRef}
                   valid={isValidTab0.firstName}
-                  autoComplete="new-password"
+                  autoComplete="off"
                   title={
                     isValidTab0.firstName ? "" : "Поле не может быть пустым."
                   }
@@ -213,7 +213,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                   name="patronymic"
                   value={values.patronymic}
                   onChange={onChange}
-                  autoComplete="new-password"
+                  autoComplete="off"
                 ></Input>
               </div>
             </div>
@@ -264,7 +264,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                 onChange={onChange}
                 ref={passwordRef}
                 valid={isValidTab1.password}
-                autoComplete="new-password"
+                autoComplete="off"
                 title={
                   isValidTab1.password
                     ? ""
@@ -303,7 +303,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                 value={values.repeatPassword}
                 onChange={onChange}
                 ref={repeatPasswordRef}
-                autoComplete="new-password"
+                autoComplete="off"
                 valid={isValidTab1.repeatPassword}
                 title={isValidTab1.repeatPassword ? "" : "Пароли не совпадают."}
               >
@@ -349,7 +349,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                   onChange={onChange}
                   ref={countryRef}
                   valid={isValidTab2.country}
-                  autoComplete="new-password"
+                  autoComplete="off"
                   title={
                     isValidTab2.country ? "" : "Поле не может быть пустым."
                   }
@@ -370,7 +370,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                   onChange={onChange}
                   ref={birthdayRef}
                   valid={isValidTab2.birthday}
-                  autoComplete="new-password"
+                  autoComplete="off"
                   title={
                     isValidTab2.birthday ? "" : `Дата рождения не может быть пустой и лежать вне диапазона "01.01.1900" - сегодняшняя дата`
                   }
@@ -391,7 +391,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                 placeholder="Введите место работы/учёбы"
                 ref={employmentRef}
                 valid={isValidTab2.employment}
-                autoComplete="new-password"
+                autoComplete="off"
                 title={
                   isValidTab2.employment ? "" : "Поле не может быть пустым."
                 }
@@ -408,10 +408,10 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                 value={values.themes}
                 maxLength="1000"
                 onChange={onChange}
-                autoComplete="new-password"
+                autoComplete="off"
                 placeholder="Введите темы через запятую"
               >
-                <Hint text="Например, наночастицы диоксида титана, квантовая механика" />
+                <Hint text="Например: наночастицы диоксида титана, квантовая механика. Тем может быть не более 5." />
               </Input>
             </div>
             <div className="sign-up-form-container">
@@ -438,7 +438,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
                 maxLength="50"
                 value={values.status}
                 onChange={onChange}
-                autoComplete="new-password"
+                autoComplete="off"
                 placeholder="Или введите свой вариант"
               />
             </div>

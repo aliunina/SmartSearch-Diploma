@@ -6,7 +6,7 @@ import fs from "fs";
 import User from "../model/userModel.js";
 import Notification from "../model/notificationModel.js";
 
-const cronExpression = "*/1 * * * *";
+const cronExpression = "0 9 1,15 * *"; //работает в 9 утра каждого 1го и 15го числа месяца
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -43,15 +43,16 @@ const sendNotifications = async (req, res) => {
       const themesToSave = [];
 
       const themePromises = user.themes.map(async (theme) => {
-        const { count, articles } = await getNewArticles(theme);
+        const { notificationArticles, recentArticles } =
+          await getNotificationArticles(theme);
         themesToSave.push({
           text: theme.text,
-          count,
+          recentArticles,
         });
-        if (articles.length > 0) {
+        if (notificationArticles.length > 0) {
           htmlArticles += `<p style="font-size: medium;">Эти статьи на тему <b>"${theme.text}"</b> могут быть вам интересны:</p>`;
 
-          articles.forEach((article) => {
+          notificationArticles.forEach((article) => {
             htmlArticles += `
                     <div style="padding-bottom: 2em;">
                       <a
@@ -83,7 +84,7 @@ const sendNotifications = async (req, res) => {
               title: article.title,
               displayLink: article.displayLink,
               snippet: article.snippet,
-              createdAt: Date.now()
+              createdAt: Date.now(),
             });
             notificationsToSave.push(newNotification);
           });
@@ -96,9 +97,10 @@ const sendNotifications = async (req, res) => {
         sendNotificationEmail(_id, email, firstName, htmlArticles);
         await Notification.create(notificationsToSave);
 
-        User.findByIdAndUpdate(
-          { _id },
-          { themes: themesToSave }
+        const updatedData = await User.findByIdAndUpdate(
+          _id,
+          { themes: themesToSave },
+          { new: true }
         );
       }
     });
@@ -107,7 +109,7 @@ const sendNotifications = async (req, res) => {
   }
 };
 
-const getNewArticles = async (theme) => {
+const getNotificationArticles = async (theme) => {
   try {
     const urlParams = new URLSearchParams({
       cx: process.env.SEARCH_ENGINE_CX,
@@ -119,23 +121,28 @@ const getNewArticles = async (theme) => {
     const response = await axios.get(
       `${process.env.SEARCH_ENGINE_URL}?${urlParams.toString()}`
     );
-    const newArticlesCount =
-      (response.data.searchInformation.totalResults - theme.count) % 10;
 
-    console.log(
-      "Статей по теме " +
-        theme.text +
-        ": " +
-        response.data.searchInformation.totalResults
-    );
+    let notificationArticles = [];
+    if (theme.recentArticles.length !== 0) {
+      const newArticles = response.data.items.slice(0, 3);
 
-    const articles = [];
-    for (let i = 0; i < newArticlesCount; i++) {
-      articles.push(response.data.items[i]);
+      newArticles.forEach((newArticle) => {
+        if (
+          !theme.recentArticles.find(
+            (oldArticle) =>
+              newArticle.link === oldArticle.link &&
+              newArticle.title === oldArticle.title
+          )
+        ) {
+          notificationArticles.push(newArticle);
+        }
+      });
+    } else {
+      notificationArticles = response.data.items.slice(0, 3);
     }
     return {
-      count: response.data.searchInformation.totalResults,
-      articles,
+      notificationArticles,
+      recentArticles: response.data.items.slice(0, 3),
     };
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -169,9 +176,7 @@ const sendNotificationEmail = (id, email, name, htmlArticles) => {
     });
 };
 
-// sendNotifications();
-
-// cron.schedule(cronExpression, () => {
-//   console.log("job is running");
-//   sendNotifications();
-// });
+cron.schedule(cronExpression, () => {
+  console.log("job is running");
+  sendNotifications();
+});
