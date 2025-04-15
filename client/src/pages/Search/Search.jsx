@@ -358,17 +358,13 @@ export default function Search() {
       });
   };
 
-  const saveArticle = (index) => {
+  const saveArticle = (article) => {
     setBusy(true);
     const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .post(
-        serverUrl + "/article/save-to-library",
-        { ...appState.items[index] },
-        {
-          withCredentials: true
-        }
-      )
+      .post(serverUrl + "/article/save-article", article, {
+        withCredentials: true
+      })
       .then((response) => {
         if (response.status === 200) {
           showSuccessMessageToast(
@@ -381,10 +377,20 @@ export default function Search() {
       })
       .catch((response) => {
         console.log(response.data);
-        if (response.status === 409) {
+        if (response.status === 404) {
+          showErrorMessageToast(
+            "Попытка обращения к несуществующему пользователю или статье."
+          );
+        } else if (response.status === 401) {
+          showErrorMessageToast(
+            "Вы не авторизованы. Пожалуйста, выполните вход."
+          );
+        } else if (response.status === 409) {
           showErrorMessageToast("Статья уже сохранена в вашей библиотеке.");
         } else if (response.status === 429) {
-          showErrorMessageToast("Библиотека переполнена. Пожалуйста, удалите одну из статей в библиотеке, чтобы продолжить.");
+          showErrorMessageToast(
+            "Библиотека переполнена. Пожалуйста, удалите одну из статей в библиотеке, чтобы продолжить."
+          );
         } else {
           showErrorMessageToast("Произошла ошибка, попробуйте позже.");
         }

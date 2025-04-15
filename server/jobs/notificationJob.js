@@ -4,7 +4,7 @@ import axios from "axios";
 import fs from "fs";
 
 import User from "../model/userModel.js";
-import Article from "../model/notificationModel.js";
+import Notification from "../model/notificationModel.js";
 
 const cronExpression = "*/1 * * * *";
 
@@ -94,7 +94,7 @@ const sendNotifications = async (req, res) => {
 
       if (notificationsToSave.length > 0) {
         sendNotificationEmail(_id, email, firstName, htmlArticles);
-        await Article.create(notificationsToSave);
+        await Notification.create(notificationsToSave);
 
         User.findByIdAndUpdate(
           { _id },

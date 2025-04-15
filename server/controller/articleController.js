@@ -24,9 +24,6 @@ export const saveArticle = async (req, res) => {
           title: req.body.title,
         },
         {
-          notification: false,
-        },
-        {
           userId: id,
         },
       ],
@@ -38,14 +35,7 @@ export const saveArticle = async (req, res) => {
     }
 
     const userArticles = await Article.find({
-      $and: [
-        {
-          notification: false,
-        },
-        {
-          userId: id,
-        },
-      ],
+      userId: id,
     });
     if (userArticles.length === 50) {
       return res.status(429).json({
@@ -59,9 +49,7 @@ export const saveArticle = async (req, res) => {
       link: req.body.link,
       displayLink: req.body.displayLink,
       title: req.body.title,
-      theme: null,
       snippet: req.body.snippet,
-      notification: false,
       createdAt: new Date(),
     });
 
@@ -85,14 +73,7 @@ export const getArticles = async (req, res) => {
     }
 
     const articles = await Article.find({
-      $and: [
-        {
-          notification: false,
-        },
-        {
-          userId: id,
-        },
-      ],
+      userId: id,
     })
       .sort({ createdAt: -1 })
       .exec();
@@ -105,7 +86,7 @@ export const getArticles = async (req, res) => {
   }
 };
 
-export const deleteArticleFromLibrary = async (req, res) => {
+export const deleteArticle = async (req, res) => {
   try {
     const userId = req.body.userId;
     const articleId = req.body.articleId;
@@ -125,19 +106,12 @@ export const deleteArticleFromLibrary = async (req, res) => {
     }
 
     await Article.findByIdAndDelete(articleId);
-    const articles = await Article.find({
-      $and: [
-        {
-          notification: false,
-        },
-        { userId },
-      ],
-    })
+    const articles = await Article.find({ userId })
       .sort({ createdAt: -1 })
       .exec();
     res.status(200).json({
       message: `Article with id '${articleId}' has been deleted.`,
-      articles: articles ? articles : []
+      articles: articles ? articles : [],
     });
   } catch (error) {
     res.status(500).json({

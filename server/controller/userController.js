@@ -8,7 +8,7 @@ import fs from "fs";
 import axios from "axios";
 
 import User from "../model/userModel.js";
-import Article from "../model/articleModel.js";
+import Notification from "../model/notificationModel.js";
 import UserVerification from "../model/userVerificationModel.js";
 import UserResetPassword from "../model/userResetPasswordModel.js";
 
@@ -547,8 +547,8 @@ export const updateThemes = async (req, res) => {
     );
 
     userData.themes.forEach((theme) => {
-      if (!forUpdateThemes.find(theme.text)) {
-        Article.deleteMany({ theme: theme.text });
+      if (!forUpdateThemes.find(el => el === theme.text)) {
+        Notification.deleteMany({ theme: theme.text });
       }
     });
 

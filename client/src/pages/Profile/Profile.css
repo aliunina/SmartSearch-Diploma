@@ -90,14 +90,6 @@
   height: 3em;
 }
 
-.library {
-  gap: 2em;
-  padding-top: 3em;
-  padding-bottom: 3em;
-  display: flex;
-  margin-right: 15vw;
-}
-
 .profile-change-password-button {
   font-weight: 500;
   color: var(--gray-text-color);

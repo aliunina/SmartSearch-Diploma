@@ -10,8 +10,9 @@ export default function SearchResults({
   issueText,
   isLoading,
   hideDeleteButton = true,
-  hideSaveButton,
+  hideSaveButton = false,
   saveArticle,
+  hidePages = false,
   deleteArticle
 }) {
   const setPage = (event) => {
@@ -46,24 +47,26 @@ export default function SearchResults({
             {...el}
             hideDeleteButton={hideDeleteButton}
             hideSaveButton={hideSaveButton}
-            saveArticle={() => saveArticle(i)}
+            saveArticle={() => saveArticle(el)}
             deleteArticle={() => deleteArticle(el._id)}
           ></SearchResult>
         ))}
       </div>
-      <div className="pagination">
-        {[...Array(count)].map((item, index) => (
-          <a
-            key={index}
-            className={`page ${
-              selectedPage === index + 1 ? "page-active" : ""
-            }`}
-            onClick={setPage}
-          >
-            {index + 1}
-          </a>
-        ))}
-      </div>
+      {!hidePages && (
+        <div className="pagination">
+          {[...Array(count)].map((item, index) => (
+            <a
+              key={index}
+              className={`page ${
+                selectedPage === index + 1 ? "page-active" : ""
+              }`}
+              onClick={setPage}
+            >
+              {index + 1}
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

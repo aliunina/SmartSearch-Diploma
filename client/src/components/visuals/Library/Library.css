@@ -1,0 +1,18 @@
+.library {
+  gap: 2em;
+  padding-top: 3em;
+  padding-bottom: 3em;
+  display: flex;
+  margin-right: 15vw;
+}
+
+.library-search-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.library-search-button span{
+  color: var(--accent-green);
+  font-size: 1.4em;
+}

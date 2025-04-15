@@ -1,0 +1,24 @@
+.notifications {
+  padding-top: 3em;
+  padding-bottom: 3em;
+  margin-left: 15vw;
+  margin-right: 15vw;
+}
+
+.theme-notifications {
+  margin-bottom: 1.5em;
+}
+
+.theme-notifications-title {
+  font-weight: 700;
+  font-size: 1.4em;
+  margin-bottom: 0.5em;
+}
+
+.notifications-busy-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  min-height: 15em;
+  align-items: center;
+}

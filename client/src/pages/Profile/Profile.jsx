@@ -4,7 +4,6 @@ import Body from "../../layouts/SearchLayout/Body/Body";
 import Header from "../../layouts/CommonLayout/Header/Header";
 import UpperPanel from "../../layouts/ProfileLayout/UpperPanel/UpperPanel";
 import LowerPanel from "../../layouts/ProfileLayout/LowerPanel/LowerPanel";
-import LeftPanel from "../../layouts/SearchLayout/LeftPanel/LeftPanel";
 
 import Avatar from "../../components/visuals/Avatar/Avatar";
 import Logo from "../../components/visuals/Logo/Logo";
@@ -12,25 +11,19 @@ import EditProfileDialog from "../../components/dialogs/EditProfileDialog/EditPr
 import EditPasswordDialog from "../../components/dialogs/EditPasswordDialog/EditPasswordDialog";
 import Button from "../../components/inputs/Button/Button";
 import EditThemesDialog from "../../components/dialogs/EditThemesDialog/EditThemesDialog";
-import PeriodFilter from "../../components/filters/PeriodFilter/PeriodFilter";
-import DateFilter from "../../components/filters/DateFilter/DateFilter";
-import ConfirmDialog from "../../components/dialogs/ConfirmDialog/ConfirmDialog";
-import SearchResults from "../../components/visuals/SearchResults/SearchResults";
+import Library from "../../components/visuals/Library/Library";
 
 import {
-  getFilterDate,
-  getPagesCount,
-  getSortFunction,
   showErrorMessageToast,
   showSuccessMessageToast
 } from "../../helpers/util";
 
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { UserContext } from "../../contexts/UserContext/UserContext";
-import { PERIOD_FILTER } from "../../constants";
+import Notifications from "../../components/visuals/Notifications/Notifications";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -39,26 +32,6 @@ export default function Profile() {
   const { user, setUser } = useContext(UserContext);
 
   const [tab, setTab] = useState(0);
-
-  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-  const [confirmationDialogState, setConfirmationDialogState] = useState({
-    text: "",
-    title: "",
-    confirmButtonType: "",
-    confirmButtonText: "",
-    data: {}
-  });
-  const [confirmationDialogBusy, setConfirmationDialogBusy] = useState(false);
-
-  const [libraryPage, setLibraryPage] = useState(1);
-  const [libraryArticles, setLibraryArticles] = useState([]);
-  const [libraryFilter, setLibraryFilter] = useState(PERIOD_FILTER.all);
-  const [librarySort, setLibrarySort] = useState("new");
-  const [libraryState, setLibraryState] = useState({
-    isLoading: false,
-    items: [],
-    count: 0
-  });
 
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [profileDialogState, setProfileDialogState] = useState(user);
@@ -88,63 +61,6 @@ export default function Profile() {
       });
     }
   }, [user, navigate]);
-
-  useEffect(() => {
-    if (user !== null) {
-      setLibraryState({
-        items: [],
-        count: 0,
-        isLoading: true
-      });
-      const serverUrl = import.meta.env.VITE_SERVER_API_URL;
-      axios
-        .get(serverUrl + "/article/get-articles", {
-          withCredentials: true
-        })
-        .then((response) => {
-          if (response.status === 200 && response.data) {
-            setLibraryArticles(response.data);
-
-            const newLibraryState = {
-              items: response.data.slice(0, 10),
-              count: getPagesCount(response.data.length),
-              isLoading: false
-            };
-
-            if (response.data.length === 0) {
-              newLibraryState.issueText = "Отсутствуют статьи в библиотеке.";
-            }
-            setLibraryState(newLibraryState);
-          } else {
-            setLibraryState({
-              items: [],
-              count: 0,
-              isLoading: false,
-              issueText: "Отсутствуют статьи в библиотеке."
-            });
-          }
-        })
-        .catch((response) => {
-          console.log(response.data);
-          if (response.status === 404) {
-            showErrorMessageToast(
-              "Попытка редактирования несуществующего пользователя."
-            );
-          } else if (response.status === 401) {
-            showErrorMessageToast(
-              "Вы не авторизованы. Пожалуйста, выполните вход."
-            );
-          }
-
-          setLibraryState({
-            items: [],
-            count: 0,
-            isLoading: false,
-            issueText: "Произошла ошибка, попробуйте еще раз."
-          });
-        });
-    }
-  }, [user, setLibraryState]);
 
   useEffect(() => {
     setTab(location.state?.tab ? location.state.tab : 0);
@@ -277,136 +193,6 @@ export default function Profile() {
       });
   };
 
-  const handleLibraryPageUpdate = useCallback(
-    (page) => {
-      let items = libraryArticles.slice((page - 1) * 10, (page - 1) * 10 + 10);
-      const newLibraryState = { ...libraryState };
-      if (items.length === 0) {
-        page -= 1;
-        items = libraryArticles.slice((page - 1) * 10, (page - 1) * 10 + 10);
-        newLibraryState.count = getPagesCount(libraryArticles.length);
-      }
-      if (items.length === 0 && page === 0) {
-        newLibraryState.issueText = "Отсутствуют статьи в библиотеке.";
-      }
-      newLibraryState.items = items;
-      setLibraryPage(Number(page));
-      setLibraryState(newLibraryState);
-    },
-    [libraryArticles, libraryState]
-  );
-
-  const handleLibraryFilterUpdate = (newFilter) => {
-    setLibraryFilter(newFilter);
-
-    const sortFunction = getSortFunction(librarySort);
-    const filterDate = getFilterDate(newFilter.value);
-
-    applyLibraryFilters(sortFunction, filterDate);
-  };
-
-  const handleLibrarySortUpdate = (newSort) => {
-    setLibrarySort(newSort);
-
-    const sortFunction = getSortFunction(newSort);
-    const filterDate = getFilterDate(libraryFilter.value);
-
-    applyLibraryFilters(sortFunction, filterDate);
-  };
-
-  const applyLibraryFilters = (sortFunction, filterDate) => {
-    setLibraryPage(1);
-
-    const newLibraryState = { ...libraryState };
-
-    newLibraryState.items = libraryArticles.sort(sortFunction);
-    if (filterDate) {
-      newLibraryState.items = libraryArticles.filter(
-        (article) => new Date(article.createdAt) > filterDate
-      );
-      newLibraryState.count = getPagesCount(newLibraryState.items.length);
-    } else {
-      newLibraryState.items = libraryArticles;
-      newLibraryState.count = getPagesCount(libraryArticles.length);
-    }
-
-    setLibraryState(newLibraryState);
-  };
-
-  const deleteFromLibrary = (id) => {
-    setConfirmationDialogOpen(true);
-    setConfirmationDialogState({
-      isLoading: false,
-      text: "Вы действительно хотите удалить статью из библиотеки?",
-      title: "Подтвердите удаление статьи",
-      confirmButtonType: "delete",
-      confirmButtonText: "Удалить",
-      data: { id }
-    });
-  };
-
-  const isArticleDeleted = useRef(false);
-  useEffect(() => {
-    if (isArticleDeleted.current) {
-      const sortFunction = getSortFunction(librarySort);
-      const filterDate = getFilterDate(libraryFilter.value);
-      applyLibraryFilters(sortFunction, filterDate);
-      handleLibraryPageUpdate(libraryPage);
-
-      showSuccessMessageToast("Статья успешно удалена.");
-      setConfirmationDialogOpen(false);
-      isArticleDeleted.current = false;
-    }
-  }, [
-    libraryArticles,
-    applyLibraryFilters,
-    handleLibraryPageUpdate,
-    libraryPage,
-    libraryFilter.value,
-    librarySort
-  ]);
-
-  const handleConfirmationDialogClose = (choice, data) => {
-    if (choice === "confirm") {
-      setConfirmationDialogBusy(true);
-      const serverUrl = import.meta.env.VITE_SERVER_API_URL;
-      axios
-        .post(
-          serverUrl + "/article/delete-article-from-library",
-          { articleId: data.id },
-          {
-            withCredentials: true
-          }
-        )
-        .then(async (response) => {
-          if (response.status === 200 && response.data) {
-            isArticleDeleted.current = true;
-            setLibraryArticles(response.data.articles);
-          } else {
-            showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
-          }
-          setConfirmationDialogBusy(false);
-        })
-        .catch((response) => {
-          console.log(response.data);
-          if (response.status === 404) {
-            showErrorMessageToast(
-              "Попытка редактирования несуществующего пользователя или статьи."
-            );
-          } else if (response.status === 401) {
-            showErrorMessageToast(
-              "Вы не авторизованы. Пожалуйста, выполните вход."
-            );
-          } else {
-            showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
-          }
-          setConfirmationDialogBusy(false);
-        });
-    } else {
-      setConfirmationDialogOpen(false);
-    }
-  };
-
   return (
     <div className="profile-root">
       {user && (
@@ -440,19 +226,6 @@ export default function Profile() {
                 setDialogOpen={setThemesDialogOpen}
                 setDialogState={setThemesDialogState}
                 updateThemes={updateThemes}
-              />
-            )}
-            {confirmationDialogOpen && (
-              <ConfirmDialog
-                dialogBusy={confirmationDialogBusy}
-                dialogOpen={confirmationDialogOpen}
-                setDialogOpen={setConfirmationDialogOpen}
-                dialogClose={handleConfirmationDialogClose}
-                text={confirmationDialogState.text}
-                title={confirmationDialogState.title}
-                confirmButtonText={confirmationDialogState.confirmButtonText}
-                confirmButtonType={confirmationDialogState.confirmButtonType}
-                data={confirmationDialogState.data}
               />
             )}
           </Header>
@@ -550,37 +323,16 @@ export default function Profile() {
                       }`}
                     />
                   </svg>
-                  Оповещения по теме
+                  Оповещения по темам
                 </p>
               </div>
             </LowerPanel>
             <div className="profile-content">
               {tab === 0 && (
-                <div className="library">
-                  <LeftPanel>
-                    <DateFilter
-                      currentFilter={librarySort}
-                      updateFilter={handleLibrarySortUpdate}
-                    />
-                    <PeriodFilter
-                      title="Добавлено"
-                      currentFilter={libraryFilter}
-                      updateFilter={handleLibraryFilterUpdate}
-                      showCustomPeriod={false}
-                    />
-                  </LeftPanel>
-                  <SearchResults
-                    items={libraryState.items}
-                    hideDeleteButton={false}
-                    deleteArticle={deleteFromLibrary}
-                    hideSaveButton={true}
-                    count={libraryState.count}
-                    isLoading={libraryState.isLoading}
-                    issueText={libraryState.issueText}
-                    selectedPage={libraryPage}
-                    updatePage={handleLibraryPageUpdate}
-                  />
-                </div>
+                <Library/>
+              )}
+              {tab === 1 && (
+                <Notifications/>
               )}
             </div>
           </Body>

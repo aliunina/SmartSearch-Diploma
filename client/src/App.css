@@ -208,3 +208,24 @@ input[type="search"]::-webkit-search-results-decoration {
 .header-sign-in-button {
   margin-left: 1em;
 }
+
+.empty-container {
+  width: 100%;
+  align-items: center;
+  margin-top: 3em;
+  margin-bottom: 3em;
+  gap: 2em;
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-image {
+  width: 20em;  
+}
+
+.empty-text {
+  margin: 0;
+  text-align: center;
+  font-weight: 400;
+  font-size: 1.3em;  
+}
