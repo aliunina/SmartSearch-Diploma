@@ -1,4 +1,4 @@
-import "./ChangePasswordDialog.css";
+import "./EditPasswordDialog.css";
 
 import Button from "../../inputs/Button/Button";
 import { useEffect, useRef, useState } from "react";
@@ -8,12 +8,12 @@ import Label from "../../visuals/Label/Label";
 import Input from "../../inputs/Input/Input";
 import { EyeFilled, EyeInvisibleFilled } from "@ant-design/icons";
 
-export default function ChangePasswordDialog({
+export default function EditPasswordDialog({
   dialogBusy,
   dialogState,
   setDialogState,
   setDialogOpen,
-  changePassword
+  editPassword
 }) {
   const [isValid, setIsValid] = useState({
     oldPassword: true,
@@ -56,7 +56,7 @@ export default function ChangePasswordDialog({
 
     const isReadyToSubmit = checkReadiness();
     if (isReadyToSubmit) {
-      changePassword(dialogState);
+      editPassword(dialogState);
     }
   };
 
@@ -85,7 +85,7 @@ export default function ChangePasswordDialog({
   return (
     <div className="darkened-background">
       <form
-        className="dialog-size dialog-change-password dialog-wrap"
+        className="dialog-size dialog-edit-password dialog-wrap"
         onSubmit={submitForm}
       >
         {dialogBusy && (
@@ -104,16 +104,16 @@ export default function ChangePasswordDialog({
           </Button>
         </div>
         <p className="dialog-title">Изменить пароль</p>
-        <div className="dialog-content dialog-change-password">
-          <div className="change-password-container">
-            <Label required={true} htmlFor="changeOldPassword">
+        <div className="dialog-content dialog-edit-password">
+          <div className="edit-password-container">
+            <Label required={true} htmlFor="editOldPassword">
               Старый пароль
             </Label>
             <Input
               type="password"
               placeholder="Введите старый пароль"
               maxLength="65"
-              id="changeOldPassword"
+              id="editOldPassword"
               name="oldPassword"
               value={dialogState.oldPassword}
               onChange={(e) =>
@@ -129,15 +129,15 @@ export default function ChangePasswordDialog({
               }
             ></Input>
           </div>
-          <div className="change-password-container">
-            <Label required={true} htmlFor="changeNewPassword">
+          <div className="edit-password-container">
+            <Label required={true} htmlFor="editNewPassword">
               Новый пароль
             </Label>
             <Input
               type={inputType}
               placeholder="Введите новый пароль"
               maxLength="65"
-              id="changeNewPassword"
+              id="editNewPassword"
               name="newPassword"
               value={dialogState.newPassword}
               onChange={(e) =>
@@ -158,23 +158,23 @@ export default function ChangePasswordDialog({
                 onClick={showPassword}
               >
                 {inputType === "text" && (
-                  <EyeInvisibleFilled className="change-password-icon" />
+                  <EyeInvisibleFilled className="edit-password-icon" />
                 )}
                 {inputType === "password" && (
-                  <EyeFilled className="change-password-icon" />
+                  <EyeFilled className="edit-password-icon" />
                 )}
               </Button>
             </Input>
           </div>
-          <div className="change-password-container">
-            <Label required={true} htmlFor="changeRepeatPassword">
+          <div className="edit-password-container">
+            <Label required={true} htmlFor="editRepeatPassword">
               Подтвердите пароль
             </Label>
             <Input
               type={repeatInputType}
               placeholder="Введите новый пароль"
               maxLength="65"
-              id="changeRepeatPassword"
+              id="editRepeatPassword"
               name="repeatPassword"
               value={dialogState.repeatPassword}
               onChange={(e) =>
@@ -194,10 +194,10 @@ export default function ChangePasswordDialog({
                 onClick={showRepeatPassword}
               >
                 {repeatInputType === "text" && (
-                  <EyeInvisibleFilled className="change-password-icon" />
+                  <EyeInvisibleFilled className="edit-password-icon" />
                 )}
                 {repeatInputType === "password" && (
-                  <EyeFilled className="change-password-icon" />
+                  <EyeFilled className="edit-password-icon" />
                 )}
               </Button>
             </Input>

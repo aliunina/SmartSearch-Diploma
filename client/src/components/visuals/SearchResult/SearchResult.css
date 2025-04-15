@@ -5,55 +5,79 @@
 }
 
 .search-result-title {
-    margin: 0;
-    font-weight: 500;
-    font-size: 1.2em;
-    text-decoration: none;
-    color: #1155CC;
+  margin: 0;
+  font-weight: 500;
+  font-size: 1.2em;
+  text-decoration: none;
+  color: #1155cc;
 }
 
 .search-result-title:visited {
-    color: #3600AE;
+  color: #3600ae;
 }
 
 .search-result-title:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .search-result-site:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .search-result-site {
-    margin: 0;
-    text-decoration: none;
-    color: var(--accent-green);
+  margin: 0;
+  text-decoration: none;
+  color: var(--accent-green);
 }
 
 .search-result-snippet {
-    margin: 0;
+  margin: 0;
 }
 
 .search-result-save-button {
-    padding: 0;
-    color: var(--accent-green);
-    background-color: transparent;
-    border: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.2em;
-    font-weight: 500;
+  padding: 0;
+  color: var(--accent-green);
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  font-weight: 500;
 }
 
 .search-result-save-button:hover {
-    color: var(--accent-dark-green)
+  color: var(--accent-dark-green);
 }
 
 .search-result-save-button:active {
-    color: var(--accent-darker-green)
+  color: var(--accent-darker-green);
 }
 
 .search-result-save-button span {
-    font-size: 1.3em;
+  font-size: 1.3em;
+}
+
+.search-result-delete-button {
+  padding: 0;
+  color: var(--gray);
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  font-weight: 500;
+}
+
+.search-result-delete-button:hover {
+  color: var(--delete-color);
+}
+
+.search-result-delete-button:active {
+  color: var(--delete-hover-color);
+}
+
+.search-result-delete-button span {
+  font-size: 1.3em;
 }

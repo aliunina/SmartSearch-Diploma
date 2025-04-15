@@ -4,14 +4,18 @@ import Body from "../../layouts/SearchLayout/Body/Body";
 import Header from "../../layouts/CommonLayout/Header/Header";
 import UpperPanel from "../../layouts/ProfileLayout/UpperPanel/UpperPanel";
 import LowerPanel from "../../layouts/ProfileLayout/LowerPanel/LowerPanel";
+import LeftPanel from "../../layouts/SearchLayout/LeftPanel/LeftPanel";
 
 import Avatar from "../../components/visuals/Avatar/Avatar";
 import Logo from "../../components/visuals/Logo/Logo";
 import EditProfileDialog from "../../components/dialogs/EditProfileDialog/EditProfileDialog";
-import ChangePasswordDialog from "../../components/dialogs/ChangePasswordDialog/ChangePasswordDialog";
+import EditPasswordDialog from "../../components/dialogs/EditPasswordDialog/EditPasswordDialog";
 import Button from "../../components/inputs/Button/Button";
 import EditThemesDialog from "../../components/dialogs/EditThemesDialog/EditThemesDialog";
 import PeriodFilter from "../../components/filters/PeriodFilter/PeriodFilter";
+import DateFilter from "../../components/filters/DateFilter/DateFilter";
+import ConfirmDialog from "../../components/dialogs/ConfirmDialog/ConfirmDialog";
+import SearchResults from "../../components/visuals/SearchResults/SearchResults";
 
 import {
   getFilterDate,
@@ -21,15 +25,12 @@ import {
   showSuccessMessageToast
 } from "../../helpers/util";
 
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { UserContext } from "../../contexts/UserContext/UserContext";
-import SearchResults from "../../components/visuals/SearchResults/SearchResults";
 import { PERIOD_FILTER } from "../../constants";
-import LeftPanel from "../../layouts/SearchLayout/LeftPanel/LeftPanel";
-import DateFilter from "../../components/filters/DateFilter/DateFilter";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -38,6 +39,16 @@ export default function Profile() {
   const { user, setUser } = useContext(UserContext);
 
   const [tab, setTab] = useState(0);
+
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [confirmationDialogState, setConfirmationDialogState] = useState({
+    text: "",
+    title: "",
+    confirmButtonType: "",
+    confirmButtonText: "",
+    data: {}
+  });
+  const [confirmationDialogBusy, setConfirmationDialogBusy] = useState(false);
 
   const [libraryPage, setLibraryPage] = useState(1);
   const [libraryArticles, setLibraryArticles] = useState([]);
@@ -87,17 +98,23 @@ export default function Profile() {
       });
       const serverUrl = import.meta.env.VITE_SERVER_API_URL;
       axios
-        .get(serverUrl + "/user/get-articles", {
+        .get(serverUrl + "/article/get-articles", {
           withCredentials: true
         })
         .then((response) => {
           if (response.status === 200 && response.data) {
             setLibraryArticles(response.data);
-            setLibraryState({
+
+            const newLibraryState = {
               items: response.data.slice(0, 10),
               count: getPagesCount(response.data.length),
               isLoading: false
-            });
+            };
+
+            if (response.data.length === 0) {
+              newLibraryState.issueText = "Отсутствуют статьи в библиотеке.";
+            }
+            setLibraryState(newLibraryState);
           } else {
             setLibraryState({
               items: [],
@@ -178,11 +195,11 @@ export default function Profile() {
     setPasswordDialogOpen(true);
   };
 
-  const changePassword = (values) => {
+  const editPassword = (values) => {
     setPasswordDialogBusy(true);
     const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
-      .put(serverUrl + "/user/change-password", values, {
+      .put(serverUrl + "/user/update-password", values, {
         withCredentials: true
       })
       .then((response) => {
@@ -260,27 +277,38 @@ export default function Profile() {
       });
   };
 
-  const handleLibraryPageUpdate = (page) => {
-    setLibraryPage(Number(page));
-    setLibraryState({
-      ...libraryState,
-      items: libraryArticles.slice((page - 1) * 10, (page - 1) * 10 + 10)
-    });
-  };
+  const handleLibraryPageUpdate = useCallback(
+    (page) => {
+      let items = libraryArticles.slice((page - 1) * 10, (page - 1) * 10 + 10);
+      const newLibraryState = { ...libraryState };
+      if (items.length === 0) {
+        page -= 1;
+        items = libraryArticles.slice((page - 1) * 10, (page - 1) * 10 + 10);
+        newLibraryState.count = getPagesCount(libraryArticles.length);
+      }
+      if (items.length === 0 && page === 0) {
+        newLibraryState.issueText = "Отсутствуют статьи в библиотеке.";
+      }
+      newLibraryState.items = items;
+      setLibraryPage(Number(page));
+      setLibraryState(newLibraryState);
+    },
+    [libraryArticles, libraryState]
+  );
 
   const handleLibraryFilterUpdate = (newFilter) => {
     setLibraryFilter(newFilter);
 
-    const sortFunction = getSortFunction(librarySort);   
+    const sortFunction = getSortFunction(librarySort);
     const filterDate = getFilterDate(newFilter.value);
 
-    applyLibraryFilters(sortFunction, filterDate);    
+    applyLibraryFilters(sortFunction, filterDate);
   };
 
   const handleLibrarySortUpdate = (newSort) => {
     setLibrarySort(newSort);
 
-    const sortFunction = getSortFunction(newSort);        
+    const sortFunction = getSortFunction(newSort);
     const filterDate = getFilterDate(libraryFilter.value);
 
     applyLibraryFilters(sortFunction, filterDate);
@@ -305,6 +333,80 @@ export default function Profile() {
     setLibraryState(newLibraryState);
   };
 
+  const deleteFromLibrary = (id) => {
+    setConfirmationDialogOpen(true);
+    setConfirmationDialogState({
+      isLoading: false,
+      text: "Вы действительно хотите удалить статью из библиотеки?",
+      title: "Подтвердите удаление статьи",
+      confirmButtonType: "delete",
+      confirmButtonText: "Удалить",
+      data: { id }
+    });
+  };
+
+  const isArticleDeleted = useRef(false);
+  useEffect(() => {
+    if (isArticleDeleted.current) {
+      const sortFunction = getSortFunction(librarySort);
+      const filterDate = getFilterDate(libraryFilter.value);
+      applyLibraryFilters(sortFunction, filterDate);
+      handleLibraryPageUpdate(libraryPage);
+
+      showSuccessMessageToast("Статья успешно удалена.");
+      setConfirmationDialogOpen(false);
+      isArticleDeleted.current = false;
+    }
+  }, [
+    libraryArticles,
+    applyLibraryFilters,
+    handleLibraryPageUpdate,
+    libraryPage,
+    libraryFilter.value,
+    librarySort
+  ]);
+
+  const handleConfirmationDialogClose = (choice, data) => {
+    if (choice === "confirm") {
+      setConfirmationDialogBusy(true);
+      const serverUrl = import.meta.env.VITE_SERVER_API_URL;
+      axios
+        .post(
+          serverUrl + "/article/delete-article-from-library",
+          { articleId: data.id },
+          {
+            withCredentials: true
+          }
+        )
+        .then(async (response) => {
+          if (response.status === 200 && response.data) {
+            isArticleDeleted.current = true;
+            setLibraryArticles(response.data.articles);
+          } else {
+            showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+          }
+          setConfirmationDialogBusy(false);
+        })
+        .catch((response) => {
+          console.log(response.data);
+          if (response.status === 404) {
+            showErrorMessageToast(
+              "Попытка редактирования несуществующего пользователя или статьи."
+            );
+          } else if (response.status === 401) {
+            showErrorMessageToast(
+              "Вы не авторизованы. Пожалуйста, выполните вход."
+            );
+          } else {
+            showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+          }
+          setConfirmationDialogBusy(false);
+        });
+    } else {
+      setConfirmationDialogOpen(false);
+    }
+  };
+
   return (
     <div className="profile-root">
       {user && (
@@ -323,12 +425,12 @@ export default function Profile() {
               />
             )}
             {passwordDialogOpen && (
-              <ChangePasswordDialog
+              <EditPasswordDialog
                 dialogState={passwordDialogState}
                 dialogBusy={passwordDialogBusy}
                 setDialogOpen={setPasswordDialogOpen}
                 setDialogState={setPasswordDialogState}
-                changePassword={changePassword}
+                editPassword={editPassword}
               />
             )}
             {themesDialogOpen && (
@@ -338,6 +440,19 @@ export default function Profile() {
                 setDialogOpen={setThemesDialogOpen}
                 setDialogState={setThemesDialogState}
                 updateThemes={updateThemes}
+              />
+            )}
+            {confirmationDialogOpen && (
+              <ConfirmDialog
+                dialogBusy={confirmationDialogBusy}
+                dialogOpen={confirmationDialogOpen}
+                setDialogOpen={setConfirmationDialogOpen}
+                dialogClose={handleConfirmationDialogClose}
+                text={confirmationDialogState.text}
+                title={confirmationDialogState.title}
+                confirmButtonText={confirmationDialogState.confirmButtonText}
+                confirmButtonType={confirmationDialogState.confirmButtonType}
+                data={confirmationDialogState.data}
               />
             )}
           </Header>
@@ -353,11 +468,11 @@ export default function Profile() {
                     className="profile-edit-button transparent-button"
                     onClick={editUserProfile}
                   >
-                    <img src="edit-profile.svg" alt="Редактировать" />
-                    Редактировать профиль
+                    <img src="edit-profile.svg" alt="Изменить профиль" />
+                    Изменить профиль
                   </Button>
                   <Button
-                    className="transparent-button"
+                    className="profile-change-password-button transparent-button"
                     onClick={openPasswordDialog}
                   >
                     Изменить пароль
@@ -437,30 +552,6 @@ export default function Profile() {
                   </svg>
                   Оповещения по теме
                 </p>
-                <p
-                  className={`${
-                    tab === 2 ? "profile-tab profile-tab-active" : "profile-tab"
-                  }`}
-                  onClick={() => setTab(2)}
-                >
-                  <svg
-                    width="19"
-                    height="18"
-                    viewBox="0 0 19 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M4.5 14H11.5V12H4.5V14ZM4.5 10H14.5V8.00003H4.5V10ZM4.5 6.00003H14.5V4.00003H4.5V6.00003ZM2.5 18C1.95 18 1.479 17.804 1.087 17.412C0.695002 17.02 0.499335 16.5494 0.500002 16V2.00003C0.500002 1.45003 0.696002 0.979032 1.088 0.587032C1.48 0.195032 1.95067 -0.000634451 2.5 3.22154e-05H16.5C17.05 3.22154e-05 17.521 0.196032 17.913 0.588032C18.305 0.980032 18.5007 1.4507 18.5 2.00003V16C18.5 16.55 18.304 17.021 17.912 17.413C17.52 17.805 17.0493 18.0007 16.5 18H2.5Z"
-                      fill={`${
-                        tab === 2
-                          ? "var(--accent-green)"
-                          : "var(--gray-text-color)"
-                      }`}
-                    />
-                  </svg>
-                  Новые статьи в источниках
-                </p>
               </div>
             </LowerPanel>
             <div className="profile-content">
@@ -481,6 +572,7 @@ export default function Profile() {
                   <SearchResults
                     items={libraryState.items}
                     hideDeleteButton={false}
+                    deleteArticle={deleteFromLibrary}
                     hideSaveButton={true}
                     count={libraryState.count}
                     isLoading={libraryState.isLoading}

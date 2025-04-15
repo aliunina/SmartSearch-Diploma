@@ -254,22 +254,6 @@ export const registerUser = async (req, res) => {
   }
 };
 
-export const getAllUsers = async (req, res) => {
-  try {
-    const userData = await User.find();
-    if (!userData || userData.length === 0) {
-      return res.status(404).json({
-        errorMessage: "Users not found.",
-      });
-    }
-    res.status(200).json(userData);
-  } catch (error) {
-    res.status(500).json({
-      errorMessage: error.message,
-    });
-  }
-};
-
 const sendResetPasswordEmail = ({ _id, email, firstName }, res) => {
   UserResetPassword.deleteMany({ userId: _id })
     .then(() => {
@@ -616,7 +600,7 @@ export const updateUser = async (req, res) => {
   }
 };
 
-export const changePassword = async (req, res) => {
+export const updatePassword = async (req, res) => {
   try {
     const id = req.body.userId;
     const userData = await User.findById(id);

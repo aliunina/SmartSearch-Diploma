@@ -113,7 +113,7 @@ export default function EditProfileDialog({
             <img src="cross.svg" alt="Закрыть" />
           </Button>
         </div>
-        <p className="dialog-title">Редактировать профиль</p>
+        <p className="dialog-title">Изменить профиль</p>
         <div className="dialog-content">
           <div className="edit-profile-container">
             <Label required={true} htmlFor="editProfileLastName">

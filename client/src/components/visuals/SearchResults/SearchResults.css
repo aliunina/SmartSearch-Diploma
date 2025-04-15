@@ -34,7 +34,6 @@
 
 .issue-container {
   width: 100%;
-  margin-top: 3em;
   align-items: center;
   gap: 2em;
   display: flex;
@@ -51,6 +50,7 @@
 }
 
 .results-busy-container {
+  width: 100%;
   display: flex;
   justify-content: center;
   min-height: 40em;

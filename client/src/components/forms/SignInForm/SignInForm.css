@@ -18,19 +18,6 @@
   height: 0.8em;
 }
 
-.sign-in-form-divider {
-  width: 100%;
-  align-items: center;
-  display: flex;
-  color: var(--gray);;
-  gap: 1em;
-}
-
-.sign-in-form-divider-line {
-  width: 50%;
-  border-bottom: 1px solid var(--border-color);
-}
-
 .sign-in-form-container {
   display: flex;
   flex-direction: column;

@@ -17,6 +17,9 @@ body {
   --toastify-color-success: #008054;
   --toastify-color-error: #b3261e;
   --invalid-error: #b3261e;
+  --delete-color: #b3261e;
+  --delete-hover-color: #971e18;
+  --delete-active-color: #841b15;
   --transparent-color: white;
   --transparent-hover-color: #e6e6e6;
   --transparent-active-color: #b4b4b4;
@@ -117,8 +120,7 @@ input[type="search"]::-webkit-search-results-decoration {
   font-weight: 500;
   font-size: 1.2em;
   margin: 0;
-  margin-left: 1.5em;
-  margin-bottom: 1.2em;
+  margin: 0 1.5em 1.2em 1.5em;
 }
 
 .dialog-content {
@@ -134,10 +136,9 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .dialog-buttons-container {
   border-top: 1px solid var(--border-color);
-  padding-top: 1em;
   display: flex;
   gap: 1em;
-  padding-right: 1em;
+  padding: 1em 1em 0em 1em;
   justify-content: end;
 }
 

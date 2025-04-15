@@ -4,19 +4,6 @@
   align-content: center;
 }
 
-.sign-up-form-divider {
-  width: 100%;
-  align-items: center;
-  display: flex;
-  color: var(--gray);;
-  gap: 1em;
-}
-
-.sign-up-form-divider-line {
-  width: 50%;
-  border-bottom: 1px solid var(--border-color);
-}
-
 .sign-up-form-double-container {
   display: flex;
   gap: 1em;

@@ -213,13 +213,21 @@ export default function Search() {
             });
           }
         })
-        .catch((error) => {
-          console.log("Error: " + error);
-          setAppState({
-            isLoading: false,
-            issueText: "Произошла ошибка, попробуйте позже.",
-            items: []
-          });
+        .catch((response) => {
+          console.log("Error: " + response);
+          if (response.status === 429) {
+            setAppState({
+              isLoading: false,
+              issueText: "Лимит запросов в системе превышен.",
+              items: []
+            });
+          } else {
+            setAppState({
+              isLoading: false,
+              issueText: "Произошла ошибка, попробуйте позже.",
+              items: []
+            });
+          }
         });
     }
   }, [setAppState, urlParams]);
@@ -350,12 +358,12 @@ export default function Search() {
       });
   };
 
-  const saveToLibrary = (index) => {
+  const saveArticle = (index) => {
     setBusy(true);
     const serverUrl = import.meta.env.VITE_SERVER_API_URL;
     axios
       .post(
-        serverUrl + "/user/save-to-library",
+        serverUrl + "/article/save-to-library",
         { ...appState.items[index] },
         {
           withCredentials: true
@@ -463,7 +471,7 @@ export default function Search() {
               updatePage={handleUpdatePage}
               hideSaveButton={!user}
               count={appState.count}
-              saveToLibrary={saveToLibrary}
+              saveArticle={saveArticle}
             />
           </div>
         </Body>

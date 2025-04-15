@@ -66,15 +66,6 @@ export default function SignInForm({ signIn }) {
         <p className="sign-in-form-title">
           Вход в <Logo className="sign-in-form-logo" />
         </p>
-        <Button className="sign-in-form-google-button">
-          <img src="google.svg" alt="Google" />
-          Продолжить с Google
-        </Button>
-        <div className="sign-in-form-divider">
-          <div className="sign-in-form-divider-line" />
-          или
-          <div className="sign-in-form-divider-line" />
-        </div>
         <div className="sign-in-form-container sign-in-form-email">
           <Label htmlFor="signInEmail">
             Электронная почта для подтверждения

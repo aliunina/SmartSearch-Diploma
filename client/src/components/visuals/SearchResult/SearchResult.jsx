@@ -2,9 +2,7 @@ import "./SearchResult.css";
 
 import Button from "../../inputs/Button/Button";
 
-import { StarFilled } from "@ant-design/icons";
-import { useContext } from "react";
-import { UserContext } from "../../../contexts/UserContext/UserContext";
+import { DeleteFilled, StarFilled } from "@ant-design/icons";
 
 export default function SearchResult({
   link,
@@ -13,10 +11,9 @@ export default function SearchResult({
   snippet,
   hideDeleteButton,
   hideSaveButton,
-  saveToLibrary
-}) {  
-  const { user } = useContext(UserContext);
-
+  saveArticle,
+  deleteArticle
+}) {
   return (
     <div className="search-result-container">
       <a className="search-result-title" target="_blank" href={link}>
@@ -26,9 +23,21 @@ export default function SearchResult({
         {displayLink}
       </a>
       <p className="search-result-snippet">{snippet}</p>
-      <Button onClick={saveToLibrary} hidden={hideSaveButton} className="search-result-save-button">
-        <StarFilled/>
+      <Button
+        onClick={saveArticle}
+        hidden={hideSaveButton}
+        className="search-result-save-button"
+      >
+        <StarFilled />
         Сохранить
+      </Button>
+      <Button
+        onClick={deleteArticle}
+        hidden={hideDeleteButton}
+        className="search-result-delete-button"
+      >
+        <DeleteFilled />
+        Удалить
       </Button>
     </div>
   );

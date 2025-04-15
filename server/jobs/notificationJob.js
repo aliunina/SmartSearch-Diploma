@@ -4,7 +4,7 @@ import axios from "axios";
 import fs from "fs";
 
 import User from "../model/userModel.js";
-import Article from "../model/articleModel.js";
+import Article from "../model/notificationModel.js";
 
 const cronExpression = "*/1 * * * *";
 
@@ -39,7 +39,7 @@ const sendNotifications = async (req, res) => {
     notifiedUsers.forEach(async (user) => {
       const { _id, email, firstName } = user;
       let htmlArticles = "";
-      const articlesToSave = [];
+      const notificationsToSave = [];
       const themesToSave = [];
 
       const themePromises = user.themes.map(async (theme) => {
@@ -76,31 +76,29 @@ const sendNotifications = async (req, res) => {
                       <div>${article.snippet}</div>
                     </div>`;
 
-            const newArticle = new Article({
+            const newNotification = new Notification({
               userId: _id,
               link: article.link,
               theme: theme.text,
               title: article.title,
               displayLink: article.displayLink,
               snippet: article.snippet,
-              notification: true,
-              createdAt: Date.now(),
+              createdAt: Date.now()
             });
-            articlesToSave.push(newArticle);
+            notificationsToSave.push(newNotification);
           });
         }
       });
 
       await Promise.all(themePromises);
 
-      if (articlesToSave.length > 0) {
+      if (notificationsToSave.length > 0) {
         sendNotificationEmail(_id, email, firstName, htmlArticles);
-        await Article.create(articlesToSave);
+        await Article.create(notificationsToSave);
 
-        const userData = await User.findByIdAndUpdate(
+        User.findByIdAndUpdate(
           { _id },
-          { themes: themesToSave },
-          { new: true }
+          { themes: themesToSave }
         );
       }
     });

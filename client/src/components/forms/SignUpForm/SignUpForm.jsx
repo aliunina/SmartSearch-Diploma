@@ -164,15 +164,6 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
             title="Личные данные"
             titleDetails="Введите свое имя и электронную почту"
           >
-            <Button type="button" className="sign-up-form-google-button">
-              <img src="google.svg" alt="Google" />
-              Продолжить с Google
-            </Button>
-            <div className="sign-up-form-divider">
-              <div className="sign-up-form-divider-line" />
-              или
-              <div className="sign-up-form-divider-line" />
-            </div>
             <div className="sign-up-form-container">
               <Label required={true} htmlFor="signUpLastName">
                 Фамилия

@@ -67,24 +67,9 @@ export default function NavMenu({
             </Button>
           </li>
           <li>
-            <Button className="nav-menu-button" onClick={() => openUserProfile(0)}>
-              <img src="my_library.svg" alt="Моя библиотека" />
-              Моя библиотека
-            </Button>
-          </li>
-          <li>
             <Button className="nav-menu-button" onClick={() => openUserProfile(1)}>
               <img src="notifications_by_theme.svg" alt="Оповещения по теме" />
               Оповещения по теме
-            </Button>
-          </li>
-          <li>
-            <Button className="nav-menu-button" onClick={() => openUserProfile(2)}>
-              <img
-                src="notifications_by_article.svg"
-                alt="Оповещения по журналам"
-              />
-              Оповещения по журналам
             </Button>
           </li>
         </ul>

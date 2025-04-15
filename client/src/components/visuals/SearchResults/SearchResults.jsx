@@ -11,7 +11,8 @@ export default function SearchResults({
   isLoading,
   hideDeleteButton = true,
   hideSaveButton,
-  saveToLibrary
+  saveArticle,
+  deleteArticle
 }) {
   const setPage = (event) => {
     updatePage(Number(event.target.text));
@@ -45,7 +46,8 @@ export default function SearchResults({
             {...el}
             hideDeleteButton={hideDeleteButton}
             hideSaveButton={hideSaveButton}
-            saveToLibrary={() => saveToLibrary(i)}
+            saveArticle={() => saveArticle(i)}
+            deleteArticle={() => deleteArticle(el._id)}
           ></SearchResult>
         ))}
       </div>

@@ -105,11 +105,11 @@ export const getArticles = async (req, res) => {
   }
 };
 
-export const deleteArticle = async (req, res) => {
+export const deleteArticleFromLibrary = async (req, res) => {
   try {
     const userId = req.body.userId;
     const articleId = req.body.articleId;
-    
+
     const userExists = await User.findById(userId);
     if (!userExists) {
       return res.status(404).json({
@@ -123,10 +123,21 @@ export const deleteArticle = async (req, res) => {
         errorMessage: "Article not found.",
       });
     }
-    
+
     await Article.findByIdAndDelete(articleId);
+    const articles = await Article.find({
+      $and: [
+        {
+          notification: false,
+        },
+        { userId },
+      ],
+    })
+      .sort({ createdAt: -1 })
+      .exec();
     res.status(200).json({
       message: `Article with id '${articleId}' has been deleted.`,
+      articles: articles ? articles : []
     });
   } catch (error) {
     res.status(500).json({
