@@ -3,7 +3,6 @@ import userAuth from "../middleware/userAuth.js";
 import {
   authorizeUser,
   deleteUser,
-  getAllUsers,
   registerUser,
   checkCode,
   recoveryUser,
@@ -13,7 +12,8 @@ import {
   verified,
   signOutUser,
   isAuthentificated,
-  changePassword
+  updatePassword,
+  updateThemes,
 } from "../controller/userController.js";
 
 const userRoute = express.Router();
@@ -23,11 +23,10 @@ userRoute.post("/authorize", authorizeUser);
 userRoute.get("/sign-out", signOutUser);
 userRoute.get("/is-auth", userAuth, isAuthentificated);
 
-userRoute.get("/all", getAllUsers);
-
 userRoute.put("/update", userAuth, updateUser);
-userRoute.post("/change-password", userAuth, changePassword);
-userRoute.delete("/delete", userAuth, deleteUser);
+userRoute.put("/update-password", userAuth, updatePassword);
+userRoute.put("/update-themes", userAuth, updateThemes);
+userRoute.post("/delete", userAuth, deleteUser);
 
 userRoute.get("/verify/:id/:uniqueString", verifyUser);
 userRoute.get("/verified", verified);

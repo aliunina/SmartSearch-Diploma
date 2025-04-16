@@ -1,0 +1,38 @@
+.confirm-dialog-wrap {
+    height: auto;
+    overflow: hidden;
+    z-index: 11;
+}
+
+.confirm-dialog-title {
+    text-align: center;
+}
+
+.confirm-dialog-text {
+    margin: 0 1.5em 1em 1.5em;
+    text-align: center;
+}
+
+.confirm-dialog-buttons {
+    justify-content: center;
+}
+
+.confirm-dialog-delete-button {
+    background-color: var(--delete-color);
+}
+
+.confirm-dialog-delete-button:hover {
+    background-color: var(--delete-hover-color);
+}
+
+.confirm-dialog-delete-button:active {
+    background-color: var(--delete-active-color);
+}
+
+.confirm-dialog-darkened-background {
+    z-index: 10;
+}
+
+.confirm-dialog-busy-background {
+    z-index: 11;
+}

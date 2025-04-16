@@ -2,9 +2,10 @@ import "./SignIn.css";
 
 import Body from "../../layouts/CommonLayout/Body/Body";
 import Header from "../../layouts/CommonLayout/Header/Header";
-import Logo from "../../components/Logo/Logo";
-import SignInForm from "../../components/SignInForm/SignInForm";
-import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
+
+import Logo from "../../components/visuals/Logo/Logo";
+import SignInForm from "../../components/forms/SignInForm/SignInForm";
+import BusyIndicator from "../../components/visuals/BusyIndicator/BusyIndicator";
 
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";

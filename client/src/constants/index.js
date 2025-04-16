@@ -65,6 +65,10 @@ export const SOURCE_FILTER = {
   "bntusmi": {
     text: "БНТУ в СМИ",
     url: "smi.bntu.by"
+  },
+  "library": {
+    text: "Новости и подборки Научной библиотеки БНТУ",
+    url: "library.bntu.by"
   }
 };
 

@@ -1,0 +1,43 @@
+.filter-title {
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 0.2em;
+}
+
+.custom-period-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}
+
+.custom-period-inputs {
+  display: flex;
+  align-items: center;
+}
+
+.custom-period-input {
+  width: 4em;
+  height: 2em;
+  border: var(--border-color) 1.5px solid;
+  border-radius: 6px;
+}
+
+.custom-period-input:not(.custom-period-input-invalid):focus {
+  outline: 1px solid var(--accent-green);
+}
+
+.custom-period-input:not(.custom-period-input-invalid):focus-visible {
+  outline: 1px solid var(--accent-green);
+}
+
+.custom-period-input-invalid {
+  outline: 2px solid var(--invalid-color);
+}
+
+.filter-container {
+  display: flex;
+  margin-bottom: 2em;
+  flex-direction: column;
+  gap: 1em;
+}

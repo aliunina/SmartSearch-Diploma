@@ -13,14 +13,8 @@ const articleSchema = mongoose.Schema({
     title: {
         type: String
     },
-    theme: {
-        type: String
-    },
     snippet: {
         type: String
-    },
-    newArticle: {
-        type: Boolean
     },
     createdAt: {
         type: Date

@@ -1,0 +1,31 @@
+.edit-profile-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.delete-profile-button {
+  /* padding: 0;
+  color: var(--gray);
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  font-weight: 500; */
+  color: var(--delete-color);
+  gap: 0.3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-profile-button:hover {
+  color: var(--delete-hover-color);
+}
+
+.delete-profile-button:active {
+  color: var(--delete-active-color);
+}
+
+.delete-profile-button span {
+  font-size: 1.3em;
+}

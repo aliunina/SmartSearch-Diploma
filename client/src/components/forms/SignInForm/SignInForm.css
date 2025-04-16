@@ -1,0 +1,82 @@
+.sign-in-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 28em;
+}
+
+.sign-in-form-title {
+  font-size: 2em;
+  font-weight: 700;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+.sign-in-form-logo {
+  height: 0.8em;
+}
+
+.sign-in-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.sign-in-form-email {
+  position: relative;
+}
+
+.sign-in-form-email input {
+  padding-left: 3em;
+}
+
+.sign-in-form-email img {
+  position: absolute;
+  top: 58%;
+  left: 1em;
+}
+
+.sign-in-form-password {
+  position: relative;
+}
+
+.sign-in-form-password input {
+  padding-left: 3em;
+  padding-right: 3em;
+}
+
+.sign-in-form-password-icon {
+  position: absolute;
+  top: 52%;
+  left: 1em;
+  height: 1.3em;
+}
+
+.sign-in-form-password button {
+  position: absolute;
+  top: 48%;
+  right: 2em;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--gray);;
+  font-size: 1.4em;
+}
+
+.sign-in-form-forgot-password {
+  font-size: 0.8em;
+  color: var(--gray);
+  cursor: pointer;
+  text-align: center;
+  text-decoration: underline;
+}
+
+.sign-in-form-forgot-password:hover {
+  color: var(--gray-text-color);
+}
+
+.sign-in-form-forgot-password:active {
+  color: var(--darker-gray-text-color);
+}

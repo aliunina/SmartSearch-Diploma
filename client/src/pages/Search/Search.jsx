@@ -3,17 +3,19 @@ import Header from "../../layouts/SearchLayout/Header/Header";
 import LeftPanel from "../../layouts/SearchLayout/LeftPanel/LeftPanel";
 import Body from "../../layouts/SearchLayout/Body/Body";
 
-import SearchResults from "../../components/SearchResults/SearchResults";
-import SearchBar from "../../components/SearchBar/SearchBar";
-import Logo from "../../components/Logo/Logo";
-import NavMenu from "../../components/NavMenu/NavMenu";
-import Avatar from "../../components/Avatar/Avatar";
-import PeriodFilter from "../../components/PeriodFilter/PeriodFilter";
+import SearchResults from "../../components/visuals/SearchResults/SearchResults";
+import SearchBar from "../../components/inputs/SearchBar/SearchBar";
+import Logo from "../../components/visuals/Logo/Logo";
+import NavMenu from "../../components/menus/NavMenu/NavMenu";
+import Avatar from "../../components/visuals/Avatar/Avatar";
+import PeriodFilter from "../../components/filters/PeriodFilter/PeriodFilter";
+import OrderFilter from "../../components/filters/OrderFilter/OrderFilter";
+import SourceFilter from "../../components/filters/SourceFilter/SourceFilter";
+import Button from "../../components/inputs/Button/Button";
+import BusyIndicator from "../../components/visuals/BusyIndicator/BusyIndicator";
 
-import {
-  PERIOD_FILTER,
-  SOURCE_FILTER
-} from "../../constants/index";
+import { PERIOD_FILTER, SOURCE_FILTER } from "../../constants/index";
+
 import {
   getPagesCount,
   showErrorMessageToast,
@@ -23,11 +25,8 @@ import {
 import { useState, useCallback, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import OrderFilter from "../../components/OrderFilter/OrderFilter";
-import SourceFilter from "../../components/SourceFilter/SourceFilter";
+
 import { UserContext } from "../../contexts/UserContext/UserContext";
-import Button from "../../components/Button/Button";
-import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
 
 export default function Search() {
   const { user, setUser } = useContext(UserContext);
@@ -185,10 +184,9 @@ export default function Search() {
       }
       delete newFilters.authors;
 
-      
-    const engineUrl = import.meta.env.VITE_SEARCH_ENGINE_URL;
-    const cx = import.meta.env.VITE_SEARCH_ENGINE_CX;
-    const key = import.meta.env.VITE_SEARCH_ENGINE_KEY;
+      const engineUrl = import.meta.env.VITE_SEARCH_ENGINE_URL;
+      const cx = import.meta.env.VITE_SEARCH_ENGINE_CX;
+      const key = import.meta.env.VITE_SEARCH_ENGINE_KEY;
       const fullParams = new URLSearchParams({
         cx,
         key,
@@ -215,13 +213,21 @@ export default function Search() {
             });
           }
         })
-        .catch((error) => {
-          console.log("Error: " + error);
-          setAppState({
-            isLoading: false,
-            issueText: "Произошла ошибка, попробуйте позже.",
-            items: []
-          });
+        .catch((response) => {
+          console.log("Error: " + response);
+          if (response.status === 429) {
+            setAppState({
+              isLoading: false,
+              issueText: "Лимит запросов в системе превышен.",
+              items: []
+            });
+          } else {
+            setAppState({
+              isLoading: false,
+              issueText: "Произошла ошибка, попробуйте позже.",
+              items: []
+            });
+          }
         });
     }
   }, [setAppState, urlParams]);
@@ -336,8 +342,58 @@ export default function Search() {
       })
       .catch((response) => {
         console.log(response.data);
-        showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+        if (response.status === 404) {
+          showErrorMessageToast(
+            "Попытка редактирования статей несуществующего пользователя."
+          );
+        } else if (response.status === 401) {
+          showErrorMessageToast(
+            "Вы не авторизованы. Пожалуйста, выполните вход."
+          );
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+        }
         setMenuOpen(false);
+        setBusy(false);
+      });
+  };
+
+  const saveArticle = (article) => {
+    setBusy(true);
+    const serverUrl = import.meta.env.VITE_SERVER_API_URL;
+    axios
+      .post(serverUrl + "/article/save", article, {
+        withCredentials: true
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          showSuccessMessageToast(
+            "Статья успешно сохранена в вашей библиотеке."
+          );
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте еще раз.");
+        }
+        setBusy(false);
+      })
+      .catch((response) => {
+        console.log(response.data);
+        if (response.status === 404) {
+          showErrorMessageToast(
+            "Попытка обращения к несуществующему пользователю или статье."
+          );
+        } else if (response.status === 401) {
+          showErrorMessageToast(
+            "Вы не авторизованы. Пожалуйста, выполните вход."
+          );
+        } else if (response.status === 409) {
+          showErrorMessageToast("Статья уже сохранена в вашей библиотеке.");
+        } else if (response.status === 429) {
+          showErrorMessageToast(
+            "Библиотека переполнена. Пожалуйста, удалите одну из статей в библиотеке, чтобы продолжить."
+          );
+        } else {
+          showErrorMessageToast("Произошла ошибка, попробуйте позже.");
+        }
         setBusy(false);
       });
   };
@@ -370,10 +426,13 @@ export default function Search() {
         )}
         {!user && (
           <div className="search-header-buttons">
-            <Button className="menu-button" onClick={openMenu}>
+            <Button className="default-button" onClick={openMenu}>
               <img src="menu.svg" alt="Меню" />
             </Button>
-            <Button className="sign-in-button" onClick={signIn}>
+            <Button
+              className="accent-button header-sign-in-button"
+              onClick={signIn}
+            >
               Войти
             </Button>
           </div>
@@ -389,12 +448,13 @@ export default function Search() {
         )}
       </Header>
       <div className="main">
-        <LeftPanel>
+        <LeftPanel className="search-left-panel">
           <OrderFilter
             currentFilter={orderFilter}
             updateFilter={handleOrderFilterUpdate}
           />
           <PeriodFilter
+            title="Период"
             currentFilter={periodFilter}
             updateFilter={handlePeriodFilterUpdate}
             changeFrom={(newFrom) => setFrom(newFrom)}
@@ -408,14 +468,18 @@ export default function Search() {
           />
         </LeftPanel>
         <Body>
-          <SearchResults
-            isLoading={appState.isLoading}
-            issueText={appState.issueText}
-            items={appState.items}
-            selectedPage={page}
-            updatePage={handleUpdatePage}
-            count={appState.count}
-          />
+          <div className="search-page-results">
+            <SearchResults
+              isLoading={appState.isLoading}
+              issueText={appState.issueText}
+              items={appState.items}
+              selectedPage={page}
+              updatePage={handleUpdatePage}
+              hideSaveButton={!user}
+              count={appState.count}
+              saveArticle={saveArticle}
+            />
+          </div>
         </Body>
       </div>
     </>

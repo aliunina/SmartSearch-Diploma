@@ -1,0 +1,93 @@
+.nav-menu {
+  position: fixed;
+  top: 6em;
+  right: 2em;
+  width: 20em;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+  background-color: white;
+  border-radius: 20px;
+  padding: 0.5em;
+  padding-bottom: 0;
+}
+
+.nav-menu-actions-list {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  padding: 0;
+  padding-top: 0.5em;
+  margin: 0;
+  margin-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 1px solid var(--border-color);
+}
+
+.nav-menu-close-button {
+  margin-right: 0.5em;
+}
+
+.nav-menu-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 1em;
+}
+
+.nav-menu-button {
+  padding: 1em;
+  color: var(--gray-text-color);
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+  width: 100%;
+  cursor: pointer;
+  z-index: 6;
+  background-color: white;
+  border: 0;
+  border-radius: 12px;
+}
+
+.nav-menu-button img {
+  width: 1.7em;
+  margin-right: 1em;
+}
+
+.nav-menu-button:hover {
+  background-color: var(--light-gray);
+}
+
+.nav-menu-button:active {
+  background-color: var(--dark-gray);
+}
+
+.nav-menu-button-container {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 1px solid var(--border-color);
+}
+
+.nav-menu-close-button-container {
+  margin-top: 0.5em;
+  width: 100%;
+  display: flex;
+  justify-content: right;
+}
+
+.nav-menu-user-name {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin-bottom: 0.5em;
+}
+
+.nav-menu-description {
+  color: var(--hint-color);
+  font-size: 0.9em;
+  padding-top: 1.3em;
+  padding-bottom: 1.3em;
+  text-align: center;
+  margin: 0;
+}

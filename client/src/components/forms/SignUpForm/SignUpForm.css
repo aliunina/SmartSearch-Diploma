@@ -1,0 +1,117 @@
+.sign-up-form {
+  width: 30em;
+  height: 100%;
+  align-content: center;
+}
+
+.sign-up-form-double-container {
+  display: flex;
+  gap: 1em;
+}
+
+.sign-up-form-single-container {
+  width: 50%;
+}
+
+.sign-up-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.sign-up-form-buttons {
+  margin-top: 1em;
+  display: flex;
+  gap: 2em;
+  justify-content: center;
+}
+
+.sign-up-form-button {
+  width: 100%;
+}
+
+.sign-up-form-progress {
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+  margin-bottom: 2em;
+  position: relative;
+}
+
+.sign-up-form-progress-step {
+  height: 1em;
+  width: 1em;
+  background-color: var(--dark-gray);
+  border: none;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.sign-up-form-progress-step-active {
+  background-color: var(--accent-green);
+}
+
+.sign-up-form-progress-step-finished {
+  background-color: var(--accent-darker-green);
+}
+
+.sign-up-form-agreement {
+  color: var(--gray);
+  font-size: 0.8em;
+  text-align: center;
+  margin-top: 1em;
+}
+
+.sign-up-form-agreement-hidden {
+  display: none;
+}
+
+.sign-up-form-email {
+  position: relative;
+}
+
+.sign-up-form-email input {
+  padding-left: 3em;
+}
+
+.sign-up-form-email img {
+  position: absolute;
+  top: 48%;
+  left: 1em;
+}
+
+.sign-up-form-password {
+  position: relative;
+}
+
+.sign-up-form-password input {
+  padding-left: 3em;
+  padding-right: 3em;
+}
+
+.sign-up-form-password-icon {
+  position: absolute;
+  top: 52%;
+  left: 1em;
+  height: 1.3em;
+}
+
+.sign-up-form-password button {
+  position: absolute;
+  top: 48%;
+  right: 2em;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--gray);
+  font-size: 1.4em;
+}
+
+.sign-up-form-status-container {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}

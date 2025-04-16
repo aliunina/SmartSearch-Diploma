@@ -6,8 +6,11 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import userRoute from "./routes/userRoute.js";
+import articleRoute from "./routes/articleRoute.js";
+import notificationRoute from "./routes/notificationRoute.js";
 
-import "./jobs/notificationJob.js";
+import "./jobs/sendNotificationByEmailJob.js";
+import "./jobs/deleteNotificationJob.js";
 
 const app = express();
 app.use(bodyParser.json());
@@ -31,3 +34,5 @@ mongoose
   });
 
 app.use("/api/user", userRoute);
+app.use("/api/article", articleRoute);
+app.use("/api/notification", notificationRoute);

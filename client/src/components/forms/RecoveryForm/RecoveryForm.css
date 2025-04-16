@@ -1,0 +1,92 @@
+.recovery-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.recovery-form-step-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 28em;
+}
+
+.recovery-form-title {
+  font-size: 2em;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+}
+
+.recovery-form-subtitle {
+  color: var(--hint-color);
+  margin: 0;
+  text-align: center;
+}
+
+.recovery-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.recovery-form-email {
+  position: relative;
+}
+
+.recovery-form-email input {
+  padding-left: 3em;
+}
+
+.recovery-form-email img {
+  position: absolute;
+  top: 58%;
+  left: 1em;
+}
+
+.recovery-form-details {
+  margin: 0;
+}
+
+.recovery-form-password {
+  position: relative;
+}
+
+.recovery-form-password input {
+  padding-left: 3em;
+  padding-right: 3em;
+}
+
+.recovery-form-password-icon {
+  position: absolute;
+  top: 52%;
+  left: 1em;
+  height: 1.3em;
+}
+
+.recovery-form-password button {
+  position: absolute;
+  top: 48%;
+  right: 2em;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--gray);
+  font-size: 1.4em;
+}
+
+.recovery-form-back-to-signin {
+  font-size: 0.8em;
+  color: var(--gray);;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: underline;
+}
+
+.recovery-form-back-to-signin:hover {
+  color: var(--gray-text-color);
+}
+
+.recovery-form-back-to-signin:active {
+  color: var(--darker-gray-text-color);
+}

@@ -1,5 +1,5 @@
 import styles from "./LeftPanel.module.css";
 
-export default function LeftPanel({ children }) {
-  return <div className={styles["left-panel"]}>{children}</div>;
+export default function LeftPanel({ children, className }) {
+  return <div className={`${styles["left-panel"]} ${className}`}>{children}</div>;
 }

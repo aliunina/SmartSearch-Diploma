@@ -2,20 +2,23 @@ import "./Main.css";
 
 import Header from "../../layouts/CommonLayout/Header/Header";
 import Body from "../../layouts/CommonLayout/Body/Body";
-import Button from "../../components/Button/Button";
-import ExtendedSearchDialog from "../../components/ExtendedSearchDialog/ExtendedSearchDialog";
 
-import RedirectSearchBar from "../../components/RedirectSearchBar/RedirectSearchBar";
+import Button from "../../components/inputs/Button/Button";
+import ExtendedSearchDialog from "../../components/dialogs/ExtendedSearchDialog/ExtendedSearchDialog";
+import RedirectSearchBar from "../../components/inputs/RedirectSearchBar/RedirectSearchBar";
+import NavMenu from "../../components/menus/NavMenu/NavMenu";
+import BusyIndicator from "../../components/visuals/BusyIndicator/BusyIndicator";
+
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useContext } from "react";
-import NavMenu from "../../components/NavMenu/NavMenu";
+import axios from "axios";
+
 import {
   showErrorMessageToast,
   showSuccessMessageToast
 } from "../../helpers/util";
+
 import { UserContext } from "../../contexts/UserContext/UserContext";
-import axios from "axios";
-import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
 
 export default function Main() {
   const { user, setUser } = useContext(UserContext);
@@ -119,11 +122,11 @@ export default function Main() {
         </div>
       )}
       <Header className="main-header">
-        <Button className="menu-button" onClick={openMenu}>
+        <Button className="default-button" onClick={openMenu}>
           <img src="menu.svg" alt="Меню" />
         </Button>
         {!user && (
-          <Button className="sign-in-button" onClick={signIn}>
+          <Button className="accent-button header-sign-in-button" onClick={signIn}>
             Войти
           </Button>
         )}

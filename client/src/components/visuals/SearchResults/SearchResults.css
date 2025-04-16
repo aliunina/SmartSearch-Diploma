@@ -1,0 +1,61 @@
+.search-results-container {
+  /* margin: 3em; */
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.search-results {
+  margin-bottom: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  justify-items: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 2em;
+}
+
+.page {
+  font-size: 1.2em;
+  color: var(--accent-green);
+  cursor: pointer;
+}
+
+.page:hover {
+  color: var(--accent-dark-green);
+}
+
+.page-active {
+  color: black;
+}
+
+.issue-container {
+  width: 100%;
+  align-items: center;
+  gap: 2em;
+  display: flex;
+  flex-direction: column;
+}
+
+.issue-image {
+  width: 20em;
+}
+
+.issue-text {
+  margin: 0;
+  text-align: center;
+  font-weight: 400;
+  font-size: 1.3em;
+  max-width: 20em;
+}
+
+.results-busy-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  min-height: 40em;
+  align-items: center;
+}

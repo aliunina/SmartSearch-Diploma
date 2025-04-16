@@ -1,0 +1,34 @@
+.sign-up-step-container {
+    display: flex;
+}
+
+.sign-up-step-text {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.sign-up-step-title {
+    font-weight: 500;
+    color: black;
+    margin: 0;
+}
+
+.sign-up-step-title-inactive {
+    color: #858585;
+}
+
+.sign-up-step-description {
+    margin: 0;
+    color: var(--hint-color);
+}
+
+.sign-up-step-description-inactive {
+    color: #b4b3b4;
+}
+
+.sign-up-step-icon {
+    width: 10%;
+    height: 2.5em;
+}

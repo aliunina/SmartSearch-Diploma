@@ -1,12 +1,12 @@
 import "./SignUp.css";
 import Header from "../../layouts/CommonLayout/Header/Header";
-import Logo from "../../components/Logo/Logo";
+import Logo from "../../components/visuals/Logo/Logo";
 import Body from "../../layouts/CommonLayout/Body/Body";
 import LeftPanel from "../../layouts/SignUpLayout/LeftPanel/LeftPanel";
 import RightPanel from "../../layouts/SignUpLayout/RightPanel/RightPanel";
-import SignUpStep from "../../components/SignUpStep/SignUpStep";
-import SignUpForm from "../../components/SignUpForm/SignUpForm";
-import BusyIndicator from "../../components/BusyIndicator/BusyIndicator";
+import SignUpStep from "../../components/visuals/SignUpStep/SignUpStep";
+import SignUpForm from "../../components/forms/SignUpForm/SignUpForm";
+import BusyIndicator from "../../components/visuals/BusyIndicator/BusyIndicator";
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";

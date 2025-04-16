@@ -1,5 +1,7 @@
-import Button from "../../components/Button/Button";
 import "./Error.css";
+
+import Button from "../../components/inputs/Button/Button";
+
 import { useNavigate } from "react-router-dom";
 
 export default function Error() {
@@ -19,7 +21,7 @@ export default function Error() {
         alt="Страница не найдена"
       />
       <div className="error-page-text">Такой страницы не существует.</div>
-      <Button className="error-page-button" onClick={navToMain}>
+      <Button className="accent-button" onClick={navToMain}>
         На главную
       </Button>
     </div>
