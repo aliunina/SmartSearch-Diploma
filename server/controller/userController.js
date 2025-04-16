@@ -29,12 +29,11 @@ transporter.verify((error, success) => {
     console.log(error);
   } else {
     console.log("Ready to send emails.");
-    console.log("Sender is ready: " + success);
   }
 });
 
 const sendVerificationEmail = ({ _id, email, firstName }, res) => {
-  const currentUrl = process.env.APP_URL;
+  const currentUrl = process.env.SERVER_URL;
   const uniqueString = uuidv4() + _id;
   const link = `${currentUrl + "api/user/verify/" + _id + "/" + uniqueString}`;
 
