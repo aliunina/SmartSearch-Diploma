@@ -32,8 +32,8 @@ transporter.verify((error, success) => {
   }
 });
 
-const sendVerificationEmail = ({ _id, email, firstName }, res) => {
-  const currentUrl = process.env.SERVER_URL;
+const sendVerificationEmail = ({ _id, email, firstName }, req, res) => {
+  let currentUrl = `${req.protocol}://${req.get('host')}/`;
   const uniqueString = uuidv4() + _id;
   const link = `${currentUrl + "api/user/verify/" + _id + "/" + uniqueString}`;
 
@@ -173,8 +173,14 @@ export const verifyUser = (req, res) => {
     });
 };
 
-export const verified = (req, res) => {
-  res.sendFile(path.resolve("templates/verifiedTemplate.html"));
+export const verified = (req, res) => {  
+  const filePath = "./templates/verifiedTemplate.html";
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const html = fileContent.replace(
+    "{{clientUrl}}",
+    process.env.CLIENT_URL + "/sign-in"
+  );
+  res.send(html);
 };
 
 export const registerUser = async (req, res) => {
@@ -221,7 +227,7 @@ export const registerUser = async (req, res) => {
           .save()
           .then((result) => {
             //Verification
-            sendVerificationEmail(result, res);
+            sendVerificationEmail(result, req, res);
           })
           .catch((error) =>
             res.status(500).json({
