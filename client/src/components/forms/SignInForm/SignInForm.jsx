@@ -7,7 +7,7 @@ import Label from "../../visuals/Label/Label";
 import Logo from "../../visuals/Logo/Logo";
 
 import { useEffect, useReducer, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { EyeFilled, EyeInvisibleFilled } from "@ant-design/icons";
 
 export default function SignInForm({ signIn }) {
@@ -15,6 +15,8 @@ export default function SignInForm({ signIn }) {
   const { values, isValid, isReadyToSubmit } = formState;
 
   const [inputType, setInputType] = useState("password");
+
+  const navigate = useNavigate();
 
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -45,6 +47,10 @@ export default function SignInForm({ signIn }) {
 
   const navForward = () => {
     dispatchForm({ type: "SUBMIT" });
+  };
+
+  const signUp = () => {
+    navigate("/sign-up");
   };
 
   const showPassword = () => {
@@ -130,6 +136,13 @@ export default function SignInForm({ signIn }) {
           onClick={navForward}
         >
           Продолжить
+        </Button>
+        <Button
+          type="button"
+          className="default-button sign-up-button"
+          onClick={signUp}
+        >
+          Зарегистрироваться
         </Button>
         <Link to="/account-recovery" className="sign-in-form-forgot-password">
           Забыли пароль?

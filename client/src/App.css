@@ -173,6 +173,12 @@ input[type="search"]::-webkit-search-results-decoration {
   border-radius: 12px;
 }
 
+.sign-up-button {
+  border: 2px solid var(--accent-green);
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
 .close-button {
   border: none;
   cursor: pointer;

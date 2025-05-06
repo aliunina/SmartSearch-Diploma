@@ -2,11 +2,42 @@
   margin-bottom: 3em;
 }
 
-.main-header {  
+.main-header {
   display: flex;
   justify-content: right;
   align-items: center;
   padding: 1.5em;
   margin-right: 1em;
   overflow: auto;
+}
+
+.main-header-buttons {
+  display: flex;
+  gap: 1em;
+}
+
+.main-site-title {
+  font-weight: 400;
+  font-size: 4.5em;
+  margin: 0 0 0.3em 0;
+  cursor: pointer;
+}
+
+.main-site-title > a {
+  text-decoration: none;
+}
+
+.main-site-title-bntu,
+.main-site-title-bntu:visited,
+.main-site-title-bntu:hover,
+.main-site-title-bntu:active {
+  font-family: "Roboto Slab", sans-serif !important;
+  color: var(--accent-green);
+}
+
+.main-site-title-smart-search,
+.main-site-title-smart-search:visited,
+.main-site-title-smart-search:hover,
+.main-site-title-smart-search:active {
+  color: #333333;
 }

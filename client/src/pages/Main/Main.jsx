@@ -9,7 +9,7 @@ import RedirectSearchBar from "../../components/inputs/RedirectSearchBar/Redirec
 import NavMenu from "../../components/menus/NavMenu/NavMenu";
 import BusyIndicator from "../../components/visuals/BusyIndicator/BusyIndicator";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useContext } from "react";
 import axios from "axios";
 
@@ -126,9 +126,18 @@ export default function Main() {
           <img src="menu.svg" alt="Меню" />
         </Button>
         {!user && (
-          <Button className="accent-button header-sign-in-button" onClick={signIn}>
-            Войти
-          </Button>
+          <div className="main-header-buttons">
+            <Button className="accent-button header-sign-in-button" onClick={signIn}>
+              Войти
+            </Button>          
+            <Button
+              type="button"
+              className="default-button sign-up-button"
+              onClick={signUp}
+            >
+              Зарегистрироваться
+            </Button>
+          </div>
         )}
         {menuOpen && (
           <NavMenu
@@ -149,7 +158,10 @@ export default function Main() {
         )}
       </Header>
       <Body>
-        <img src="title.svg" alt="Заголовок сайта" className="title" />
+        <p className="main-site-title">
+          <Link className="main-site-title-bntu" to="https://bntu.by/">БНТУ </Link>
+          <Link className="main-site-title-smart-search" to="/">Умный поиск</Link>
+        </p>
         <RedirectSearchBar
           ref={searchBarRef}
           searchValue={searchValue}
