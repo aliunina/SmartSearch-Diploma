@@ -6,7 +6,6 @@ import Button from "../../inputs/Button/Button";
 import Input from "../../inputs/Input/Input";
 import Label from "../../visuals/Label/Label";
 import Hint from "../../visuals/Hint/Hint";
-import CustomDatePicker from "../../inputs/CustomDatePicker/CustomDatePicker";
 import FilterItem from "../../inputs/FilterItem/FilterItem";
 
 import { STATUS_SELECT } from "../../../constants/index";
@@ -37,7 +36,6 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
   const passwordRef = useRef();
   const repeatPasswordRef = useRef();
   const countryRef = useRef();
-  const birthdayRef = useRef();
   const employmentRef = useRef();
 
   const navBack = () => {
@@ -74,9 +72,6 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
       case !isValid.country:
         countryRef.current.focus();
         break;
-      case !isValid.birthday:
-        birthdayRef.current.focus();
-        break;
       case !isValid.employment:
         employmentRef.current.focus();
         break;
@@ -100,11 +95,7 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
   }, [isValidTab1, setSelectedTab, isReadyToSubmitTab1]);
 
   useEffect(() => {
-    if (
-      !isValidTab2.country ||
-      !isValidTab2.birthday ||
-      !isValidTab2.employment
-    ) {
+    if (!isValidTab2.country || !isValidTab2.employment) {
       focusErrorTab2(isValidTab2);
     } else if (isReadyToSubmitTab2) {
       dispatchForm({ type: "SUBMIT" });
@@ -334,48 +325,23 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
             title="О себе"
             titleDetails="Добавьте информацию о своем месте работы, области интересов, стране проживания"
           >
-            <div className="sign-up-form-double-container">
-              <div className="sign-up-form-container sign-up-form-single-container">
-                <Label required={true} htmlFor="signUpCountry">
-                  Страна
-                </Label>
-                <Input
-                  type="text"
-                  id="signUpCountry"
-                  name="country"
-                  maxLength="50"
-                  placeholder="Введите страну"
-                  value={values.country}
-                  onChange={onChange}
-                  ref={countryRef}
-                  valid={isValidTab2.country}
-                  autoComplete="off"
-                  title={
-                    isValidTab2.country ? "" : "Поле не может быть пустым."
-                  }
-                ></Input>
-              </div>
-              <div className="sign-up-form-container sign-up-form-single-container">
-                <Label required={true} htmlFor="signUpBirthday">
-                  Дата рождения
-                </Label>
-                <CustomDatePicker
-                  id="signUpBirthday"
-                  name="birthday"
-                  value={
-                    values.birthday
-                      ? new Date(values.birthday).toISOString().slice(0, 10)
-                      : ""
-                  }
-                  onChange={onChange}
-                  ref={birthdayRef}
-                  valid={isValidTab2.birthday}
-                  autoComplete="off"
-                  title={
-                    isValidTab2.birthday ? "" : `Дата рождения не может быть пустой и лежать вне диапазона "01.01.1900" - сегодняшняя дата`
-                  }
-                />
-              </div>
+            <div className="sign-up-form-container">
+              <Label required={true} htmlFor="signUpCountry">
+                Страна
+              </Label>
+              <Input
+                type="text"
+                id="signUpCountry"
+                name="country"
+                maxLength="50"
+                placeholder="Введите страну"
+                value={values.country}
+                onChange={onChange}
+                ref={countryRef}
+                valid={isValidTab2.country}
+                autoComplete="off"
+                title={isValidTab2.country ? "" : "Поле не может быть пустым."}
+              ></Input>
             </div>
             <div className="sign-up-form-container">
               <Label required={true} htmlFor="signUpEmployment">
