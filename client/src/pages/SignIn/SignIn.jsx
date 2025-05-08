@@ -16,6 +16,7 @@ import {
   showErrorMessageToast,
   showSuccessMessageToast
 } from "../../helpers/util";
+import Footer from "../../layouts/CommonLayout/Footer/Footer";
 
 export default function SignIn() {
   const location = useLocation();
@@ -74,6 +75,7 @@ export default function SignIn() {
       <Body>
         <SignInForm signIn={signIn}></SignInForm>
       </Body>
+      <Footer className="fixed-footer"/>
     </>
   );
 }

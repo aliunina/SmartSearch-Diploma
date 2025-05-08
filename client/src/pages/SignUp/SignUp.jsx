@@ -16,6 +16,7 @@ import {
   showErrorMessageToast,
   showSuccessMessageToast
 } from "../../helpers/util";
+import Footer from "../../layouts/CommonLayout/Footer/Footer";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -88,6 +89,7 @@ export default function SignUp() {
           />
         </RightPanel>
       </Body>
+      <Footer className="fixed-footer"/>
     </>
   );
 }

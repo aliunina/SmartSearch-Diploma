@@ -19,6 +19,7 @@ import {
 } from "../../helpers/util";
 
 import { UserContext } from "../../contexts/UserContext/UserContext";
+import Footer from "../../layouts/CommonLayout/Footer/Footer";
 
 export default function Main() {
   const { user, setUser } = useContext(UserContext);
@@ -169,6 +170,7 @@ export default function Main() {
           redirect={handleRedirect}
         />
       </Body>
+      <Footer className="fixed-footer"/>
     </>
   );
 }

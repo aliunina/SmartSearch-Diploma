@@ -435,29 +435,30 @@ export default function SignUpForm({ selectedTab, setSelectedTab, signUp }) {
           Нажимая «Продолжить», вы соглашаетесь на обработку персональных
           данных.
         </div>
-      </div>
-      <div className="sign-up-form-progress">
-        <span
-          className={`sign-up-form-progress-step ${
-            selectedTab === 0
-              ? "sign-up-form-progress-step-active"
-              : "sign-up-form-progress-step-finished"
-          }`}
-        ></span>
-        <span
-          className={`sign-up-form-progress-step ${
-            selectedTab === 1
-              ? "sign-up-form-progress-step-active"
-              : selectedTab === 2
-              ? "sign-up-form-progress-step-finished"
-              : ""
-          }`}
-        ></span>
-        <span
-          className={`sign-up-form-progress-step ${
-            selectedTab === 2 ? "sign-up-form-progress-step-active" : ""
-          }`}
-        ></span>
+
+        <div className="sign-up-form-progress">
+          <span
+            className={`sign-up-form-progress-step ${
+              selectedTab === 0
+                ? "sign-up-form-progress-step-active"
+                : "sign-up-form-progress-step-finished"
+            }`}
+          ></span>
+          <span
+            className={`sign-up-form-progress-step ${
+              selectedTab === 1
+                ? "sign-up-form-progress-step-active"
+                : selectedTab === 2
+                ? "sign-up-form-progress-step-finished"
+                : ""
+            }`}
+          ></span>
+          <span
+            className={`sign-up-form-progress-step ${
+              selectedTab === 2 ? "sign-up-form-progress-step-active" : ""
+            }`}
+          ></span>
+        </div>
       </div>
     </>
   );

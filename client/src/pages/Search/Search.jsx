@@ -27,6 +27,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 import { UserContext } from "../../contexts/UserContext/UserContext";
+import Footer from "../../layouts/CommonLayout/Footer/Footer";
 
 export default function Search() {
   const { user, setUser } = useContext(UserContext);
@@ -482,6 +483,7 @@ export default function Search() {
           </div>
         </Body>
       </div>
+      <Footer/>
     </>
   );
 }
