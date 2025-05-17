@@ -3,8 +3,8 @@ import nodemailer from "nodemailer";
 import axios from "axios";
 import fs from "fs";
 
-import User from "../model/userModel.js";
-import Notification from "../model/notificationModel.js";
+import User from "../models/userModel.js";
+import Notification from "../models/notificationModel.js";
 
 const cronExpression = "0 9 1,15 * *"; //работает в 9 утра каждого 1го и 15го числа месяца
 

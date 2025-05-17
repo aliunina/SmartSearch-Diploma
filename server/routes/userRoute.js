@@ -1,5 +1,5 @@
 import express from "express";
-import userAuth from "../middleware/userAuth.js";
+import userAuth from "../middlewares/userAuth.js";
 import {
   authorizeUser,
   deleteUser,
@@ -14,7 +14,7 @@ import {
   isAuthentificated,
   updatePassword,
   updateThemes,
-} from "../controller/userController.js";
+} from "../controllers/userController.js";
 
 const userRoute = express.Router();
 

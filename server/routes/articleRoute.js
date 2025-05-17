@@ -1,6 +1,6 @@
 import express from "express";
-import userAuth from "../middleware/userAuth.js";
-import { saveArticle, getArticles, deleteArticle } from "../controller/articleController.js";
+import userAuth from "../middlewares/userAuth.js";
+import { saveArticle, getArticles, deleteArticle } from "../controllers/articleController.js";
 
 const articleRoute = express.Router();
 

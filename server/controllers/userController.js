@@ -6,11 +6,11 @@ import path from "path";
 import jwt from "jsonwebtoken";
 import fs from "fs";
 
-import User from "../model/userModel.js";
-import Article from "../model/articleModel.js";
-import Notification from "../model/notificationModel.js";
-import UserVerification from "../model/userVerificationModel.js";
-import UserResetPassword from "../model/userResetPasswordModel.js";
+import User from "../models/userModel.js";
+import Article from "../models/articleModel.js";
+import Notification from "../models/notificationModel.js";
+import UserVerification from "../models/userVerificationModel.js";
+import UserResetPassword from "../models/userResetPasswordModel.js";
 
 const saltRounds = 10;
 
