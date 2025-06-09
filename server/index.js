@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import userRoute from "./routes/userRoute.js";
 import articleRoute from "./routes/articleRoute.js";
 import notificationRoute from "./routes/notificationRoute.js";
+import fileRoute from "./routes/fileRoute.js";
 
 import "./jobs/sendNotificationByEmailJob.js";
 import "./jobs/deleteNotificationJob.js";
@@ -36,3 +37,4 @@ mongoose
 app.use("/api/user", userRoute);
 app.use("/api/article", articleRoute);
 app.use("/api/notification", notificationRoute);
+app.use("/api/file", fileRoute);

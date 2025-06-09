@@ -12,6 +12,7 @@ import { showErrorMessageToast } from "../../helpers/util";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import Footer from "../../layouts/CommonLayout/Footer/Footer";
 
 export default function Recovery() {
   const [userEmail, setUserEmail] = useState(null);
@@ -142,7 +143,8 @@ export default function Recovery() {
           checkCode={checkCode}
           resetPassword={resetPassword}
         />
-      </Body>
+      </Body>   
+      <Footer className="fixed-footer"/>
     </>
   );
 }

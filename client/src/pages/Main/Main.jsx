@@ -9,7 +9,7 @@ import RedirectSearchBar from "../../components/inputs/RedirectSearchBar/Redirec
 import NavMenu from "../../components/menus/NavMenu/NavMenu";
 import BusyIndicator from "../../components/visuals/BusyIndicator/BusyIndicator";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useContext } from "react";
 import axios from "axios";
 
@@ -19,6 +19,7 @@ import {
 } from "../../helpers/util";
 
 import { UserContext } from "../../contexts/UserContext/UserContext";
+import Footer from "../../layouts/CommonLayout/Footer/Footer";
 
 export default function Main() {
   const { user, setUser } = useContext(UserContext);
@@ -114,6 +115,10 @@ export default function Main() {
       });
   };
 
+  const moveToHelp = () => {
+    navigate("/help");
+  };
+
   return (
     <>
       {busy && (
@@ -126,14 +131,27 @@ export default function Main() {
           <img src="menu.svg" alt="Меню" />
         </Button>
         {!user && (
-          <Button className="accent-button header-sign-in-button" onClick={signIn}>
-            Войти
-          </Button>
+          <div className="main-header-buttons">
+            <Button
+              className="accent-button header-sign-in-button"
+              onClick={signIn}
+            >
+              Войти
+            </Button>
+            <Button
+              type="button"
+              className="default-button sign-up-button"
+              onClick={signUp}
+            >
+              Зарегистрироваться
+            </Button>
+          </div>
         )}
         {menuOpen && (
           <NavMenu
             setMenuOpen={setMenuOpen}
             openESDialog={handleOpenESDialog}
+            moveToHelp={moveToHelp}
             signUp={signUp}
             openUserProfile={openUserProfile}
             signOut={signOut}
@@ -149,7 +167,14 @@ export default function Main() {
         )}
       </Header>
       <Body>
-        <img src="title.svg" alt="Заголовок сайта" className="title" />
+        <p className="main-site-title">
+          <Link className="main-site-title-bntu" to="https://bntu.by/">
+            БНТУ{" "}
+          </Link>
+          <Link className="main-site-title-smart-search" to="/">
+            Умный поиск
+          </Link>
+        </p>
         <RedirectSearchBar
           ref={searchBarRef}
           searchValue={searchValue}
@@ -157,6 +182,7 @@ export default function Main() {
           redirect={handleRedirect}
         />
       </Body>
+      <Footer className="fixed-footer" />
     </>
   );
 }

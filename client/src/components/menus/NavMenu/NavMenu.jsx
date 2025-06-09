@@ -11,6 +11,7 @@ import { UserContext } from "../../../contexts/UserContext/UserContext";
 export default function NavMenu({
   setMenuOpen,
   openESDialog,
+  moveToHelp,
   signUp,
   signOut,
   openUserProfile
@@ -80,16 +81,12 @@ export default function NavMenu({
           Расширенный поиск
         </Button>
       </div>
-      {/* <div className="nav-menu-button-container">
-        <Button className="nav-menu-button">
-          <img src="confidentiality.svg" alt="Конфиденциальность" />
-          Конфиденциальность
-        </Button>
-        <Button className="nav-menu-button">
+      <div className="nav-menu-button-container">
+        <Button className="nav-menu-button" onClick={moveToHelp}>
           <img src="help.svg" alt="Справка" />
           Справка
         </Button>
-      </div> */}
+      </div>
       {user && (
         <div className="nav-menu-button-container">
           <Button className="nav-menu-button" onClick={signOut}>

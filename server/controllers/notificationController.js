@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 
-import User from "../model/userModel.js";
-import Notification from "../model/notificationModel.js";
-import Article from "../model/articleModel.js";
+import User from "../models/userModel.js";
+import Notification from "../models/notificationModel.js";
+import Article from "../models/articleModel.js";
 
 dotenv.config();
 

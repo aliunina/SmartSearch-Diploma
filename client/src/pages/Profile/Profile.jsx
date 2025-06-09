@@ -25,6 +25,7 @@ import axios from "axios";
 import { UserContext } from "../../contexts/UserContext/UserContext";
 import Notifications from "../../components/visuals/Notifications/Notifications";
 import ConfirmDialog from "../../components/dialogs/ConfirmDialog/ConfirmDialog";
+import Footer from "../../layouts/CommonLayout/Footer/Footer";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -424,7 +425,8 @@ export default function Profile() {
                 />
               )}
             </div>
-          </Body>
+          </Body>          
+          <Footer/>
         </>
       )}
     </div>

@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 
-import User from "../model/userModel.js";
-import Article from "../model/articleModel.js";
+import User from "../models/userModel.js";
+import Article from "../models/articleModel.js";
 
 dotenv.config();
 

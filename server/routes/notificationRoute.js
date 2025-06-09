@@ -1,6 +1,6 @@
 import express from "express";
-import userAuth from "../middleware/userAuth.js";
-import { getNotifications, saveNotification } from "../controller/notificationController.js";
+import userAuth from "../middlewares/userAuth.js";
+import { getNotifications, saveNotification } from "../controllers/notificationController.js";
 
 const notificationRoute = express.Router();
 

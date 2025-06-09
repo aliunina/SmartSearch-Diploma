@@ -21,7 +21,6 @@ export default function EditProfileDialog({
     lastName: true,
     firstName: true,
     country: true,
-    birthday: true,
     employment: true,
     status: true
   });
@@ -30,7 +29,6 @@ export default function EditProfileDialog({
   const firstNameRef = useRef();
   const statusRef = useRef();
   const countryRef = useRef();
-  const birthdayRef = useRef();
   const employmentRef = useRef();
 
   const close = () => {
@@ -48,13 +46,6 @@ export default function EditProfileDialog({
     res.country = dialogState.country?.trim().length > 0;
     res.employment = dialogState.employment?.trim().length > 0;
     res.status = dialogState.status?.trim().length > 0;
-
-    const birthday = dialogState.birthday.trim();
-    res.birthday = !(
-      birthday.length > 0 &&
-      (new Date(birthday) > Date.now() ||
-        new Date(birthday) < new Date("1900-01-01"))
-    );
 
     setIsValid(res);
     for (const key of Object.keys(res)) {
@@ -84,9 +75,6 @@ export default function EditProfileDialog({
         break;
       case !isValid.country:
         countryRef.current.focus();
-        break;
-      case !isValid.birthday:
-        birthdayRef.current.focus();
         break;
       case !isValid.employment:
         employmentRef.current.focus();
@@ -186,30 +174,6 @@ export default function EditProfileDialog({
               valid={isValid.country}
               autoComplete="off"
               title={isValid.country ? "" : "Поле не может быть пустым."}
-            />
-          </div>
-          <div className="edit-profile-container">
-            <Label required={true} htmlFor="editProfileBirthday">
-              Дата рождения
-            </Label>
-            <CustomDatePicker
-              id="editProfileBirthday"
-              ref={birthdayRef}
-              valid={isValid.birthday}
-              value={
-                dialogState.birthday
-                  ? new Date(dialogState.birthday).toISOString().slice(0, 10)
-                  : ""
-              }
-              onChange={(e) =>
-                setDialogState({ ...dialogState, birthday: e.target.value })
-              }
-              autoComplete="off"
-              title={
-                isValid.birthday
-                  ? ""
-                  : `Дата рождения не может быть пустой и лежать вне диапазона "01.01.1900" - сегодняшняя дата`
-              }
             />
           </div>
           <div className="edit-profile-container">

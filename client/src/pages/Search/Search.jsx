@@ -14,7 +14,13 @@ import SourceFilter from "../../components/filters/SourceFilter/SourceFilter";
 import Button from "../../components/inputs/Button/Button";
 import BusyIndicator from "../../components/visuals/BusyIndicator/BusyIndicator";
 
-import { PERIOD_FILTER, SOURCE_FILTER } from "../../constants/index";
+import {
+  loadSourceFilter,
+  getSourceFilter,
+  isSourceFilterLoaded
+} from "../../utils/sourceFilter";
+
+import { PERIOD_FILTER } from "../../constants/index";
 
 import {
   getPagesCount,
@@ -27,6 +33,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 import { UserContext } from "../../contexts/UserContext/UserContext";
+import Footer from "../../layouts/CommonLayout/Footer/Footer";
 
 export default function Search() {
   const { user, setUser } = useContext(UserContext);
@@ -42,7 +49,7 @@ export default function Search() {
   const [page, setPage] = useState(1);
   const [orderFilter, setOrderFilter] = useState("relevance");
   const [periodFilter, setPeriodFilter] = useState(PERIOD_FILTER.all);
-  const [sourceFilter, setSourceFilter] = useState(SOURCE_FILTER.all);
+  const [sourceFilter, setSourceFilter] = useState(null);
 
   const [appState, setAppState] = useState({
     isLoading: false,
@@ -57,12 +64,15 @@ export default function Search() {
     );
     setUrlParams(urlParams);
 
-    if (urlParams.siteSearch) {
-      const sourceFilter = Object.keys(SOURCE_FILTER).find((key) => {
-        return SOURCE_FILTER[key].url === urlParams.siteSearch;
-      });
-      setSourceFilter(SOURCE_FILTER[sourceFilter]);
-    }
+    loadSourceFilter(import.meta.env.VITE_SERVER_API_URL).then((sources) => {
+      setSourceFilter(getSourceFilter().all);
+      if (urlParams.siteSearch) {
+        const foundKey = Object.keys(sources).find(
+          (key) => sources[key].url === urlParams.siteSearch
+        );
+        if (foundKey) setSourceFilter(sources[foundKey]);
+      }
+    });
 
     if (urlParams.dateRestrict) {
       const periodFilter = Object.keys(PERIOD_FILTER).find(
@@ -145,7 +155,10 @@ export default function Search() {
 
       let newFilters = { ...urlParams };
       delete newFilters.start;
-      if (newFilter.text !== SOURCE_FILTER.all.text) {
+      if (
+        isSourceFilterLoaded() &&
+        newFilter.text !== getSourceFilter().all.text
+      ) {
         setUrlParams({
           ...newFilters,
           siteSearch: newFilter.url,
@@ -234,8 +247,10 @@ export default function Search() {
 
   const handleResetFilters = () => {
     setOrderFilter("relevance");
-    setPeriodFilter(PERIOD_FILTER["all"]);
-    setSourceFilter(SOURCE_FILTER["all"]);
+    setPeriodFilter(PERIOD_FILTER.all);
+    if (isSourceFilterLoaded()) {
+      setSourceFilter(getSourceFilter().all);
+    }
     setUrlParams({});
     setLocationQueryParams("");
   };
@@ -398,6 +413,10 @@ export default function Search() {
       });
   };
 
+  const moveToHelp = () => {
+    navigate("/help");
+  };
+
   return (
     <>
       {busy && (
@@ -441,6 +460,7 @@ export default function Search() {
           <NavMenu
             setMenuOpen={setMenuOpen}
             openESDialog={handleOpenESDialog}
+            moveToHelp={moveToHelp}
             signUp={signUp}
             openUserProfile={openUserProfile}
             signOut={signOut}
@@ -482,6 +502,7 @@ export default function Search() {
           </div>
         </Body>
       </div>
+      <Footer />
     </>
   );
 }

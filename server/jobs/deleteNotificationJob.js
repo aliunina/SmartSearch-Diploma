@@ -1,6 +1,6 @@
 import cron from "node-cron";
 
-import Notification from "../model/notificationModel.js";
+import Notification from "../models/notificationModel.js";
 
 const cronExpression = "0 0 1 * *"; //работает каждый 1-й день месяца
 

@@ -33,10 +33,6 @@ const userSchema = mongoose.Schema({
     maxlength: 50,
     required: true,
   },
-  birthday: {
-    type: Date,
-    required: true,
-  },
   employment: {
     type: String,
     maxlength: 100,
