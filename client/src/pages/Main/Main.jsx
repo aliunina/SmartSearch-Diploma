@@ -115,6 +115,10 @@ export default function Main() {
       });
   };
 
+  const moveToHelp = () => {
+    navigate("/help");
+  };
+
   return (
     <>
       {busy && (
@@ -128,9 +132,12 @@ export default function Main() {
         </Button>
         {!user && (
           <div className="main-header-buttons">
-            <Button className="accent-button header-sign-in-button" onClick={signIn}>
+            <Button
+              className="accent-button header-sign-in-button"
+              onClick={signIn}
+            >
               Войти
-            </Button>          
+            </Button>
             <Button
               type="button"
               className="default-button sign-up-button"
@@ -144,6 +151,7 @@ export default function Main() {
           <NavMenu
             setMenuOpen={setMenuOpen}
             openESDialog={handleOpenESDialog}
+            moveToHelp={moveToHelp}
             signUp={signUp}
             openUserProfile={openUserProfile}
             signOut={signOut}
@@ -160,8 +168,12 @@ export default function Main() {
       </Header>
       <Body>
         <p className="main-site-title">
-          <Link className="main-site-title-bntu" to="https://bntu.by/">БНТУ </Link>
-          <Link className="main-site-title-smart-search" to="/">Умный поиск</Link>
+          <Link className="main-site-title-bntu" to="https://bntu.by/">
+            БНТУ{" "}
+          </Link>
+          <Link className="main-site-title-smart-search" to="/">
+            Умный поиск
+          </Link>
         </p>
         <RedirectSearchBar
           ref={searchBarRef}
@@ -170,7 +182,7 @@ export default function Main() {
           redirect={handleRedirect}
         />
       </Body>
-      <Footer className="fixed-footer"/>
+      <Footer className="fixed-footer" />
     </>
   );
 }

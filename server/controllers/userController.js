@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
-import path from "path";
 import jwt from "jsonwebtoken";
 import fs from "fs";
 

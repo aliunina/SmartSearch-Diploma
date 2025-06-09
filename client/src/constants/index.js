@@ -25,53 +25,6 @@ export const PERIOD_FILTER = {
   }
 };
 
-export const SOURCE_FILTER = {
-  "all": {    
-    text: "По всем источникам",
-    url: null
-  },
-  "rep": {    
-    text: "Репозиторий БНТУ",
-    url: "rep.bntu.by"
-  },
-  "elcat": {
-    text: "Электронный каталог",
-    url: "elcat.bntu.by"
-  },
-  "lan": {
-    text: "Лань",
-    url: "e.lanbook.com"
-  },
-  "znanium": {
-    text: "Znanium",
-    url: "znanium.ru"
-  },
-  "ibooks": {
-    text: "ibooks.ru - IT коллекция",
-    url: "ibooks.ru"
-  },
-  "urait": {
-    text: "Юрайт",
-    url: "urait.ru"
-  },
-  "litres": {
-    text: "Литрес",
-    url: "litres.ru"
-  },
-  "gacademy": {
-    text: "Google Академия",
-    url: "scholar.google.ru"
-  },
-  "bntusmi": {
-    text: "БНТУ в СМИ",
-    url: "smi.bntu.by"
-  },
-  "library": {
-    text: "Новости и подборки Научной библиотеки БНТУ",
-    url: "library.bntu.by"
-  }
-};
-
 export const STATUS_SELECT = {
   "student": {
     text: "Обучающийся"

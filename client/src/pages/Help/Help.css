@@ -1,0 +1,58 @@
+.help-page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  justify-content: center;
+  align-items: center;
+}
+
+.help-page-logo-container {
+  text-align: center;
+  position: relative;
+  margin-top: 1em;
+}
+
+.help-page-logo {
+  width: 30em;
+}
+
+.help-page-back-button {
+  margin-left: 1em;
+  position: absolute;
+  left: 3.4em;
+  top: -0.15em;
+}
+
+.help-page-section {
+  margin: 2em 3em 0 3em;
+  font-size: 1.2em;
+  align-self: center;
+}
+
+.help-page-body {
+  align-self: center;
+  max-width: 70em;
+}
+
+.help-page-text {
+  text-align: justify;
+}
+
+.help-page-text > li {
+  margin-bottom: 0.75rem;
+}
+
+.help-page-link {
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  color: #1155cc;
+}
+
+.help-page-link:visited {
+  color: #1155cc;
+}
+
+.help-page-link:hover {
+  text-decoration: underline;
+}
